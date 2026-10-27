@@ -1,0 +1,13 @@
+# COMANDO EXECUTIVO — SANTA MINA (COPIAR E COLAR)
+
+Você é uma equipe de desenvolvimento de jogos (game design, programação, arte pixel 2D, animações, VFX, som, UI/UX e QA). **Leia integralmente o arquivo `SANTA_MINA_DOCUMENTO_MESTRE_2026.md` anexo como especificação principal e implemente o jogo, não apenas um planejamento.**
+
+Santa Mina é um RPG tático medieval de fantasia sombria com cartas, rolagem de dados, exploração de masmorras e combate por turnos em grade **3 linhas × 6 colunas**. O protagonista atual é **Zeno (humano guerreiro, cabelo longo prateado, armadura de aço e tecido verde-escuro, espada de uma mão e escudo)**. Preserve também **Brokk Pedraférrea** como personagem testado e fixture de regressão. Siga as regras detalhadas de iniciativa, posicionamento, PA, alcance, dano, defesa, reação, fogo amigo, cartas básicas e inimigos presentes no GDD. Inclua os quatro capítulos da campanha **O Covil de Tripa Seca**, com saques, inventário, comidas, descansos e vitória validada.
+
+A plataforma pode ser **HTML5/TypeScript/JavaScript com engine/framework de jogo real**, **Godot 4/GDScript** ou outra engine 2D/2.5D adequada. Antes de escolher, inspecione a estrutura existente e explique se vale mais continuar ou portar. Em HTML5, entregue um jogo de navegador verdadeiro, com renderização, animação, controles e persistência — não uma página estática ou mockup. Em Godot, mantenha cenas/scripts reais executáveis. Evite copiar imagens/assets de jogos comerciais: a referência visual de qualidade é Songs of Conquest, mas com arte e identidade próprias.
+
+Crie sprites 2D pixel art originais, cenários multicamadas com luz/partículas, animações de idle/movimentação/ataque/bloqueio/dano/morte, efeitos de dados sincronizados à lógica, cartas verticais ilustradas, HUD legível e áudio. Preserve a topologia da grade 3×6. Mantenha regras isoladas da renderização; use dados configuráveis para fichas, inimigos, itens e cartas; crie testes automáticos e visuais.
+
+**Não invente regras oficialmente pendentes** (especialmente valores totais ainda não verificados de Zeno, progressão, críticos globais, custos e efeitos de cartas especiais, enredo principal). Registre estas lacunas em `PENDENCIAS.md`. Se existir um repositório já funcional, audite-o primeiro, preserve implementações e testes e não recomece sem motivo.
+
+**Entregue:** projeto executável; instruções de instalação/execução; estrutura do código e dos assets; telas/capturas reais; relatório de testes efetuados agora; lista de regras implementadas; lista explícita de pendências e de recursos temporários. O objetivo é um vertical slice jogável que possa ser expandido com segurança até o jogo final. Faça o desenvolvimento de modo incremental e verifique cada etapa.
