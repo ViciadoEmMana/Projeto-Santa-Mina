@@ -1,0 +1,40 @@
+[
+  {
+    "id": "goblin_porrete",
+    "pasta": "assets/enemies/goblins/goblin_porrete",
+    "altura": 50,
+    "cena": "GoblinPorrete",
+    "projetil": false
+  },
+  {
+    "id": "goblin_sucata",
+    "pasta": "assets/enemies/goblins/goblin_sucata",
+    "altura": 50,
+    "cena": "GoblinSucata",
+    "projetil": false
+  },
+  {
+    "id": "goblin_tiro",
+    "pasta": "assets/enemies/goblins/goblin_tiro",
+    "altura": 50,
+    "cena": "GoblinTiroCerto",
+    "projetil": true
+  }
+,
+{
+  "id": "goblin_faca",
+  "pasta": "assets/enemies/goblins/goblin_faca",
+  "altura": 50,
+  "cena": "GoblinFacaCega",
+  "versao_acoes": "v02"
+},
+{
+  "id": "tripa_seca",
+  "gesto": true,
+  "apoios_gesto": [426, 1155, 464.5, 1155.5],
+  "pasta": "assets/enemies/tripa_seca",
+  "altura": 68,
+  "cena": "TripaSeca",
+  "versao_acoes": "v02"
+}
+]

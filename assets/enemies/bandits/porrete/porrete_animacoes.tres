@@ -1,0 +1,209 @@
+[gd_resource type="SpriteFrames" load_steps=34 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/enemies/bandits/porrete/porrete_acoes_fonte_v01.png" id="1"]
+[ext_resource type="Texture2D" path="res://assets/enemies/bandits/porrete/porrete_ataque_fonte_v01.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/enemies/bandits/porrete/porrete_reacoes_fonte_v01.png" id="3"]
+
+[ext_resource type="Texture2D" path="res://assets/enemies/bandits/porrete/porrete_ataque_pares_v01.png" id="4"]
+[ext_resource type="Texture2D" path="res://assets/enemies/bandits/porrete/porrete_ataque_impares_v01.png" id="5"]
+
+[sub_resource type="AtlasTexture" id="Quadro_0"]
+atlas = ExtResource("1")
+region = Rect2(89, 142, 274, 377)
+margin = Rect2(153.5, 183, 366, 263)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_1"]
+atlas = ExtResource("1")
+region = Rect2(423, 132, 269, 387)
+margin = Rect2(158, 173, 371, 253)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_2"]
+atlas = ExtResource("1")
+region = Rect2(771, 142, 280, 377)
+margin = Rect2(150, 183, 360, 263)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_3"]
+atlas = ExtResource("1")
+region = Rect2(1145, 142, 275, 377)
+margin = Rect2(154, 183, 365, 263)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_4"]
+atlas = ExtResource("1")
+region = Rect2(81, 587, 298, 373)
+margin = Rect2(168.5, 187, 342, 267)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_5"]
+atlas = ExtResource("1")
+region = Rect2(459, 579, 249, 383)
+margin = Rect2(186, 177, 391, 257)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_6"]
+atlas = ExtResource("1")
+region = Rect2(799, 587, 293, 373)
+margin = Rect2(161, 187, 347, 267)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_7"]
+atlas = ExtResource("1")
+region = Rect2(1181, 587, 271, 373)
+margin = Rect2(173.5, 187, 369, 267)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_8"]
+atlas = ExtResource("4")
+region = Rect2(60, 85, 319, 397)
+margin = Rect2(131, 163, 321, 243)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_9"]
+atlas = ExtResource("5")
+region = Rect2(433, 54, 342, 429)
+margin = Rect2(114.5, 131, 298, 211)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_10"]
+atlas = ExtResource("4")
+region = Rect2(827, 42, 307, 440)
+margin = Rect2(159, 120, 333, 200)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_11"]
+atlas = ExtResource("5")
+region = Rect2(1200, 56, 308, 428)
+margin = Rect2(165.5, 132, 332, 212)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_12"]
+atlas = ExtResource("4")
+region = Rect2(28, 570, 428, 391)
+margin = Rect2(62.5, 169, 212, 249)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_13"]
+atlas = ExtResource("5")
+region = Rect2(425, 569, 400, 395)
+margin = Rect2(73, 165, 240, 245)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_14"]
+atlas = ExtResource("4")
+region = Rect2(800, 574, 367, 393)
+margin = Rect2(96, 167, 273, 247)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_15"]
+atlas = ExtResource("5")
+region = Rect2(1179, 571, 309, 397)
+margin = Rect2(141.5, 163, 331, 243)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_16"]
+atlas = ExtResource("3")
+region = Rect2(40, 47, 290, 339)
+margin = Rect2(55.5, 221, 350, 301)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_17"]
+atlas = ExtResource("3")
+region = Rect2(433, 78, 298, 306)
+margin = Rect2(129.5, 254, 342, 334)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_18"]
+atlas = ExtResource("3")
+region = Rect2(792, 88, 316, 298)
+margin = Rect2(124, 262, 324, 342)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_19"]
+atlas = ExtResource("3")
+region = Rect2(1170, 45, 279, 341)
+margin = Rect2(152.5, 219, 361, 299)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_20"]
+atlas = ExtResource("3")
+region = Rect2(36, 454, 321, 251)
+margin = Rect2(157, 309, 319, 389)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_21"]
+atlas = ExtResource("3")
+region = Rect2(417, 474, 316, 242)
+margin = Rect2(255, 318, 324, 398)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_22"]
+atlas = ExtResource("3")
+region = Rect2(790, 505, 327, 209)
+margin = Rect2(233, 351, 313, 431)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_23"]
+atlas = ExtResource("3")
+region = Rect2(1161, 520, 341, 199)
+margin = Rect2(203.5, 361, 299, 441)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_24"]
+atlas = ExtResource("3")
+region = Rect2(30, 795, 370, 171)
+margin = Rect2(135, 389, 270, 469)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_25"]
+atlas = ExtResource("3")
+region = Rect2(423, 836, 338, 141)
+margin = Rect2(151, 419, 302, 499)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_26"]
+atlas = ExtResource("3")
+region = Rect2(779, 847, 358, 123)
+margin = Rect2(141, 437, 282, 517)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_27"]
+atlas = ExtResource("3")
+region = Rect2(1156, 847, 357, 123)
+margin = Rect2(141.5, 437, 283, 517)
+filter_clip = true
+
+[resource]
+animations = [{
+"frames": [{"duration": 1.0, "texture": SubResource("Quadro_0")}, {"duration": 1.0, "texture": SubResource("Quadro_1")}, {"duration": 1.0, "texture": SubResource("Quadro_2")}, {"duration": 1.0, "texture": SubResource("Quadro_3")}],
+"loop": true,
+"name": &"idle",
+"speed": 4.0
+},
+{
+"frames": [{"duration": 1.0, "texture": SubResource("Quadro_4")}, {"duration": 1.0, "texture": SubResource("Quadro_5")}, {"duration": 1.0, "texture": SubResource("Quadro_6")}, {"duration": 1.0, "texture": SubResource("Quadro_7")}],
+"loop": true,
+"name": &"caminhar",
+"speed": 8.0
+},
+{
+"frames": [{"duration": 1.0, "texture": SubResource("Quadro_8")}, {"duration": 1.0, "texture": SubResource("Quadro_9")}, {"duration": 1.0, "texture": SubResource("Quadro_10")}, {"duration": 1.0, "texture": SubResource("Quadro_11")}, {"duration": 1.0, "texture": SubResource("Quadro_12")}, {"duration": 1.0, "texture": SubResource("Quadro_13")}, {"duration": 1.0, "texture": SubResource("Quadro_14")}, {"duration": 1.0, "texture": SubResource("Quadro_15")}],
+"loop": false,
+"name": &"ataque",
+"speed": 12.0
+},
+{
+"frames": [{"duration": 1.0, "texture": SubResource("Quadro_16")}, {"duration": 1.0, "texture": SubResource("Quadro_17")}, {"duration": 1.0, "texture": SubResource("Quadro_18")}, {"duration": 1.0, "texture": SubResource("Quadro_19")}],
+"loop": false,
+"name": &"dano",
+"speed": 12.0
+},
+{
+"frames": [{"duration": 1.0, "texture": SubResource("Quadro_20")}, {"duration": 1.0, "texture": SubResource("Quadro_21")}, {"duration": 1.0, "texture": SubResource("Quadro_22")}, {"duration": 1.0, "texture": SubResource("Quadro_23")}, {"duration": 1.0, "texture": SubResource("Quadro_24")}, {"duration": 1.0, "texture": SubResource("Quadro_25")}, {"duration": 1.0, "texture": SubResource("Quadro_26")}, {"duration": 1.0, "texture": SubResource("Quadro_27")}],
+"loop": false,
+"name": &"morte",
+"speed": 10.0
+}]
+

@@ -1,10 +1,41 @@
 # SANTA MINA — GDD E PROMPT MESTRE | EDIÇÃO GODOT 4
-**Versão:** 2.1 — 22/10/2026 • Edição GODOT 4  
+**Versão:** 2.2 — 24/10/2026 • Edição GODOT 4  
 **Idioma do jogo:** Português brasileiro  
 **Engine obrigatória:** Godot 4.x (GDScript, cenas `.tscn`, recursos `.tres`, sprites, shaders e áudio reais)  
 **Plataforma-alvo inicial:** Windows / PC  
 **Gênero:** **RPG tático de fantasia sombria com cartas e exploração de masmorras**  
 **Estágio:** protótipo de combate e minicampanha testados; documento para consolidação e evolução em um projeto jogável coeso.
+
+> **Protagonista oficial — 24/10/2026:** Zeno, Humano Guerreiro, substitui Brokk
+> no combate, campanha, ficha, cartas e saves novos. As seções históricas de
+> 23/10 e os relatórios de Brokk documentam o protótipo anterior. A atualização
+> preserva os sistemas e migra saves v1. [Detalhes e limites](ATUALIZACAO_ZENO.md).
+> Visual atual de Zeno é provisório, criado a partir da descrição: a ilustração
+> oficial mencionada no comando ainda não foi anexada.
+> Validação desta transição: **6.452 verificações automatizadas + 20 renderizadas,
+> zero falhas finais**. Os testes de Brokk permanecem como regressões legadas.
+> **Registro de apresentação — 23/10/2026:** Brokk e os sete inimigos possuem
+> sprites próprios animados; quatro locais, pisos/props, cartas básicas e gestos
+> do chefe estão integrados. Golpe Sujo e Me Protejam já funcionavam e mantêm
+> suas regras. O combate não referencia mais a textura 32rogues. Isso não altera
+> as regras da versão 2.1 nem define cartas especiais/classes futuras.
+> Arquivos, testes, limites e como jogar: [entrega visual](arte/ENTREGA_VISUAL_01.md).
+
+> **Persistência — 23/10/2026:** a minicampanha agora possui um slot local manual
+> de Salvar/Carregar fora dos confrontos, com backup. Capítulos, PV, inventário,
+> alimentos, usos e débitos são preservados; não há save de combate em andamento.
+> Implementação e testes: [salvamento local](../SALVAMENTO.md).
+
+> **Interface — 23/10/2026:** por solicitação do usuário, os quadros permanentes
+> superiores do combate deram lugar à inspeção por hover/seleção. PV aparecem
+> sobre os atores; a grade visual foi ampliada em 50%, conservando 3×6 e toda
+> a geometria lógica. [Controles e arquivos](../INTERFACE_ARENA.md).
+
+> **Regra aprovada — Goblin Faca Cega, 23/10/2026:** Duas Facas Cegas usam dois
+> d4 em uma ação de 3 PA. Cada natural 1 erra apenas o próprio golpe; os acertos
+> são somados antes da Defesa existente, aplicada uma vez. Natural 2 ou 3 em
+> qualquer golpe ativa o escudo equipado de Brokk: +2 de Defesa no total, sem
+> acumular quando os dois ativam. Os dados exibem seus valores individuais.
 
 > **INSTRUÇÃO PRINCIPAL PARA A IA DESENVOLVEDORA:** Leia integralmente este documento e **crie/complete um projeto Godot real, executável e visualmente elaborado**, preservando as regras aprovadas. Se receber o repositório existente, **inspecione-o primeiro e continue a partir dele**; não reescreva o que já funciona. Se estiver começando do zero, implemente uma versão vertical jogável com a mesma lógica, os mesmos parâmetros e o mesmo escopo de personagem inicial. Não declare funcionalidades implementadas sem testes reais. A execução deve ocorrer **dentro da Godot**, nunca em HTML Canvas, protótipo web ou interface simulada.
 
@@ -34,7 +65,7 @@ Santa Mina é uma aventura de fantasia medieval sombria focada em **um herói in
 ### Direção concreta
 - **Pixel art 2D com apresentação 2.5D**: personagens em sprites, múltiplas camadas de cenário, sombras de contato, luzes e partículas; câmera tática lateral/oblíqua conforme o projeto existente. **Não trocar o tabuleiro 3×6 por hexágonos.**
 - Cenários com **pedra úmida, madeira antiga, ferro, vegetação, ruínas, minas e masmorras**, riqueza de detalhes e leitura limpa da grade.
-- Sprites com silhueta identificável mesmo pequenos: anão robusto com machado/escudo; bandidos e goblins distintos; arqueiros com arco legível.
+- Sprites com silhueta identificável mesmo pequenos: humano com armadura metálica, tecido verde e espada/escudo; bandidos e goblins distintos; arqueiros com arco legível.
 - Animações: idle (respiração), ataque, defesa/bloqueio, deslocamento, corrida, dano, morte, reações, uso de item e rolagem de dados. Adicionar anticipation, impacto, recuperação, pequenas vibrações de câmera e efeitos de acerto **sem excesso**.
 - FX: trilhas de golpes, faíscas, poeira, sangue estilizado opcional, flechas e rastros, bloqueios, indicadores de dano, condições e destaques de alcance.
 - Iluminação: contraste de fontes quentes (tochas) e sombras frias, profundidade por paralaxe e sombras; preservar a legibilidade dos sprites e da UI.
@@ -42,28 +73,53 @@ Santa Mina é uma aventura de fantasia medieval sombria focada em **um herói in
 - UI: pergaminho escuro, bronze, madeira, tipografia nítida; **cartas realmente verticais**, com ilustração, moldura, nome, custo e texto; apresentação de mão inspirada na ergonomia de deckbuilders, mas design original.
 - Importação de pixel art: filtros de textura apropriados (evitar borramento), escala coerente, fontes legíveis, não esticar sprites de forma irregular.
 - Não usar assets de terceiros sem licença compatível e atribuição quando exigida. Manter `ASSET_CREDITS.md`. Priorizar assets originais e materiais fornecidos pelo usuário.
+- **Diretriz aprovada para os próximos assets:** não usar o pacote 32rogues, nem como base visual ou entrada para geração de imagens. Criar Zeno, inimigos e cenários originais. Brokk e referências legadas permanecem para histórico e testes.
 - Se a IA não tiver gerador de imagens, criar sprites/efeitos originais simples por meios compatíveis com Godot, usar recursos livres licenciados ou sinalizar o que precisa de arte. **Nunca afirmar que há arte final se só existem placeholders.**
 
 ## 3. Escopo de personagens — obrigatório nesta fase
 
-**Implementar SOMENTE a classe GUERREIRO e a raça ANÃO como jogáveis**, com o herói **Brokk Pedraférrea**.
+**O único protagonista jogável atual é Zeno, Humano Guerreiro nível 1.**
+Brokk Pedraférrea é o protótipo anterior: seus assets, ficha e testes permanecem
+como legado interno. Não oferecer seleção de personagens, classes ou raças agora.
 
-Classes futuras **não implementar agora**: Mago, Ladino, Clérigo, Caçador e Feiticeiro. Outras raças também ficam para fases posteriores. A arquitetura pode ser extensível, mas **não criar seletores de classes vazios nem fingir que estão jogáveis**.
+### Zeno — Humano (O Versátil), Guerreiro nível 1
+- Classe: FOR +2, DES +2, CON +2, INT 0, SAB +1, CAR +1.
+- Escolhas raciais humanas fixadas: **+1 FOR e +1 CON**.
+- Totais antes dos equipamentos: **FOR +3, DES +2, CON +3, INT 0, SAB +1, CAR +1**.
+- PV máximos **14** (11 + CON 3); começa 14/14. PA por turno **5**.
+- Equipamento inicial: **Espada de Ferro (1H, físico 1d6 + FOR)** e
+  **Escudo de Ferro e Madeira** (+2 Defesa contra naturais 2/3; −1 DES).
+- DES efetiva inicial **+1**, usada na iniciativa. Não herda Pele de Rocha nem
+  Firmeza de Rocha; recebe normalmente as condições aplicáveis aos humanos.
 
-### Brokk Pedraférrea
-- Raça: Anão; classe: Guerreiro.
-- PV máximos: **14**; PA por turno: **5**.
-- Bônus da classe: FOR +2, DES +2, CON +2, INT 0, SAB +1, CAR +1.
-- Bônus raciais: FOR +1, CON +1. Portanto FOR **+3**, CON **+3**; DES base +2, **DES efetiva +1 com o escudo inicial que impõe −1 DES**.
-- Arma inicial: **Machado de Ferro**, dano **1d6 + FOR**; se o resultado natural do dado de arma for **6** e FOR ≥ 2, adicionar **+2 de dano**, conforme implementação existente.
-- Escudo inicial: **+2 Defesa quando o dado natural relevante do atacante for 2 ou 3**; penalidade de **−1 DES**.
-- **Pele de Rocha:** +1 Defesa natural enquanto PV atuais > metade dos PV máximos.
-- **Firmeza de Rocha:** imune a Derrubado por armas 1d6/1d8; Vantagem em resistência contra Derrubado por 1d10/1d12.
-- **Físico Atlético (Guerreiro):** Vantagem em desafios puros de FOR e resistência a doenças conforme regras existentes.
-- **Mestre das Armas:** uma vez por combate, 0 PA, repetir dado de ataque escolhido após resultado; o novo resultado é obrigatório.
-- **Muralha de Ferro:** reação uma vez por combate, reduzir pela metade dano físico recebido (arredondar para baixo), com **1 PA descontado do próximo turno**.
-- **Não inventar novas passivas, poderes, níveis, custos ou modificadores sem confirmação.**
+### Talento Universal: Veterano de Batalha
+- **Defesa:** defender/esquivar de um ataque sem receber dano ativa **+1 Defesa**
+  até o final do combate. Uma ativação, sem acumular. Defender está integrado;
+  a função aceita futura esquiva, sem criar uma ação ou rolagem de esquiva.
+- A elegibilidade do bloqueio automático apenas com escudo está em esclarecimento
+  com o usuário. A ação Defender sem dano já é um gatilho seguro e implementado.
+- **Ofensiva:** natural final do dado da arma **5 ou mais** ativa **+1 dano** até
+  o fim do combate. **Já vale no ataque que o ativou**, conforme resposta oficial.
+- Cada metade é independente e só ativa uma vez. Resultado descartado por
+  Vantagem/Desvantagem ou substituído por repetição não ativa o talento.
+- Dado de teste d20 não é dado de ataque. Não há crítico novo.
+- Ambos os bônus aparecem no cabeçalho/inspeção, geram feedback discreto e som,
+  entram no cálculo centralizado e desaparecem na vitória ou derrota.
 
+### Espada e habilidades de Guerreiro
+- Espada de Ferro: uma repetição opcional de ataque errado por combate, se
+  **FOR ou DES efetiva >= 2**. Não gasta outro ataque/PA. O novo conjunto de
+  dados substitui o anterior, conservando Vantagem/Desvantagem.
+- Mestre das Armas mantém sua decisão após a rolagem e antes do dano; em
+  Vantagem repete apenas o maior. A Espada é oferecida se o resultado final
+  continuar em erro após essa decisão. Os dois usos são independentes.
+- **Físico Atlético:** Vantagem em desafio puro de FOR e resistência a doenças,
+  com funções preparadas e sem inventar eventos de desafio/doença.
+- **Mestre das Armas:** repetir um dado, 0 PA, aceitando obrigatoriamente o novo.
+- **Muralha de Ferro:** reação, metade do dano físico para baixo, custo de 1 PA
+  no próximo turno. Preservar usos e recuperação por descanso existentes.
+- Veterano e repetição da Espada renovam no começo do novo confronto; isso não
+  recupera usos de classe, não cura, não apaga débitos e não é descanso.
 ## 4. Combate tático: tabuleiro, turnos e PA
 
 ### Grade
@@ -76,7 +132,7 @@ Classes futuras **não implementar agora**: Mago, Ladino, Clérigo, Caçador e F
 
 ### Iniciativa e turnos
 - Iniciativa: **1d20 + DES efetiva**, maior age primeiro; preservar desempates do projeto existente ou documentar se não existirem.
-- Brokk: **5 PA** por turno.
+- Zeno: **5 PA** por turno.
 - Inimigos comuns: geralmente **3 PA** por turno.
 - Tripa Seca: **4 PA** por turno.
 - Gastos de PA são validados antes da ação; seleção/cancelamento/ação inválida **não consomem PA**.
@@ -128,10 +184,12 @@ As cinco cartas ficam **sempre disponíveis**, não são compradas, descartadas 
 3. **A Passagem dos Covardes** — Goblin Tiro Certo **5 PV**, Defesa 0, DES +2, arco podre 1d6−1; Goblin Faca Cega **6 PV**, Defesa 0, DES +2, duas facas cegas **2d4**, deslocamento gratuito de **1 casa por rodada**.
 4. **O Covil de Tripa Seca** — chefe Tripa Seca **13 PV**, Defesa 2, FOR +2, DES +2, **4 PA**, espada 1d6, acompanhado de Goblin do Porrete e Goblin Sucata. Vitória só após derrotar **todos** os inimigos.
 
-**Habilidades do chefe:**
+**Habilidades do chefe — IMPLEMENTADAS E TESTADAS:**
 - **Golpe Sujo (Comum):** reação **uma vez por combate**, sem custo de PA do chefe, após declaração de ataque corpo a corpo válido contra ele; atacante testa **1d20 + DES ou SAB (à escolha) contra CD 12**. Falha faz o ataque errar; sucesso permite resolução normal. Não vale contra ataques à distância; PA do atacante já gastos.
 - **Me Protejam!:** reação sem custo de PA; quando chefe receberia **≥5 de dano final ou dano fatal**, se existir goblin aliado vivo **até 1 casa inclusive diagonal**, transfere **todo o dano já calculado** ao aliado, sem nova Defesa. Se vários, escolher o de maior PV, desempate estável. Pode ocorrer repetidamente enquanto houver protetores válidos; não move unidades.
 - Ordem: validar ataque/custo → Golpe Sujo → ataque/dano → Me Protejam! → dano/mortes/saque/vitória.
+
+> Estado confirmado: Golpe Sujo e Me Protejam! já estão implementados no projeto existente e possuem testes. Preservar suas regras e integração; não tratá-los como funcionalidades pendentes. A apresentação audiovisual original pode ser aprimorada sem reimplementar as habilidades.
 
 ### Saques e recompensa
 - Goblin do Porrete: porrete gasto + **2 coroas**.
@@ -171,7 +229,7 @@ As cinco cartas ficam **sempre disponíveis**, não são compradas, descartadas 
 
 **Descanso Curto:** fora de combate, ao fim de turno de movimento no mapa, consome 1 alimento/bebida e recupera **exatamente uma habilidade de classe já utilizada**; não recupera PV diretamente, salvo efeito próprio do consumível.
 
-**Descanso Longo:** fora de combate, ao fim do turno em **cidade/vila/acampamento protegido**, **nunca em masmorra**; consome 1 alimento/bebida; recupera todas as habilidades de classe e **metade dos PV máximos + CON** (Brokk: 7+3=10), sem ultrapassar PV máximos; aplicar efeito próprio do consumível.
+**Descanso Longo:** fora de combate, ao fim do turno em **cidade/vila/acampamento protegido**, **nunca em masmorra**; consome 1 alimento/bebida; recupera todas as habilidades de classe e **metade dos PV máximos + CON** (Zeno: 7+3=10), sem ultrapassar PV máximos; aplicar efeito próprio do consumível.
 
 Algumas durações e efeitos de atributos ainda têm decisões pendentes: documentar em vez de criar regras definitivas.
 
@@ -202,7 +260,7 @@ Criar estruturas de dados extensíveis (`CardDefinition`, `CardInstance`, `Deck`
 ### Fluxo jogável mínimo
 1. Tela inicial com **Novo Jogo**, **Continuar** (somente se save implementado), **Opções** e **Sair**.
 2. Introdução breve não canônica à minicampanha.
-3. Brokk anão guerreiro com ficha e equipamentos.
+3. Zeno humano guerreiro com ficha e equipamentos.
 4. Exploração de área construída à mão, interação com ao menos um objeto/saque.
 5. Combate tático 3×6 com iniciativa, escolha de posição, cartas básicas, IA e dados 3D.
 6. Vitória, saque, inventário, descanso quando permitido, progressão de capítulo.
@@ -210,7 +268,7 @@ Criar estruturas de dados extensíveis (`CardDefinition`, `CardInstance`, `Deck`
 8. Sem travamentos, botões inacessíveis ou controles invisíveis interceptando mouse.
 
 ### Interface de combate
-- Ficha de Brokk e fichas dos inimigos legíveis, com PV/PA, condições e atributos relevantes.
+- Ficha de Zeno e fichas dos inimigos legíveis, com PV/PA, condições e atributos relevantes.
 - Tabuleiro central com personagens grandes o suficiente para leitura e destaques de alcance/destino.
 - Ordem de iniciativa e log de combate em painéis que **não sobreponham** a grade.
 - Cinco cartas básicas com proporção vertical, moldura, custo, arte e descrição, em mão inferior; hover eleva/amplia discretamente; seleção dourada; bloqueio por PA.
@@ -239,7 +297,7 @@ res://
     exploration/
     ai/
   assets/
-    characters/brokk/
+    characters/zeno/
     enemies/bandits/
     enemies/goblins/
     enemies/tripa_seca/
@@ -260,7 +318,7 @@ res://
 ```
 
 ### Entregáveis artísticos mínimos do vertical slice
-- **Brokk:** sprite original consistente, animações de idle, deslocamento, ataque com machado, defesa, dano e morte.
+- **Zeno:** humano de armadura metálica, tecido verde, espada e escudo; idle, caminhada, corrida, ataque, defesa, dano e morte.
 - **Inimigos:** sprites distintos para bandido arqueiro, bandido porrete, Goblin Porrete, Sucata, Tiro Certo, Faca Cega e Tripa Seca; animações proporcionais à função.
 - **Ambientes:** tiles e fundos originais de floresta, passagem e covil/masmorra, com props e iluminação.
 - **Cartas:** molduras, medalhões de custo, ilustrações provisórias originais claramente identificáveis, ícones e efeitos de seleção.
@@ -285,7 +343,7 @@ Se o repositório existente estiver disponível, verificar primeiro:
 
 Arquitetura: estado de combate separado de apresentação; um único resolvedor de ações; IA usa as mesmas regras de alcance/custo/dano; fichas e equipamentos em dados; UI não decide resultados de dados; componentes de carta reutilizáveis; eventos/sinais para animações e log.
 
-Persistência: verificar se já existe save real; se não, implementar salvamento local simples e testado para progresso entre capítulos e inventário **apenas se couber no escopo**, sem inventar que o protótipo já possui save em disco.
+Persistência: implementado salvamento local simples da minicampanha entre confrontos, com slot manual, backup, validação e testes. A retomada preserva progresso entre capítulos, inventário e estado de Zeno. Não salva confrontos em andamento; detalhes em [SALVAMENTO.md](../SALVAMENTO.md).
 
 ## 12. Plano de execução do pedido de “projeto completo”
 
@@ -297,7 +355,7 @@ Persistência: verificar se já existe save real; se não, implementar salvament
 - Corrigir apenas regressões bloqueantes.
 
 **Fase B — Vertical slice visual de alta qualidade**
-- Atualizar o visual de Brokk, inimigos, cenário e UI com sprites, animações, VFX e áudio originais.
+- Atualizar o visual de Zeno, inimigos, cenário e UI com sprites, animações, VFX e áudio originais.
 - Preservar grade 3×6 e combate já testado.
 - Demonstrar um combate inteiro.
 
@@ -311,14 +369,14 @@ Persistência: verificar se já existe save real; se não, implementar salvament
 **Fase E — Preparação para expansão**
 - Estrutura de cartas especiais universais e futuras classes/raças, **sem implementá-las antes de aprovação**.
 
-**Critério de sucesso:** um projeto Godot executável e jogável, com identidade audiovisual própria, Brokk Anão Guerreiro, combate tático 3×6, quatro capítulos de demonstração e sistemas aprovados funcionando; sem precisar de um navegador.
+**Critério de sucesso:** um projeto Godot executável e jogável, com identidade audiovisual própria, Zeno Humano Guerreiro, combate tático 3×6, quatro capítulos de demonstração e sistemas aprovados funcionando; sem precisar de um navegador.
 
 ## 13. Testes obrigatórios e critérios de aceitação
 
 - Godot abre projeto sem erros de parse, cenas ou recursos ausentes.
 - Menu, exploração e combate acessíveis via F5/F6 conforme cenas disponíveis.
 - Iniciativa, escolha de posição e clique nas casas funcionam **de verdade**.
-- Brokk tem 14 PV e 5 PA; inimigos comuns 3 PA e Tripa Seca 4.
+- Zeno tem 14 PV e 5 PA; inimigos comuns 3 PA e Tripa Seca 4.
 - Cinco cartas têm custos corretos e não são consumidas.
 - Mover 2 PA + Atacar 3 PA = 5 PA, sem gastos extras.
 - Vantagem/Desvantagem, Defesa, alcance e dados sincronizados.
@@ -361,7 +419,7 @@ Ao concluir, apresentar:
 
 # PROMPT EXECUTIVO FINAL (PARA COLAR COM ESTE ARQUIVO ANEXADO)
 
-> Você é uma equipe multidisciplinar de desenvolvimento de jogos Godot 4 (game design, GDScript, pixel art, animação, VFX, UI/UX, áudio e QA). Desenvolva ou complete **Santa Mina**, um **RPG tático de fantasia sombria com cartas e exploração de masmorras**, obedecendo integralmente ao GDD anexo. **Use apenas Godot 4, não HTML Canvas**. Priorize **assets reais, sprites animados, efeitos, cenários feitos à mão e apresentação pixel art 2.5D original**, tomando *Songs of Conquest* apenas como referência de qualidade e linguagem visual, sem copiar assets ou designs protegidos. Mantenha **combate 3×6, iniciativa, PA, cinco cartas básicas, equipamentos, dados d4–d20, posicionamento inimigo, fogo amigo, Brokk Pedraférrea Anão Guerreiro e a minicampanha de quatro capítulos**. **Somente Guerreiro/Anão são jogáveis nesta fase**. Outras classes, raças, história principal e regras de cartas especiais ficam para depois. Cartas especiais serão universais, com futuras sinergias por classe. Prefira **conteúdo autoral fixo e pouca proceduralidade**. Se houver projeto existente, preserve e amplie-o; se não houver, crie um vertical slice completo e executável. Implemente incrementalmente, teste com Godot real, capture telas e relate com precisão o que está funcional, o que é temporário e o que ainda depende de definição ou arte. Não entregue um protótipo genérico e não declare conclusão sem verificação.
+> Você é uma equipe multidisciplinar de desenvolvimento de jogos Godot 4 (game design, GDScript, pixel art, animação, VFX, UI/UX, áudio e QA). Desenvolva ou complete **Santa Mina**, um **RPG tático de fantasia sombria com cartas e exploração de masmorras**, obedecendo integralmente ao GDD anexo. **Use apenas Godot 4, não HTML Canvas**. Priorize **assets reais, sprites animados, efeitos, cenários feitos à mão e apresentação pixel art 2.5D original**, tomando *Songs of Conquest* apenas como referência de qualidade e linguagem visual, sem copiar assets ou designs protegidos. Mantenha **combate 3×6, iniciativa, PA, cinco cartas básicas, equipamentos, dados d4–d20, posicionamento inimigo, fogo amigo, Zeno Humano Guerreiro e a minicampanha de quatro capítulos**. **Somente Zeno, Guerreiro/Humano, é jogável nesta fase**. Outras classes, raças, história principal e regras de cartas especiais ficam para depois. Cartas especiais serão universais, com futuras sinergias por classe. Prefira **conteúdo autoral fixo e pouca proceduralidade**. Se houver projeto existente, preserve e amplie-o; se não houver, crie um vertical slice completo e executável. Implemente incrementalmente, teste com Godot real, capture telas e relate com precisão o que está funcional, o que é temporário e o que ainda depende de definição ou arte. Não entregue um protótipo genérico e não declare conclusão sem verificação.
 
 
 ## Anexo A — Configuração recomendada para Codex, Claude Code ou Gemini com repositório Godot

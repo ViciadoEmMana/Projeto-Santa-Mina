@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/presentation/brokk_visual.gd" id="1"]
+[ext_resource type="SpriteFrames" path="res://assets/characters/zeno/zeno_animacoes.tres" id="2"]
+
+[node name="Zeno" type="Sprite2D"]
+texture_filter = 1
+script = ExtResource("1")
+quadros_principais = ExtResource("2")
+quadros_complementares = null

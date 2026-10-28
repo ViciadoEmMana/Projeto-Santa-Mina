@@ -1,0 +1,21 @@
+Revisão solicitada: humano de porte mais largo, sem proporção de anão.
+ImageGen integrado. As imagens v01 são rascunhos não usados na integração.
+
+AÇÕES
+Edit the supplied ORIGINAL Santa Mina human bandit archer spritesheet. The user rejected its dwarf-like stockiness. REDESIGN THE BODY PROPORTIONS decisively as a BROAD-SHOULDERED NORMAL ADULT HUMAN, not a dwarf.
+Keep the original character's face identity, dark stubble and short hair, olive patched tunic, worn brown leather vest, burgundy scarf, quiver and simple wooden shortbow. Keep crisp detailed pixel-art/raster style, muted medieval colors, lighting and transparent background. Do NOT preserve the short-legged body silhouette.
+ANATOMY IS THE MAIN CHANGE: adult HUMAN anatomical height SEVEN TO SEVEN AND A HALF HEADS. Make the head visibly SMALLER relative to body. Wide human shoulders and chest (shoulder span about 2.7 head widths), solid full-size human rib cage, elongated torso with distinct waist, hips at mid-height, LONG legs making about half the standing height. Normal adult length thighs, lower legs and forearms. Athletic broad build, NOT a skinny elf, NOT a small round dwarf. Tunic hem ends around upper thigh, exposing long trousers above knees. Human boots, not oversized dwarf boots. The character should look taller AND broader in chest, without a barrel belly or squat legs. Make these changes consistent in every frame.
+Output exactly FOUR COLUMNS by FOUR ROWS of separate full-body poses on actual alpha transparency, with generous margin. No text, labels, borders, floor, shadow, backdrop, UI or other characters.
+Same scale in every pose, three-quarter SIDE VIEW FACING LEFT.
+Row1 frames0..3 IDLE breathing, feet planted, bow lowered.
+Row2 frames4..7 WALK in place, alternating forward and passing long legs, torso stable, bow held close.
+Rows3 and4 frames8..15 ONE bow shot: ready, lift bow left, nock, draw, full aim LEFT with bow arm extended and rear hand at cheek, RELEASE string with NO painted flying arrow, lower bow, ready.
+Keep ONE bow and anatomically correct hands, no double arms or axes. Do not crop body, head or extended bow; do not cross neighboring cells. The whole character in all poses must fit with margins. Prioritize unmistakable broad adult HUMAN anatomy over matching the rejected short body. No 32rogues or commercial game assets.
+
+REAÇÕES
+Generate a reaction animation atlas matching EXACTLY the updated original Santa Mina human archer in the supplied reference. THIS CORRECTED BODY must be retained: broad adult human shoulders/chest, relatively SMALL head, elongated torso, normal waist, long thighs and shins. Seven to seven-and-a-half head human proportions, not a dwarf, not stocky or short-legged. Same face, stubble, hair, olive tunic hem at upper thigh, brown leather vest/boots, burgundy scarf, charcoal hood behind neck, quiver and one short wooden bow.
+Detailed crisp pixel-art/raster medieval style, left-facing three-quarter SIDE VIEW, lighting upper left, consistent character size throughout. Actual transparent alpha background. No text, grid, labels, scenery, ground shadow, blood or attacker.
+Output exactly FOUR columns by THREE rows with twelve distinct separate full-body frames, generous transparent margins and common ground baseline. All anatomy and weapons fit inside their own cell including final horizontal pose.
+FIRST ROW, frames0..3 DAMAGE: flinch, recoil with bent knees, regain balance, ready. Bow retained in left hand, normal arms, no projectiles or impact effects.
+SECOND AND THIRD ROWS frames4..11 DEATH: wounded crouch, kneel, buckle, brace hand at ground, fall on side, settle, lie motionless, same final lying pose. Preserve LONG human body during the fall, do not compress or shrink to dwarf length. Bow lies beside body by the final frames. Non-graphic defeat with no gore or injuries.
+No assets from 32rogues or commercial games; use only supplied original updated human design.

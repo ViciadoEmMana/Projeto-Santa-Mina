@@ -1,0 +1,14 @@
+ImageGen integrado: isolamento das poses para impedir fragmentos de outros quadros.
+Referência exclusiva: atlas próprio humano revisado.
+
+PREPARO
+PRECISE CLEANUP of the supplied spritesheet, preserve the corrected TALL HUMAN anatomy and small head exactly. This is NOT a redesign, NOT a zoom, NOT a new drawing of a short stocky character.
+Keep the original 1536x1024 canvas and the exact existing size and placement of the EIGHT bow-shooting poses in the LOWER TWO ROWS. Their long human legs, broad normal shoulders, small human head, face, clothes and bow MUST stay like the input. Do not enlarge heads or shorten torsos or legs. Do not move or rescale them.
+Erase ALL sprites and pixels in the UPPER TWO ROWS (the idle and walk poses), leaving those rows fully transparent. In particular remove their boot pixels that are just above the heads/bows of the lower row. Preserve the bows in the lower two rows, including the bow tips that rise slightly into the space above their cells. The goal is eight original shooting poses isolated on transparent alpha, with no fragments of the previous rows visible in any shooting-pose rectangle.
+Keep all EIGHT shooting poses, not four, read left-to-right across each of the bottom two rows. The release pose is the one with fingers open by cheek. No detached arrows added. Actual transparency everywhere outside those eight poses. No floor, shadows, text, borders or new effects. Keep precisely the reference's human body proportions.
+
+SOLTURA
+PRECISE IMAGE CLEANUP, NOT REDRAW OR REDESIGN.
+In the supplied image there are eight original human archer shooting poses in the bottom half. REMOVE THE UPPER FOUR CHARACTERS COMPLETELY, including every pixel of their boots. Keep ONLY the LOWER FOUR characters: full aim, release with open rear fingers, lower bow, ready.
+Keep the original human anatomy, SMALL head and LONG legs, colors, pose geometry and exact pixel sizes of those lower four. Keep the SAME 1536x1024 canvas and SAME positions near its bottom. Do not center or enlarge subjects. Preserve their full bows, including tips rising up into the space previously occupied by the upper four. There must be no boot fragment or other-character pixel above any surviving archer.
+All upper canvas and all gaps are actual fully transparent alpha. No scenery, shadows, text, marks, repeated sprites or extra poses. Exactly FOUR isolated characters in ONE ROW along bottom, no other characters anywhere. This is a human archer, not a dwarf.

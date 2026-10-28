@@ -1,0 +1,127 @@
+[gd_resource type="SpriteFrames" load_steps=18 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/characters/brokk/brokk_idle_ataque_fonte_v01.png" id="1"]
+
+[sub_resource type="AtlasTexture" id="Quadro_0"]
+atlas = ExtResource("1")
+region = Rect2(45, 36, 243, 273)
+margin = Rect2(80, 81, 141, 111)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_1"]
+atlas = ExtResource("1")
+region = Rect2(356, 36, 244, 273)
+margin = Rect2(78, 81, 140, 111)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_2"]
+atlas = ExtResource("1")
+region = Rect2(670, 37, 246, 272)
+margin = Rect2(78, 82, 138, 112)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_3"]
+atlas = ExtResource("1")
+region = Rect2(982, 36, 244, 273)
+margin = Rect2(77, 81, 140, 111)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_4"]
+atlas = ExtResource("1")
+region = Rect2(42, 349, 247, 274)
+margin = Rect2(77, 80, 137, 110)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_5"]
+atlas = ExtResource("1")
+region = Rect2(356, 349, 247, 274)
+margin = Rect2(78, 80, 137, 110)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_6"]
+atlas = ExtResource("1")
+region = Rect2(669, 349, 246, 274)
+margin = Rect2(77, 80, 138, 110)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_7"]
+atlas = ExtResource("1")
+region = Rect2(983, 350, 246, 273)
+margin = Rect2(78, 81, 138, 111)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_8"]
+atlas = ExtResource("1")
+region = Rect2(40, 663, 248, 273)
+margin = Rect2(75, 81, 136, 111)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_9"]
+atlas = ExtResource("1")
+region = Rect2(328, 687, 296, 250)
+margin = Rect2(50, 104, 88, 134)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_10"]
+atlas = ExtResource("1")
+region = Rect2(673, 641, 255, 296)
+margin = Rect2(81, 58, 129, 88)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_11"]
+atlas = ExtResource("1")
+region = Rect2(984, 629, 244, 308)
+margin = Rect2(79, 46, 140, 76)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_12"]
+atlas = ExtResource("1")
+region = Rect2(52, 1001, 289, 232)
+margin = Rect2(87, 122, 95, 152)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_13"]
+atlas = ExtResource("1")
+region = Rect2(354, 1014, 276, 219)
+margin = Rect2(76, 135, 108, 165)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_14"]
+atlas = ExtResource("1")
+region = Rect2(669, 979, 241, 262)
+margin = Rect2(77, 92, 143, 122)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Quadro_15"]
+atlas = ExtResource("1")
+region = Rect2(981, 975, 249, 269)
+margin = Rect2(76, 85, 135, 115)
+filter_clip = true
+
+[resource]
+animations = [{
+"frames": [{"duration": 1.0, "texture": SubResource("Quadro_0")},
+{"duration": 1.0, "texture": SubResource("Quadro_1")},
+{"duration": 1.0, "texture": SubResource("Quadro_2")},
+{"duration": 1.0, "texture": SubResource("Quadro_3")},
+{"duration": 1.0, "texture": SubResource("Quadro_4")},
+{"duration": 1.0, "texture": SubResource("Quadro_5")},
+{"duration": 1.0, "texture": SubResource("Quadro_6")},
+{"duration": 1.0, "texture": SubResource("Quadro_7")}],
+"loop": true,
+"name": &"idle",
+"speed": 6.0
+}, {
+"frames": [{"duration": 1.0, "texture": SubResource("Quadro_8")},
+{"duration": 1.0, "texture": SubResource("Quadro_9")},
+{"duration": 1.0, "texture": SubResource("Quadro_10")},
+{"duration": 1.0, "texture": SubResource("Quadro_11")},
+{"duration": 1.0, "texture": SubResource("Quadro_12")},
+{"duration": 1.0, "texture": SubResource("Quadro_13")},
+{"duration": 1.0, "texture": SubResource("Quadro_14")},
+{"duration": 1.0, "texture": SubResource("Quadro_15")}],
+"loop": false,
+"name": &"ataque",
+"speed": 12.0
+}]
+

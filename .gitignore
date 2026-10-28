@@ -1,9 +1,20 @@
-# Python
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# Estado local e backups automáticos do atualizador do plugin Godot AI.
+addons/.godot_ai_update/
+
+# Configurações privadas e arquivos gerados por ferramentas locais.
+.env
+.env.*
+!.env.example
+!.env.sample
+export_credentials.cfg
+*.log
 __pycache__/
 *.pyc
-# Editors
-.vscode/
-.idea/
-# OS
 .DS_Store
 Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,160 @@
+[gd_resource type="SpriteFrames" load_steps=27 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/enemies/goblins/goblin_porrete/goblin_porrete_acoes_fonte_v01.png" id="1"]
+
+[ext_resource type="Texture2D" path="res://assets/enemies/goblins/goblin_porrete/goblin_porrete_reacoes_fonte_v01.png" id="2"]
+
+[sub_resource type="AtlasTexture" id="Q0"]
+atlas = ExtResource("1")
+region = Rect2(56, 45, 249, 285)
+margin = Rect2(158.5, 275, 391, 355)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q1"]
+atlas = ExtResource("1")
+region = Rect2(440, 46, 247, 284)
+margin = Rect2(162.5, 276, 393, 356)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q2"]
+atlas = ExtResource("1")
+region = Rect2(816, 54, 246, 277)
+margin = Rect2(162, 283, 394, 363)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q3"]
+atlas = ExtResource("1")
+region = Rect2(1187, 44, 254, 286)
+margin = Rect2(156, 274, 386, 354)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q4"]
+atlas = ExtResource("1")
+region = Rect2(54, 365, 272, 279)
+margin = Rect2(161.5, 281, 368, 361)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q5"]
+atlas = ExtResource("1")
+region = Rect2(413, 369, 274, 278)
+margin = Rect2(157.5, 282, 366, 362)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q6"]
+atlas = ExtResource("1")
+region = Rect2(810, 371, 256, 276)
+margin = Rect2(174, 284, 384, 364)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q7"]
+atlas = ExtResource("1")
+region = Rect2(1183, 374, 280, 272)
+margin = Rect2(154, 288, 360, 368)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q8"]
+atlas = ExtResource("1")
+region = Rect2(82, 656, 250, 318)
+margin = Rect2(178.5, 242, 390, 322)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q9"]
+atlas = ExtResource("1")
+region = Rect2(341, 730, 409, 244)
+margin = Rect2(32, 316, 231, 396)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q10"]
+atlas = ExtResource("1")
+region = Rect2(786, 729, 350, 240)
+margin = Rect2(85, 320, 290, 400)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q11"]
+atlas = ExtResource("1")
+region = Rect2(1186, 704, 271, 270)
+margin = Rect2(148.5, 290, 369, 370)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q12"]
+atlas = ExtResource("2")
+region = Rect2(27, 57, 271, 279)
+margin = Rect2(145.5, 281, 369, 361)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q13"]
+atlas = ExtResource("2")
+region = Rect2(381, 46, 278, 287)
+margin = Rect2(133.5, 273, 362, 353)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q14"]
+atlas = ExtResource("2")
+region = Rect2(783, 78, 300, 260)
+margin = Rect2(132, 300, 340, 380)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q15"]
+atlas = ExtResource("2")
+region = Rect2(1190, 52, 269, 286)
+margin = Rect2(147.5, 274, 371, 354)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q16"]
+atlas = ExtResource("2")
+region = Rect2(22, 452, 284, 223)
+margin = Rect2(173.5, 337, 356, 417)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q17"]
+atlas = ExtResource("2")
+region = Rect2(398, 465, 300, 210)
+margin = Rect2(128, 350, 340, 430)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q18"]
+atlas = ExtResource("2")
+region = Rect2(761, 508, 363, 171)
+margin = Rect2(206.5, 389, 277, 469)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q19"]
+atlas = ExtResource("2")
+region = Rect2(1156, 518, 360, 154)
+margin = Rect2(288.5, 406, 280, 486)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q20"]
+atlas = ExtResource("2")
+region = Rect2(13, 803, 364, 162)
+margin = Rect2(138, 398, 276, 478)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q21"]
+atlas = ExtResource("2")
+region = Rect2(395, 834, 358, 128)
+margin = Rect2(141, 432, 282, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q22"]
+atlas = ExtResource("2")
+region = Rect2(767, 838, 369, 125)
+margin = Rect2(135.5, 435, 271, 515)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q23"]
+atlas = ExtResource("2")
+region = Rect2(1152, 837, 370, 125)
+margin = Rect2(135, 435, 270, 515)
+filter_clip = true
+
+[resource]
+animations = [{"name": &"idle", "speed": 4.0, "loop": true, "frames": [{"duration": 1.0, "texture": SubResource("Q0")}, {"duration": 1.0, "texture": SubResource("Q1")}, {"duration": 1.0, "texture": SubResource("Q2")}, {"duration": 1.0, "texture": SubResource("Q3")}]},
+{"name": &"caminhar", "speed": 8.0, "loop": true, "frames": [{"duration": 1.0, "texture": SubResource("Q4")}, {"duration": 1.0, "texture": SubResource("Q5")}, {"duration": 1.0, "texture": SubResource("Q6")}, {"duration": 1.0, "texture": SubResource("Q7")}]},
+{"name": &"ataque", "speed": 8.0, "loop": false, "frames": [{"duration": 1.0, "texture": SubResource("Q8")}, {"duration": 1.0, "texture": SubResource("Q9")}, {"duration": 1.0, "texture": SubResource("Q10")}, {"duration": 1.0, "texture": SubResource("Q11")}]},
+{"name": &"dano", "speed": 12.0, "loop": false, "frames": [{"duration": 1.0, "texture": SubResource("Q12")}, {"duration": 1.0, "texture": SubResource("Q13")}, {"duration": 1.0, "texture": SubResource("Q14")}, {"duration": 1.0, "texture": SubResource("Q15")}]},
+{"name": &"morte", "speed": 10.0, "loop": false, "frames": [{"duration": 1.0, "texture": SubResource("Q16")}, {"duration": 1.0, "texture": SubResource("Q17")}, {"duration": 1.0, "texture": SubResource("Q18")}, {"duration": 1.0, "texture": SubResource("Q19")}, {"duration": 1.0, "texture": SubResource("Q20")}, {"duration": 1.0, "texture": SubResource("Q21")}, {"duration": 1.0, "texture": SubResource("Q22")}, {"duration": 1.0, "texture": SubResource("Q23")}]}]
+metadata/escala_acoes = 0.17667844522968199
+metadata/escala_ataque = 0.17667844522968199
+metadata/escala_reacoes = 0.176056338028169
+metadata/quadro_impacto = 2

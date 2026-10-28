@@ -1,0 +1,188 @@
+[gd_resource type="SpriteFrames" load_steps=32 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/enemies/tripa_seca/tripa_seca_acoes_fonte_v02.png" id="1"]
+
+[ext_resource type="Texture2D" path="res://assets/enemies/tripa_seca/tripa_seca_reacoes_fonte_v01.png" id="2"]
+
+[ext_resource type="Texture2D" path="res://assets/enemies/tripa_seca/tripa_seca_gesto_fonte_v01.png" id="3"]
+
+[sub_resource type="AtlasTexture" id="Q0"]
+atlas = ExtResource("1")
+region = Rect2(86, 88, 228, 253)
+margin = Rect2(184, 307, 412, 387)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q1"]
+atlas = ExtResource("1")
+region = Rect2(464, 88, 222, 254)
+margin = Rect2(186.5, 306, 418, 386)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q2"]
+atlas = ExtResource("1")
+region = Rect2(855, 88, 226, 254)
+margin = Rect2(185, 306, 414, 386)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q3"]
+atlas = ExtResource("1")
+region = Rect2(1230, 88, 224, 254)
+margin = Rect2(186, 306, 416, 386)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q4"]
+atlas = ExtResource("1")
+region = Rect2(85, 409, 228, 250)
+margin = Rect2(187, 310, 412, 390)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q5"]
+atlas = ExtResource("1")
+region = Rect2(459, 409, 237, 246)
+margin = Rect2(186, 314, 403, 394)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q6"]
+atlas = ExtResource("1")
+region = Rect2(852, 410, 234, 250)
+margin = Rect2(177.5, 310, 406, 390)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q7"]
+atlas = ExtResource("1")
+region = Rect2(1221, 409, 242, 251)
+margin = Rect2(173, 309, 398, 389)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q8"]
+atlas = ExtResource("1")
+region = Rect2(100, 697, 214, 275)
+margin = Rect2(214.5, 285, 426, 365)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q9"]
+atlas = ExtResource("1")
+region = Rect2(481, 728, 212, 244)
+margin = Rect2(216, 316, 428, 396)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q10"]
+atlas = ExtResource("1")
+region = Rect2(781, 742, 336, 230)
+margin = Rect2(108, 330, 304, 410)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q11"]
+atlas = ExtResource("1")
+region = Rect2(1212, 727, 258, 245)
+margin = Rect2(164.5, 315, 382, 395)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q12"]
+atlas = ExtResource("2")
+region = Rect2(99, 55, 230, 306)
+margin = Rect2(224.5, 254, 410, 334)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q13"]
+atlas = ExtResource("2")
+region = Rect2(418, 32, 304, 330)
+margin = Rect2(185, 230, 336, 310)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q14"]
+atlas = ExtResource("2")
+region = Rect2(784, 73, 292, 287)
+margin = Rect2(138, 273, 348, 353)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q15"]
+atlas = ExtResource("2")
+region = Rect2(1159, 32, 277, 331)
+margin = Rect2(152, 229, 363, 309)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q16"]
+atlas = ExtResource("2")
+region = Rect2(43, 461, 309, 216)
+margin = Rect2(219.5, 344, 331, 424)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q17"]
+atlas = ExtResource("2")
+region = Rect2(403, 440, 301, 232)
+margin = Rect2(169.5, 328, 339, 408)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q18"]
+atlas = ExtResource("2")
+region = Rect2(780, 491, 317, 176)
+margin = Rect2(213, 384, 323, 464)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q19"]
+atlas = ExtResource("2")
+region = Rect2(1124, 487, 371, 193)
+margin = Rect2(274, 367, 269, 447)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q20"]
+atlas = ExtResource("2")
+region = Rect2(19, 765, 358, 183)
+margin = Rect2(141, 377, 282, 457)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q21"]
+atlas = ExtResource("2")
+region = Rect2(400, 812, 344, 125)
+margin = Rect2(148, 435, 296, 515)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q22"]
+atlas = ExtResource("2")
+region = Rect2(764, 831, 364, 106)
+margin = Rect2(138, 454, 276, 534)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q23"]
+atlas = ExtResource("2")
+region = Rect2(1149, 831, 363, 106)
+margin = Rect2(138.5, 454, 277, 534)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q24"]
+atlas = ExtResource("3")
+region = Rect2(183, 38, 395, 448)
+margin = Rect2(77, 112, 245, 192)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q25"]
+atlas = ExtResource("3")
+region = Rect2(900, 37, 441, 454)
+margin = Rect2(65, 106, 199, 186)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q26"]
+atlas = ExtResource("3")
+region = Rect2(185, 540, 451, 452)
+margin = Rect2(40.5, 108, 189, 188)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Q27"]
+atlas = ExtResource("3")
+region = Rect2(900, 539, 403, 452)
+margin = Rect2(64.5, 108, 237, 188)
+filter_clip = true
+
+[resource]
+animations = [{"name": &"idle", "speed": 4.0, "loop": true, "frames": [{"duration": 1.0, "texture": SubResource("Q0")}, {"duration": 1.0, "texture": SubResource("Q1")}, {"duration": 1.0, "texture": SubResource("Q2")}, {"duration": 1.0, "texture": SubResource("Q3")}]},
+{"name": &"caminhar", "speed": 8.0, "loop": true, "frames": [{"duration": 1.0, "texture": SubResource("Q4")}, {"duration": 1.0, "texture": SubResource("Q5")}, {"duration": 1.0, "texture": SubResource("Q6")}, {"duration": 1.0, "texture": SubResource("Q7")}]},
+{"name": &"ataque", "speed": 8.0, "loop": false, "frames": [{"duration": 1.0, "texture": SubResource("Q8")}, {"duration": 1.0, "texture": SubResource("Q9")}, {"duration": 1.0, "texture": SubResource("Q10")}, {"duration": 1.0, "texture": SubResource("Q11")}]},
+{"name": &"dano", "speed": 12.0, "loop": false, "frames": [{"duration": 1.0, "texture": SubResource("Q12")}, {"duration": 1.0, "texture": SubResource("Q13")}, {"duration": 1.0, "texture": SubResource("Q14")}, {"duration": 1.0, "texture": SubResource("Q15")}]},
+{"name": &"morte", "speed": 10.0, "loop": false, "frames": [{"duration": 1.0, "texture": SubResource("Q16")}, {"duration": 1.0, "texture": SubResource("Q17")}, {"duration": 1.0, "texture": SubResource("Q18")}, {"duration": 1.0, "texture": SubResource("Q19")}, {"duration": 1.0, "texture": SubResource("Q20")}, {"duration": 1.0, "texture": SubResource("Q21")}, {"duration": 1.0, "texture": SubResource("Q22")}, {"duration": 1.0, "texture": SubResource("Q23")}]},
+{"name": &"reacao", "speed": 10.0, "loop": false, "frames": [{"duration": 1.0, "texture": SubResource("Q24")}, {"duration": 1.0, "texture": SubResource("Q25")}, {"duration": 1.0, "texture": SubResource("Q26")}, {"duration": 1.0, "texture": SubResource("Q27")}]}]
+metadata/escala_acoes = 0.27091633466135456
+metadata/escala_ataque = 0.27091633466135456
+metadata/escala_reacoes = 0.2066869300911854
+metadata/quadro_impacto = 2
+metadata/escala_reacao = 0.15246636771300448
