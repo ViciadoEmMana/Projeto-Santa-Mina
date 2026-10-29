@@ -25,3 +25,9 @@ Casas são A–C × 1–6, com heróis nas colunas 1–3. A formação não vari
 - Movimentações gratuitas pré-existentes de criaturas não foram alteradas.
 
 Origem oficial: `html5/principal/index.html`; publicar sempre em https://viciadoemmana.github.io/Projeto-Santa-Mina/ via PR para main.
+
+## Escudo contra duas facas (revisão)
+
+O equipamento Escudo de Madeira e Ferro verifica **cada resultado efetivo** do ataque de duas facas (2d4). Se **qualquer** faca tirar **2 ou 3**, a Defesa do herói recebe **+2 uma única vez durante toda a ação**, mesmo se ambas rolarem 2 ou 3. A Defesa é descontada do dano bruto total já somado das facas, e não separadamente de cada golpe.
+
+Exemplos com Brokk a 14 PV, sem Defender: [1,4] → Defesa 1 (sem gatilho); [1,2] → Defesa 3; [2,3] → Defesa 3, nunca 5; [3,3] → Defesa 3. Com Defender e [2,3], Defesa total 5 = Pele 1 + Defender 2 + Escudo 2.
