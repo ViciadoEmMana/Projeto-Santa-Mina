@@ -7,9 +7,9 @@
 
 ## Goblin Faca Dupla
 - Sempre lança **duas rolagens 1d4 independentes**, ainda que a primeira seja 1. Sob vantagem/desvantagem, cada uma das facas usa seus próprios dois dados e seleciona maior/menor.
-- Para cada faca: **1 natural = errou apenas aquela faca, causando 0 dano e sem bônus**. Em 2, 3 ou 4: dano desse dado **+ DES do goblin (+2)**.
+- Para cada faca: **1 natural = errou apenas aquela faca, causando 0 dano e sem bônus**. Em 2, 3 ou 4: soma-se o resultado da faca. **A DES do goblin (+2) é adicionada apenas uma vez por ação, desde que ao menos uma faca acerte.**
 - Somam-se apenas as facas que acertaram; então se aplica a Defesa do alvo ao total.
-- Exemplos: [1,4] => 0+(4+2)=**6 de dano bruto**; [1,1] => 0; [3,4] => (3+2)+(4+2)=**11 de dano bruto**.
+- Exemplos: [1,4] => 0+4+2=**6 de dano bruto**; [1,1] => 0, sem bônus; [3,4] => 3+4+2=**9 de dano bruto**.
 - Nenhuma primeira rolagem 1 deve cancelar a segunda.
 
 ## Formações fixas dos últimos encontros
