@@ -12,4 +12,13 @@ assert.ok(html.includes("enemy.weaponPassive==='sword'&&natural===1"),'passiva e
 assert.ok(html.includes('const df=visibleDefense(u)'), 'defesa acima das unidades');
 assert.ok(html.includes('hero.knocked=false'), 'recuperação do derrubado');
 assert.ok(html.includes("const preferred=e.ranged?[5,4]:[3]"), 'arqueiro no fundo');
-console.log('HTML JavaScript válido; formações, passivas e indicador de Defesa conferidos.');
+assert.ok(html.includes('state.hero.ap=Math.max(0,state.hero.ap-1)'), 'Derrubado reduz somente um PA do herói');
+assert.ok(html.includes('enemy.apLeft=Math.max(0,enemy.ap-(enemy.knocked?1:0))'), 'Derrubado reduz somente um PA do inimigo');
+assert.ok(html.includes("proneAdvantage=!!hero.knocked"), 'ataques dos inimigos têm vantagem contra herói Derrubado');
+assert.ok(html.includes("proneAdvantage=!!target.knocked"), 'ataques do herói têm vantagem contra inimigo Derrubado');
+assert.ok(html.includes("rollMode==='max'?Math.max(...rolls)"), 'maior dado utilizado na vantagem');
+assert.ok(html.includes("const extraRolls=enemy.count>1"), 'dois golpes usam rolagens distintas');
+assert.ok(html.includes('clearKnockedAfterTurn(enemy)'), 'status removido ao final do turno do inimigo');
+assert.ok(html.includes('clearKnockedAfterTurn(state.hero)'), 'status removido ao final do turno do herói');
+assert.ok(!html.includes('perdeu o turno por Derrubado'), 'regra antiga de perder turno deve ser removida');
+console.log('JavaScript válido, formações e nova regra de Derrubado conferidas.');
