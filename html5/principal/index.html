@@ -696,16 +696,18 @@ async function enemyAttack(enemy){const hero=state.hero;const adjacentOrth=orth(
  const extraNatural=extraRolls.length?(rollMode==='max'?Math.max(...extraRolls):rollMode==='min'?Math.min(...extraRolls):extraRolls[0]):null;
  const raw=enemy.count>1?[natural,extraNatural]:(missed?[]:[natural]);
  const strikes=enemy.count>1?raw.filter(v=>v!==1):raw;
+ const attackNaturals=enemy.count>1?raw:[natural];
+ const shieldTriggered=attackNaturals.some(v=>v===2||v===3); // Em duas facas, verifica AMBOS os golpes; escudo concede no máximo +2 por ação.
  const groups=[{label:rollMode==='max'?'VANTAGEM':rollMode==='min'?'DESVANTAGEM':enemy.count>1?'GOLPE 1':'ATAQUE',sides:enemy.die,faces:rolls,pick:rollMode}];
  if(extraRolls.length)groups.push({label:rollMode==='max'?'GOLPE 2 · VANTAGEM':rollMode==='min'?'GOLPE 2 · DESVANTAGEM':'GOLPE 2',sides:enemy.die,faces:extraRolls,pick:rollMode});
- await rollDice({title:`${enemy.name.toUpperCase()} ATACA`,tone:'enemy',groups,attackNatural:natural,result:enemy.count>1?(strikes.length?diceSum(strikes,[[(enemy.dex??enemy.for??0),'DES/FOR']]):'<b class="tot miss">OS DOIS GOLPES ERRARAM</b>'):(missed?'<span class="die-chip">1</span> <span class="op">·</span> <b class="tot miss">ERROU</b>':diceSum(raw,[[enemy.bonus,'BÔNUS']])),note:[proneAdvantage?'Alvo Derrubado: vantagem.':'',bowDisadvantage?'Arco adjacente: desvantagem.':'',rollMode==='max'?'Vale o maior de cada rolagem.':'',rollMode==='min'?'Vale o menor de cada rolagem.':'',proneAdvantage&&bowDisadvantage?'Vantagem e desvantagem se anulam.':'',enemy.count>1?'Cada faca: 1 erra individualmente; DES/FOR soma uma vez se alguma acertar.':'',intercepted?`Dado ${natural}: fogo amigo!`:'',!intercepted&&!missed&&(natural===2||natural===3)?'Escudo: +2 DEF neste golpe.':'','Dano exibido antes de descontar a Defesa.'].filter(Boolean).join(' ')});
+ await rollDice({title:`${enemy.name.toUpperCase()} ATACA`,tone:'enemy',groups,attackNatural:natural,result:enemy.count>1?(strikes.length?diceSum(strikes,[[(enemy.dex??enemy.for??0),'DES/FOR']]):'<b class="tot miss">OS DOIS GOLPES ERRARAM</b>'):(missed?'<span class="die-chip">1</span> <span class="op">·</span> <b class="tot miss">ERROU</b>':diceSum(raw,[[enemy.bonus,'BÔNUS']])),note:[proneAdvantage?'Alvo Derrubado: vantagem.':'',bowDisadvantage?'Arco adjacente: desvantagem.':'',rollMode==='max'?'Vale o maior de cada rolagem.':'',rollMode==='min'?'Vale o menor de cada rolagem.':'',proneAdvantage&&bowDisadvantage?'Vantagem e desvantagem se anulam.':'',enemy.count>1?'Cada faca: 1 erra individualmente; DES/FOR soma uma vez se alguma acertar.':'',intercepted?`Dado ${natural}: fogo amigo!`:'',!intercepted&&shieldTriggered?(enemy.count>1?'Escudo: +2 DEF na ação inteira (não acumula entre facas).':'Escudo: +2 DEF neste golpe.') :'','Dano exibido antes de descontar a Defesa.'].filter(Boolean).join(' ')});
 
  await playAnim(enemy,'attack',enemy.ranged?950:780,enemy.ranged?.6:.58);if(enemy.ranged)await shootArrow(enemy,intercepted||hero);
  let target=hero;if(intercepted){{target=intercepted;log(`<strong>FOGO AMIGO!</strong> Flecha de ${enemy.name} acertou ${target.name} (dado ${natural}).`,'warn');await announce('FOGO AMIGO!',true,900);}}
  if(natural===1&&target===hero&&enemy.count===1){log(`${enemy.name} errou o ataque: 1 natural.`,'good');showToast(`${enemy.name.toUpperCase()} ERROU`,false,1100);sound('miss');return}
  const base=enemy.count>1?strikes.reduce((a,b)=>a+b,0)+(strikes.length?(enemy.dex??enemy.for??0):0):raw.reduce((a,b)=>a+b,0)+enemy.bonus;
  // Um dado comum serve para acerto e dano; Defesa e reacoes sao descontadas depois.
- const df=defense(target,natural);let damage=Math.max(0,base-df);
+ const df=defense(target,attackNaturals);let damage=Math.max(0,base-df);
  // Porrete de goblin e bandido: 6 natural aplica Derrubado mesmo se Defesa absorver o dano.
  // Brokk tem imunidade racial Firmeza de Rocha contra porrete 1d6.
  if(enemy.weaponPassive==='club'&&natural===6&&target===hero){if(heroType()==='brokk'){log('<strong>FIRMEZA DE ROCHA:</strong> Brokk resistiu ao Derrubado do porrete 1d6.','good');showToast('BROKK · IMUNE A DERRUBADO');puff(hero,'IMUNE');}else{hero.knocked=true;log(`<strong>PORRETE ATIVADO!</strong> ${enemy.name} derrubou ${heroName()} (natural 6): −1 PA no próximo turno; ataques contra ele têm vantagem até o fim desse turno.`,'warn');showToast('PORRETE · DERRUBADO! −1 PA',true);puff(hero,'DERRUBADO');}}if(target===hero&&heroWeapon()===WEAPONS.staff&&!hero.usedStaff&&meets(2)&&damage>0){hero.usedStaff=true;const before=damage;damage=Math.max(0,damage-2);log(`<strong>BASTÃO DE MADEIRA:</strong> bloqueou 2 dano (${before} → ${damage}), uma vez por luta.`,'good');showToast('BLOQUEIO DO BASTÃO!');sound('shieldBlock');}
@@ -735,7 +737,7 @@ function combatImpact(target,damage,{reduced=false}={}){
  }
 }
 function visibleDefense(target){if(!state)return 0;if(target!==state.hero)return Math.max(0,target.def+(target.defending?2:0));const h=state.hero;return Math.max(0,(heroType()==='brokk'&&h.hp>h.maxHp/2?1:0)+(h.defending?2:0)+(heroType()==='zeno'&&h.veteranDef?1:0));}
-function defense(target,attackNatural){if(target===state.hero)return (heroType()==='brokk'&&target.hp>7?1:0)+(target.defending?2:0)+(heroType()==='zeno'&&target.veteranDef?1:0)+(heroShield()&&(attackNatural===2||attackNatural===3)?2:0);
+function defense(target,attackNatural){const diceResults=Array.isArray(attackNatural)?attackNatural:[attackNatural];if(target===state.hero)return (heroType()==='brokk'&&target.hp>7?1:0)+(target.defending?2:0)+(heroType()==='zeno'&&target.veteranDef?1:0)+(heroShield()&&diceResults.some(v=>v===2||v===3)?2:0);
  return visibleDefense(target)}
 async function applyDamage(target,amount,attacker){if(amount<0)return;let died=false;
  if(target.boss&&attacker===state.hero&&(amount>=5||amount>=target.hp)){
