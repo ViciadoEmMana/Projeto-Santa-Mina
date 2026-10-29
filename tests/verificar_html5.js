@@ -35,4 +35,21 @@ assert.ok(html.includes("tripa_seca:[1,3],bow_goblin:[1,5],club_goblin:[2,4]"), 
 assert.ok(html.includes("state.hero.movedThisTurn=true"), 'Deslocamento marca acao usada');
 assert.ok(html.includes("state.hero.movedThisTurn=false"), 'Deslocamento reinicia');
 assert.ok(html.includes("(['move','run'].includes(c.id)&&h.movedThisTurn)"), 'UI desabilita ambas cartas apos uma');
-console.log('HTML validado: muralha 6+, facas independentes, formacoes fixas e movimento 1x/turno.');
+// Exercita a função real de Defesa isoladamente, sem navegador.
+const defenseCode=html.match(/function defense\(target,attackNatural\)\{[\s\S]*?return visibleDefense\(target\)\}/)?.[0];
+assert.ok(defenseCode,'função de Defesa encontrada');
+const combatContext=vm.createContext({state:{hero:{hp:14,defending:false,veteranDef:false}},heroType:()=> 'brokk',heroShield:()=>true,visibleDefense:()=>0,Array});
+vm.runInContext(defenseCode,combatContext);
+const df=(faces)=>combatContext.defense(combatContext.state.hero,faces);
+assert.equal(df([1,4]),1,'nenhuma faca ativa escudo');
+assert.equal(df([1,2]),3,'segunda faca 2 ativa +2');
+assert.equal(df([3,4]),3,'primeira faca 3 ativa +2');
+assert.equal(df([2,3]),3,'ambas ativam mas bônus não acumula');
+assert.equal(df([3,3]),3,'dois 3 não geram +4');
+assert.equal(df(2),3,'escudo também funciona em ataque simples');
+assert.equal(df(4),1,'sem gatilho em ataque simples');
+combatContext.state.hero.defending=true;
+assert.equal(df([2,3]),5,'Defender +2 soma ao escudo +2 uma vez e pele +1');
+combatContext.state.hero.hp=7;
+assert.equal(df([2,3]),4,'Pele de Rocha é removida com PV <= 7');
+console.log('HTML validado: escudo nas duas facas, sem acumular bônus, e demais regras.');
