@@ -21,4 +21,15 @@ assert.ok(html.includes("const extraRolls=enemy.count>1"), 'dois golpes usam rol
 assert.ok(html.includes('clearKnockedAfterTurn(enemy)'), 'status removido ao final do turno do inimigo');
 assert.ok(html.includes('clearKnockedAfterTurn(state.hero)'), 'status removido ao final do turno do herói');
 assert.ok(!html.includes('perdeu o turno por Derrubado'), 'regra antiga de perder turno deve ser removida');
-console.log('JavaScript válido, formações e nova regra de Derrubado conferidas.');
+assert.ok(html.includes("base>=6||damage>=hero.hp+hero.tempHp"), 'Muralha gatilho ataque total 6+');
+assert.ok(html.includes("wallReason=fatal?"), 'Muralha motivo visual');
+assert.ok(html.includes("const extraRolls=enemy.count>1?dice"), 'Faca dupla sempre rola segundo dado');
+assert.ok(html.includes("strikes=enemy.count>1?raw.filter(v=>v!==1):raw"), 'Faca natural 1 nao soma dano');
+assert.ok(html.includes("strikes.reduce((a,b)=>a+b+(enemy.dex??enemy.for??0),0)"), 'Faca soma atributo por golpe efetivo');
+assert.ok(html.includes("if(natural===1&&target===hero&&enemy.count===1)"), 'Erro da primeira faca nao cancela a segunda');
+assert.ok(html.includes("scrap_goblin:[1,3],bow_goblin:[1,5],knife_goblin:[2,3]"), 'Formacao 3 garante arqueiro na coluna 6');
+assert.ok(html.includes("tripa_seca:[1,3],bow_goblin:[1,5],club_goblin:[2,4]"), 'Formacao boss com arqueiro ao fundo e porrete lateral atras');
+assert.ok(html.includes("state.hero.movedThisTurn=true"), 'Deslocamento marca acao usada');
+assert.ok(html.includes("state.hero.movedThisTurn=false"), 'Deslocamento reinicia');
+assert.ok(html.includes("(['move','run'].includes(c.id)&&h.movedThisTurn)"), 'UI desabilita ambas cartas apos uma');
+console.log('HTML validado: muralha 6+, facas independentes, formacoes fixas e movimento 1x/turno.');
