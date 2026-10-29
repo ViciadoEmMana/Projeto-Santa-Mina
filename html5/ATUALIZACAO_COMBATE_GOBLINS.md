@@ -11,7 +11,7 @@ O posicionamento inicial continua respeitando casas vagas e a ordem de iniciativ
 
 ## Passivas dos inimigos
 
-- **Porrete do bandido/goblin:** ao tirar 6 natural no 1d6 de ataque, aplica **Derrubado** ao herói; o próximo turno dele é perdido. Não acrescenta dados ou PA ao ataque. O gatilho permanece válido se a Defesa absorver o dano, conforme protótipo. **Brokk** resiste devido à passiva racial Firmeza de Rocha contra armas 1d6. Se o alvo for outro inimigo por fogo amigo, não há Derrubado de porrete.
+- **Porrete do bandido/goblin:** ao tirar 6 natural no 1d6 de ataque, aplica **Derrubado** ao herói: **−1 PA apenas no próximo turno**, e **todos os ataques contra o alvo Derrubado têm vantagem** (dois dados, vale o maior) até terminar esse turno. Não acrescenta dados ou PA ao ataque. O gatilho permanece válido se a Defesa absorver o dano, conforme protótipo. **Brokk** resiste devido à passiva racial Firmeza de Rocha contra armas 1d6. Se o alvo for outro inimigo por fogo amigo, não há Derrubado de porrete.
 - **Espada de Tripa Seca:** uma vez por combate, repete automaticamente o **erro 1 natural** da espada 1d6. O novo dado substitui o anterior, e o efeito não se recupera até outro encontro.
 - **Arco (bandido e goblin):** mantém as regras já presentes de desvantagem contra alvo ortogonalmente adjacente e fogo amigo em resultados baixos quando há interceptação.
 - **Duas facas:** mantém os dois dados de ataque (2d4) e o deslocamento gratuito já implementados.
@@ -28,3 +28,11 @@ Pequena placa de bronze com **escudo prateado e número**, ao lado direito da ba
 ## Integração
 
 Fonte única: `html5/principal/index.html`. Publicação após merge em `main`, no link oficial https://viciadoemmana.github.io/Projeto-Santa-Mina/ . Esta atualização altera apenas regras solicitadas e a placa de Defesa; as mudanças de cenário e interface feitas pela colaboração visual permanecem.
+
+## Revisão da condição Derrubado
+
+- **Não perde o turno inteiro**. O alvo continua podendo agir com 1 PA a menos durante o próximo turno.
+- **Vantagem para os ataques recebidos:** 2 dados, aproveitando o maior resultado. Em duas facas, a vantagem é aplicada a cada golpe (até 4 dados visíveis).
+- **Arco adjacente:** vantagem e desvantagem se anulam, retornando a um dado normal.
+- **Duração:** o alvo permanece Derrubado desde o gatilho até o **fim do próximo turno dele**, quando se levanta. O status é indicado no personagem por “↓PA”.
+- **Imunidade racial de Brokk** contra Derrubado de armas 1d6 permanece preservada.
