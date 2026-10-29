@@ -1,0 +1,15 @@
+const fs=require('node:fs');const vm=require('node:vm');const assert=require('node:assert/strict');
+const html=fs.readFileSync('html5/principal/index.html','utf8');
+const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map(m=>m[1]).filter(x=>x.trim());
+assert.ok(scripts.length>0,'É necessário JavaScript incorporado');
+for(const code of scripts)new vm.Script(code,{filename:'html5/principal/index.html'});
+const match=html.match(/const chapters=\[([\s\S]*?)\];/);
+assert.ok(match,'capítulos presentes');
+const formations=[...match[1].matchAll(/enemies:\[([^\]]+)\]/g)].map(m=>m[1].replace(/['\s]/g,''));
+assert.deepEqual(formations,['archer_bandit,club_bandit','club_goblin,knife_goblin','scrap_goblin,bow_goblin,knife_goblin','tripa_seca,bow_goblin,club_goblin']);
+assert.ok(html.includes("enemy.weaponPassive==='club'&&natural===6"),'passiva porrete');
+assert.ok(html.includes("enemy.weaponPassive==='sword'&&natural===1"),'passiva espada do chefe');
+assert.ok(html.includes('const df=visibleDefense(u)'), 'defesa acima das unidades');
+assert.ok(html.includes('hero.knocked=false'), 'recuperação do derrubado');
+assert.ok(html.includes("const preferred=e.ranged?[5,4]:[3]"), 'arqueiro no fundo');
+console.log('HTML JavaScript válido; formações, passivas e indicador de Defesa conferidos.');
