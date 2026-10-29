@@ -25,7 +25,10 @@ assert.ok(html.includes("base>=6||damage>=hero.hp+hero.tempHp"), 'Muralha gatilh
 assert.ok(html.includes("wallReason=fatal?"), 'Muralha motivo visual');
 assert.ok(html.includes("const extraRolls=enemy.count>1?dice"), 'Faca dupla sempre rola segundo dado');
 assert.ok(html.includes("strikes=enemy.count>1?raw.filter(v=>v!==1):raw"), 'Faca natural 1 nao soma dano');
-assert.ok(html.includes("strikes.reduce((a,b)=>a+b+(enemy.dex??enemy.for??0),0)"), 'Faca soma atributo por golpe efetivo');
+assert.ok(html.includes("strikes.reduce((a,b)=>a+b,0)+(strikes.length?(enemy.dex??enemy.for??0):0)"), 'Faca soma atributo apenas uma vez se houver acerto');
+assert.equal(([3,4].filter(x=>x!==1).reduce((a,b)=>a+b,0)+2),9,'3 e 4 causam 9 de dano bruto');
+assert.equal(([1,4].filter(x=>x!==1).reduce((a,b)=>a+b,0)+2),6,'1 e 4 causam 6 de dano bruto');
+assert.equal(([1,1].filter(x=>x!==1).reduce((a,b)=>a+b,0)),0,'dois resultados 1 causam 0 de dano bruto');
 assert.ok(html.includes("if(natural===1&&target===hero&&enemy.count===1)"), 'Erro da primeira faca nao cancela a segunda');
 assert.ok(html.includes("scrap_goblin:[1,3],bow_goblin:[1,5],knife_goblin:[2,3]"), 'Formacao 3 garante arqueiro na coluna 6');
 assert.ok(html.includes("tripa_seca:[1,3],bow_goblin:[1,5],club_goblin:[2,4]"), 'Formacao boss com arqueiro ao fundo e porrete lateral atras');
