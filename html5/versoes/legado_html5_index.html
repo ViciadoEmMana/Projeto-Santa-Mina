@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#101b20">
+  <title>Santa Mina — O Covil de Tripa Seca | Protótipo HTML5</title>
+  <link rel="stylesheet" href="game.css">
+</head>
+<body>
+<div class="app">
+  <header class="site-head">
+    <div class="brand"><span class="brand-mark">✦</span><div><b>SANTA MINA</b><small>CRÔNICAS DA FRONTEIRA</small></div></div>
+    <div class="right-head"><span class="edition">PROTÓTIPO JOGÁVEL · HTML5</span><button id="soundBtn" class="icon-button" title="Ativar/desativar som">♫ <span>Som</span></button><button id="helpBtn" class="icon-button">? <span>Regras</span></button></div>
+  </header>
+
+  <main id="menuScreen" class="menu-screen">
+    <div class="menu-embers" aria-hidden="true"></div>
+    <div class="menu-content">
+      <div class="eyebrow">UMA AVENTURA TÁTICA EM QUATRO CAPÍTULOS</div>
+      <h1>SANTA <em>MINA</em></h1>
+      <div class="menu-sigil">✦ &nbsp; O COVIL DE TRIPA SECA &nbsp; ✦</div>
+      <p>Uma caravana desapareceu. Na mata, rastros levam a um covil onde ninguém deveria entrar sozinho.</p>
+      <div class="menu-buttons"><button id="newGameBtn" class="btn-primary">⚔ &nbsp; NOVA JORNADA</button><button id="continueBtn" class="btn-secondary" hidden>↳ &nbsp; CONTINUAR JORNADA</button><button id="chapterTestBtn" class="btn-secondary">⚙ &nbsp; TESTAR UM CAPÍTULO</button><button id="menuRulesBtn" class="btn-quiet">COMO JOGAR &nbsp; ↗</button></div>
+      <div class="edition-hint">Brokk Pedraférrea é o herói jogável de referência. Zeno está reservado para uma futura versão com ficha validada.</div>
+    </div>
+    <div class="menu-bottom">CONTROLES &nbsp; <kbd>1–5</kbd> cartas &nbsp;·&nbsp; <kbd>ESC</kbd> cancelar &nbsp;·&nbsp; <kbd>ENTER</kbd> encerrar turno</div>
+  </main>
+
+  <main id="gameScreen" class="game-screen" hidden>
+    <div class="progress-strip"><div class="progress-title"><span class="tiny-icon">◈</span><span id="chapterKicker">CAPÍTULO 01 / 04</span><b id="chapterName">O Carregamento Desaparecido</b></div><div class="progress-dots" id="progressDots"></div><button id="menuBtn" class="btn-link">↶ Menu</button></div>
+    <div class="combat-grid">
+      <aside class="side-panel hero-panel">
+        <div class="side-label">SEU HERÓI <span class="mini-ornament">✧</span></div>
+        <div class="portrait-wrap"><img src="assets/brokk.png" alt="Brokk Pedraférrea" id="brokkPortrait"><div class="portrait-deco"></div></div>
+        <h2>Brokk <span>Pedraférrea</span></h2>
+        <p class="subtitle">ANÃO &nbsp;·&nbsp; GUERREIRO</p>
+        <div class="stat-title"><span>PONTOS DE VIDA</span><b id="hpText">14 / 14</b></div>
+        <div class="meter hp-meter"><i id="hpBar"></i></div><div id="tempHP" class="temp-hp"></div>
+        <div class="stat-title ap-title"><span>PONTOS DE AÇÃO</span><b id="apText">5 / 5</b></div><div class="ap-pips" id="apPips"></div>
+        <div class="section-rule"></div>
+        <div class="statgrid"><span>FOR <b>+3</b></span><span>DES <b>+1</b></span><span>CON <b>+3</b></span><span>DEF <b id="defText">1</b></span></div>
+        <div class="equip-line"><span>⚒</span><div><b>Machado de Ferro</b><small>1d6 + FOR · natural 6: +2 dano</small></div></div>
+        <div class="equip-line"><span>◈</span><div><b>Escudo de Madeira</b><small>+2 DEF em ataque natural 2–3</small></div></div>
+        <div class="section-rule"></div>
+        <div class="skill-heading">HABILIDADES <span>0 PA / REAÇÃO</span></div>
+        <div id="skillsArea" class="skills-area"></div>
+      </aside>
+
+      <section class="center-column">
+        <div class="stage-top"><div id="turnBadge" class="turn-badge">PREPARAÇÃO DO COMBATE</div><div class="stage-help" id="contextHelp">Role a iniciativa e escolha sua posição.</div></div>
+        <div class="stage-frame" id="stageFrame">
+          <canvas id="battleCanvas" width="1000" height="600" aria-label="Tabuleiro tático de três linhas por seis colunas"></canvas>
+          <div id="dicePanel" class="dice-panel" hidden><div id="diceHead" class="dice-head">ROLAGEM</div><div id="diceFaces" class="dice-faces"></div><div id="diceDetail" class="dice-detail"></div></div>
+          <div id="stageToast" class="stage-toast" hidden></div>
+          <div class="stage-corner top-left">A · B · C <span> / 1–6</span></div>
+          <div class="stage-corner bottom-right">✦ SANTA MINA</div>
+        </div>
+        <div class="battle-toolbar"><div><b id="phaseInfo">AGUARDANDO POSICIONAMENTO</b><span id="roundInfo">Rodada 1</span></div><button id="endTurnBtn" class="endturn" disabled>ENCERRAR TURNO <span>↵</span></button></div>
+      </section>
+
+      <aside class="side-panel enemy-panel">
+        <div class="side-label">INIMIGOS <span class="mini-ornament">⚔</span></div><div id="enemyList" class="enemy-list"></div>
+        <div class="section-rule"></div><div class="side-label">ORDEM DE INICIATIVA</div><div id="initiativeList" class="initiative-list"></div>
+        <div class="section-rule"></div><div class="side-label">DIÁRIO DE COMBATE</div><div id="combatLog" class="combat-log" aria-live="polite"></div>
+      </aside>
+    </div>
+
+    <section class="action-zone"><div class="action-header"><span>◈ &nbsp; SUAS CARTAS DE COMBATE</span><span id="actionHint">Selecione uma carta e clique em uma casa válida</span></div><div class="cards" id="actionCards"></div><div class="hotkey-note">Clique em uma carta ou use <kbd>1</kbd>–<kbd>5</kbd> &nbsp;·&nbsp; <kbd>ESC</kbd> desfaz a seleção &nbsp;·&nbsp; <kbd>ENTER</kbd> encerra o turno.</div></section>
+    <div class="copyright-foot">Protótipo de testes · Arte pixelada provisória original · Regras baseadas no Documento Mestre Santa Mina 3.0</div>
+  </main>
+
+  <div id="modalBackdrop" class="modal-backdrop" hidden><section id="modalContent" class="modal" role="dialog" aria-modal="true" aria-live="polite"></section></div>
+</div>
+<script src="game.js"></script>
+</body>
+</html>

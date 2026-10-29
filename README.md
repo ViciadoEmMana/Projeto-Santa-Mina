@@ -109,3 +109,29 @@ também permanecem para histórico e regressões.
 
 Consulte ASSET_CREDITS.md e as licenças presentes junto aos materiais.
 Nenhuma licença geral de redistribuição do projeto foi estabelecida.
+
+---
+
+## 🗂️ Organização do repositório
+
+> **Versão principal de testes no navegador: [🎮 Santa Mina HTML5 V8](html5/principal/index.html).**
+> O arquivo HTML5 principal fica exclusivamente em `html5/principal/`.
+
+| Ícone | Pasta | Para que serve |
+|:---:|---|---|
+| 🎮 | [html5/principal](html5/principal/) | **Jogo principal V8** — um único HTML para abrir no navegador |
+| 🗃️ | [html5/versoes](html5/versoes/) | Entradas antigas preservadas como histórico |
+| 📖 | [html5/docs](html5/docs/) | Documentação da versão de navegador |
+| 🎨 | [assets](assets/) | Personagens, cenários, cartas e imagens do projeto Godot |
+| 🔊 | [audio](audio/) | Áudios e efeitos |
+| 🕹️ | [scenes](scenes/) | Cenas Godot |
+| ⚙️ | [scripts](scripts/) | Código GDScript auxiliar |
+| 🧪 | [tests](tests/) | Testes do projeto |
+| 📚 | [docs](docs/) | Documentação geral e referências |
+| 📦 | [releases](releases/) | Entregas anteriores |
+| 📷 | [screenshots](screenshots/) | Capturas de tela |
+| 🧩 | [addons](addons/) | Extensões do Godot |
+| 🧰 | [tools](tools/) | Ferramentas auxiliares |
+| 🧱 | [Assets 32 rogues](Assets%2032%20rogues/) | Pacotes de arte originais, mantidos no caminho atual |
+
+**Observação:** os emojis são utilizados neste índice, sem renomear os diretórios Godot existentes, para não quebrar referências de cenas e assets. `index.html` na raiz e `html5/index.html` são redirecionamentos; o jogo V8 está apenas em `html5/principal/index.html`.
