@@ -1,5 +1,9 @@
 # Santa Mina — projeto Godot 4
 
+**🎮 [JOGAR SANTA MINA HTML5 — LINK OFICIAL](https://viciadoemmana.github.io/Projeto-Santa-Mina/)**
+
+A versão HTML5 oficial é mantida em `html5/principal/index.html`. Alterações aprovadas do autor e da colaboradora são integradas via pull request na branch `main` e publicadas automaticamente no mesmo link.
+
 Repositório do **Santa Mina**, RPG tático de fantasia sombria com combate
 em tabuleiro **3×6**, cartas e a minicampanha **O Covil de Tripa Seca**.
 
