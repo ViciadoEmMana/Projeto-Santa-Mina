@@ -355,6 +355,15 @@ kbd{font:inherit;font-size:.9em;padding:1px 6px;border:2px solid var(--plate-lin
 
 /* Novo acabamento visual: .init-pos */
 .init-pos{padding:3px 9px;background:#24170e;border:2px solid #4a2c2c;border-radius:4px;font-size:15px;color:var(--ink)}
+
+/* Rolagem de iniciativa: conta de cada personagem embaixo do dado e a ordem de turno. */
+.dice-group .dice-sub{font-size:13px;color:var(--ink-dim);letter-spacing:0;margin-top:2px}
+.dice-group .dice-sub b{color:var(--gold);font-size:15px}
+.init-order{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:4px}
+.init-pos{padding:3px 9px;background:#24170e;border:2px solid #4a2c2c;border-radius:4px;font-size:15px;color:var(--ink)}
+.init-pos.hero{border-color:var(--cyan)}
+.init-pos small{color:var(--ink-faint);font-size:12px}
+.init-pos b{color:var(--gold)}
 </style>
 </head>
 <body>
@@ -533,11 +542,18 @@ function startChapter(){session++;$('dicePanel').hidden=true;modalClose();busy=f
  $('chapterKicker').textContent=`CAPÍTULO ${String(state.chapterIndex+1).padStart(2,'0')} / 04`;
  $('chapterName').textContent=c.title;
  $('progressDots').innerHTML=chapters.map((_,i)=>`<i class="${i<state.chapterIndex?'done':i===state.chapterIndex?'active':''}"></i>`).join('');
- setScreen('game');render();openModal({eyebrow:c.tag,title:c.title,text:c.description,body:`<div class="modal-details">⚔ <b>Formação e iniciativa</b><br>${heroName()}: <b>${state.hero.rawInit} + ${heroDex()+initWeaponBonus()} = ${state.hero.init}</b> · ${state.enemies.length} inimigo(s).<br>Na grade, escolha a posição inicial entre as casas <b>destacadas em verde</b>. O resultado da iniciativa define as colunas permitidas.</div>`,buttons:[{label:'ESCOLHER POSIÇÃO',click:()=>{modalClose();showToast('ESCOLHA UMA CASA',false,1250)}}]});save();}
+ setScreen('game');render();save();rollInitiative(c);}
+// Iniciativa na tela antes da rodada 1: um d20 por personagem (dado + modificador) e a ordem que sai dele.
+// O herói não pode escolher posição enquanto os dados rolam (placeHero e o brilho das casas esperam initRolling).
+async function rollInitiative(c){state.initRolling=true;const sid=session;await sleep(350);if(sid!==session)return;
+ const who=[state.hero,...state.enemies],nm=u=>u===state.hero?heroName():u.name,mod=u=>u===state.hero?heroDex()+initWeaponBonus():u.dex;
+ const order=state.order.map((u,i)=>`<span class="init-pos ${u===state.hero?'hero':''}"><small>${i+1}º</small> ${nm(u)} <b>${u.init}</b></span>`).join('');
+ await rollDice({title:'INICIATIVA',groups:who.map(u=>({label:nm(u).toUpperCase(),sides:20,faces:[u.rawInit],tone:u===state.hero?'hero':'enemy',sub:`${u.rawInit} ${mod(u)<0?'−':'+'} ${Math.abs(mod(u))} = <b>${u.init}</b>`})),result:`<div class="init-order">${order}</div>`,note:'d20 + DES de cada personagem. Quem tirar mais age primeiro.',hold:3400});
+ if(sid!==session)return;state.initRolling=false;openModal({eyebrow:c.tag,title:c.title,text:c.description,body:`<div class="modal-details">⚔ <b>Formação e iniciativa</b><br>${heroName()}: <b>${state.hero.rawInit} + ${heroDex()+initWeaponBonus()} = ${state.hero.init}</b> · ${state.enemies.length} inimigo(s).<br>Na grade, escolha a posição inicial entre as casas <b>destacadas em verde</b>. O resultado da iniciativa define as colunas permitidas.</div>`,buttons:[{label:'ESCOLHER POSIÇÃO',click:()=>{modalClose();showToast('ESCOLHA UMA CASA',false,1250)}}]});}
 function occupied(r,c,ignore){if(state.hero!==ignore&&state.hero.hp>0&&state.hero.r===r&&state.hero.c===c)return state.hero;return state.enemies.find(e=>e!==ignore&&e.alive&&e.r===r&&e.c===c)||null}
 function allowedStart(){const z=state.hero.init;const cols=z<10?[2]:z<15?[1,2]:[0,1,2];const a=[];for(let r=0;r<3;r++)for(const c of cols)if(!occupied(r,c))a.push({r,c});return a}
 function initialEnemyPosition(e,knowsHero){const preferred=e.ranged?[5,4]:[3];const candidates=[];for(const c of preferred)for(let r=0;r<3;r++){if(!occupied(r,c,e))candidates.push({r,c,dist:knowsHero&&state.hero.r>=0?Math.abs(r-state.hero.r):Math.abs(r-1)})}candidates.sort((a,b)=>a.dist-b.dist||a.r-b.r||a.c-b.c);if(candidates.length){e.r=candidates[0].r;e.c=candidates[0].c;}else{for(let c=3;c<6;c++)for(let r=0;r<3;r++)if(!occupied(r,c,e)){e.r=r;e.c=c;return}}}
-function placeHero(r,c){if(state.phase!=='placement'||modalActive)return;const allowed=allowedStart().some(x=>x.r===r&&x.c===c);if(!allowed){showToast('POSIÇÃO NÃO PERMITIDA',true);return}state.hero.r=r;state.hero.c=c;for(const e of state.order){if(e===state.hero)continue;if(e.r===-1)initialEnemyPosition(e,true)}state.phase='combat';log(`<strong>${heroName()}</strong> assumiu a posição ${String.fromCharCode(65+r)}${c+1}.`,'good');render();showToast('O COMBATE COMEÇOU');sleep(800).then(advanceTurn)}
+function placeHero(r,c){if(state.phase!=='placement'||modalActive||state.initRolling)return;const allowed=allowedStart().some(x=>x.r===r&&x.c===c);if(!allowed){showToast('POSIÇÃO NÃO PERMITIDA',true);return}state.hero.r=r;state.hero.c=c;for(const e of state.order){if(e===state.hero)continue;if(e.r===-1)initialEnemyPosition(e,true)}state.phase='combat';log(`<strong>${heroName()}</strong> assumiu a posição ${String.fromCharCode(65+r)}${c+1}.`,'good');render();showToast('O COMBATE COMEÇOU');sleep(800).then(advanceTurn)}
 function currentActor(){return state.order[state.cursor]||null}
 function isHeroTurn(){return state&&state.phase==='combat'&&state.actor===state.hero&&!busy&&!modalActive}
 function isCellValid(r,c){if(!isHeroTurn()||!state.selected)return false;if(state.selected==='move'||state.selected==='run'){const max=Math.max(0,(state.selected==='move'?1:2)-(heroShield()&&heroStr()<3?1:0));return max>0&&!!shortPath(state.hero,{r,c},max)}const target=occupied(r,c);return !!(target&&target!==state.hero&&target.alive&&inHeroRange(state.hero,target));}
@@ -609,17 +625,17 @@ function paintDie(g,die,now){const S=DIE_RES,geom=die.geom,pal=DIE_PAL[die.tone]
  return u>=1}
 function diceSum(faces,mods){faces=[].concat(faces);let total=faces.reduce((a,b)=>a+b,0),s=faces.map(v=>`<span class="die-chip">${v}</span>`).join(' <span class="op">+</span> ');for(const [v,label] of mods){if(!v)continue;s+=` <span class="op">${v<0?'−':'+'}</span> ${Math.abs(v)} <small>${label}</small>`;total+=v}return `${s} <span class="op">=</span> <b class="tot">${total}</b>`}
 // groups: [{label, sides, faces, pick:'max'|'min'}]; result/note: HTML exibido quando os dados param.
-async function rollDice({title,groups,result,note='',tone='hero',attackNatural=null}){const dp=$('dicePanel'),fd=$('diceFaces');clearTimeout(diceTimeout);dp.hidden=false;dp.classList.toggle('enemy',tone==='enemy');$('diceHead').textContent=title;$('diceResult').innerHTML='';$('diceDetail').textContent='Rolando...';
+async function rollDice({title,groups,result,note='',tone='hero',attackNatural=null,hold=DIE_HOLD_MS}){const dp=$('dicePanel'),fd=$('diceFaces');clearTimeout(diceTimeout);dp.hidden=false;dp.classList.toggle('enemy',tone==='enemy');$('diceHead').textContent=title;$('diceResult').innerHTML='';$('diceDetail').textContent='Rolando...';
  const start=performance.now(),dice3d=[];let k=0;
- fd.innerHTML=groups.map(gr=>`<div class="dice-group">${gr.label?`<small>${gr.label}</small>`:''}<div class="dice-row">${gr.faces.map(()=>`<canvas class="die3d" width="${DIE_RES}" height="${DIE_RES}"></canvas>`).join('')}</div></div>`).join('');
+ fd.innerHTML=groups.map(gr=>`<div class="dice-group">${gr.label?`<small>${gr.label}</small>`:''}<div class="dice-row">${gr.faces.map(()=>`<canvas class="die3d" width="${DIE_RES}" height="${DIE_RES}"></canvas>`).join('')}</div>${gr.sub?`<small class="dice-sub" hidden>${gr.sub}</small>`:''}</div>`).join('');
  const cvs=[...fd.querySelectorAll('canvas')];
- groups.forEach(gr=>{const geom=dieGeom(gr.sides),best=gr.pick==='max'?Math.max(...gr.faces):gr.pick==='min'?Math.min(...gr.faces):null;let marked=false;gr.faces.forEach(v=>{const cv=cvs[k],chosen=best===null||(v===best&&!marked);if(best!==null&&chosen)marked=true;dice3d.push({cv,g:cv.getContext('2d'),geom,tone,chosen,value:v,target:quat.mul(dieTilt(gr.sides),faceUpQuat(geom,v)),axis:v3.norm([Math.random()-.5,Math.random()-.5,Math.random()-.5]),spin:Math.PI*(7+Math.random()*4),start:start+k*140,dur:DIE_ROLL_MS});k++})});
+ groups.forEach(gr=>{const geom=dieGeom(gr.sides),best=gr.pick==='max'?Math.max(...gr.faces):gr.pick==='min'?Math.min(...gr.faces):null;let marked=false;gr.faces.forEach(v=>{const cv=cvs[k],chosen=best===null||(v===best&&!marked);if(best!==null&&chosen)marked=true;dice3d.push({cv,g:cv.getContext('2d'),geom,tone:gr.tone||tone,chosen,value:v,target:quat.mul(dieTilt(gr.sides),faceUpQuat(geom,v)),axis:v3.norm([Math.random()-.5,Math.random()-.5,Math.random()-.5]),spin:Math.PI*(7+Math.random()*4),start:start+k*140,dur:DIE_ROLL_MS});k++})});
  const sid=session;const frame=now=>{if(sid!==session||dp.hidden)return;let done=true;for(const d of dice3d){d.g.imageSmoothingEnabled=false;if(!paintDie(d.g,d,Math.max(now,d.start)))done=false}if(!done)requestAnimationFrame(frame)};requestAnimationFrame(frame);
  sound('dice');sound('dice',.7);sound('dice',1.3);
  await sleep(DIE_ROLL_MS+(k-1)*140+60);
  dice3d.forEach(d=>d.cv.classList.toggle('dim',!d.chosen));dice3d.filter(d=>d.chosen).forEach(d=>d.cv.classList.add('landed'));
- $('diceResult').innerHTML=result||'';$('diceDetail').innerHTML=note;sound('land');if(attackNatural===5||attackNatural===6){sound('highRoll',.11);dp.classList.add('high-roll');setTimeout(()=>dp.classList.remove('high-roll'),700);}
- await sleep(DIE_HOLD_MS);dp.hidden=true}
+ $('diceResult').innerHTML=result||'';fd.querySelectorAll('.dice-sub').forEach(e=>e.hidden=false);$('diceDetail').innerHTML=note;sound('land');if(attackNatural===5||attackNatural===6){sound('highRoll',.11);dp.classList.add('high-roll');setTimeout(()=>dp.classList.remove('high-roll'),700);}
+ await sleep(hold);dp.hidden=true}
 const heroDamageText=(n,w=heroWeapon())=>n===1?'<span class="die-chip">1</span> <span class="op">·</span> <b class="tot miss">ERROU</b>':diceSum(n,[[heroDamageBonus(),'FOR'],[w===WEAPONS.axe&&n===6&&heroStr()>=2?2:0,'MACHADO'],[heroType()==='zeno'&&(state.hero.veteranAtk||n>=5)?1:0,'VETERANO']]);
 async function heroAttack(target,advantage){const hero=state.hero,w=heroWeapon();
  if(w.kind==='ranged'&&heroDex()<(w===WEAPONS.short_bow?2:3)){log(`${heroName()} não possui DES suficiente para usar ${w.name} à distância.`,'warn');showToast('DESTREZA INSUFICIENTE',true);return;}
