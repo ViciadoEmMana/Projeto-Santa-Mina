@@ -115,7 +115,7 @@ assert.ok(!chapterStart.includes('state.hero.usedReroll=false'), 'Mestre das Arm
 assert.ok(!chapterStart.includes('state.hero.usedWall=false'), 'Muralha não reinicia sem descanso');
 assert.ok(chapterStart.includes('state.hero.usedSword=false'), 'Espada reinicia no próximo combate');
 assert.ok(chapterStart.includes('state.hero.usedStaff=false'), 'Bastão reinicia no próximo combate');
-assert.ok(html.includes("for(const id of ['usedReroll','usedWall'])"), 'descanso longo só recupera habilidades de classe');
+assert.ok(html.includes("for(const id of ['usedReroll','usedWall','usedDodge'])"), 'descanso longo recupera habilidades de classe inclusive Esquiva');
 assert.ok(html.includes("e.key<=String(cards.length)"),'tecla 6 usa a sexta carta');
 assert.ok(html.includes("if(target===hero&&heroShield()&&shieldTriggered)"),'animação apenas se escudo equipado ativar no alvo');
 assert.ok(html.includes("await playAnim(hero,'defend',620,1)"),'escudo executa animação de defesa e espera sua conclusão');
