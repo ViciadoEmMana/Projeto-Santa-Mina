@@ -61,7 +61,7 @@ const enemyBonusCode=html.match(/const enemyDamageStat=enemy=>[^;]+;/)?.[0];
 assert.ok(enemyBonusCode,'bônus é calculado segundo a arma');
 const combatStats=vm.createContext({});
 vm.runInContext(enemyBonusCode,combatStats);
-const stat=combatStats.enemyDamageStat;
+const stat=vm.runInContext('enemyDamageStat',combatStats);
 assert.equal(stat({ranged:true,count:1,dex:2,for:0}),2,'arco usa DES');
 assert.equal(stat({ranged:false,count:2,dex:2,for:0}),2,'duas facas usam DES uma vez');
 assert.equal(stat({ranged:false,count:1,dex:1,for:2}),2,'porrete/espada/gancho usam FOR');
