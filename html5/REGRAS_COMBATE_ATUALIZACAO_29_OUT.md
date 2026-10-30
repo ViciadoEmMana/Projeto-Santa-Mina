@@ -31,3 +31,9 @@ Origem oficial: `html5/principal/index.html`; publicar sempre em https://viciado
 O equipamento Escudo de Madeira e Ferro verifica **cada resultado efetivo** do ataque de duas facas (2d4). Se **qualquer** faca tirar **2 ou 3**, a Defesa do herói recebe **+2 uma única vez durante toda a ação**, mesmo se ambas rolarem 2 ou 3. A Defesa é descontada do dano bruto total já somado das facas, e não separadamente de cada golpe.
 
 Exemplos com Brokk a 14 PV, sem Defender: [1,4] → Defesa 1 (sem gatilho); [1,2] → Defesa 3; [2,3] → Defesa 3, nunca 5; [3,3] → Defesa 3. Com Defender e [2,3], Defesa total 5 = Pele 1 + Defender 2 + Escudo 2.
+
+## Regra de dano dos inimigos por arma (atualização)
+
+O bônus de dano não depende mais do campo numérico fixo de cada monstro: é derivado do atributo aplicável à arma. **Arcos e duas facas somam Destreza; espada, porrete e arma de impacto/gancho somam Força.** Um ataque normal causa o valor efetivo do dado + o atributo. As duas facas continuam rolando dois dados independentes; cada 1 erra, e DES é adicionada uma só vez se ao menos uma acertar.
+
+**Goblin Arqueiro:** 1d6 + DES 2, sem o antigo modificador −1. Dado 4 → 6 dano bruto; contra Brokk com Pele de Rocha +1, escudo que não ativou, dano final 5. O escudo continua ativando com 2 ou 3 do arco, quando aplicável.
