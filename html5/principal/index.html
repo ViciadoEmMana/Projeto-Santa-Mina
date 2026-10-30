@@ -367,9 +367,9 @@ kbd{font:inherit;font-size:.9em;padding:1px 6px;border:2px solid var(--plate-lin
       <div class="menu-sigil">O COVIL DE TRIPA SECA</div>
       <p>Uma caravana desapareceu. Na mata, rastros levam a um covil onde ninguém deveria entrar sozinho.</p>
       <div class="menu-buttons"><button id="newGameBtn" class="btn-primary">NOVA JORNADA</button><button id="continueBtn" class="btn-secondary" hidden>CONTINUAR JORNADA</button><button id="chapterTestBtn" class="btn-secondary">TESTAR UM CAPÍTULO</button><button id="menuRulesBtn" class="btn-quiet">COMO JOGAR</button></div>
-      <div class="hero-selector"><label for="heroChoice">ESCOLHA SEU HERÓI</label><select id="heroChoice" aria-label="Escolher herói"><option value="brokk">Brokk Pedraférrea · Anão Guerreiro</option><option value="zeno">Zeno · Humano Guerreiro</option></select><div id="heroChoiceInfo" class="hero-choice-info">Brokk: machado, Pele de Rocha e Firmeza de Rocha.</div></div><div class="edition-hint">Versão de laboratório · escolha o herói antes de iniciar ou testar um capítulo.</div>
+      <div class="hero-selector"><label for="heroChoice">ESCOLHA SEU HERÓI</label><select id="heroChoice" aria-label="Escolher herói"><option value="brokk">Brokk Pedraférrea · Anão Guerreiro</option><option value="zeno">Zeno · Humano Guerreiro</option><option value="halfling">Pequenino · Ladino (teste)</option></select><div id="heroChoiceInfo" class="hero-choice-info">Brokk: machado, Pele de Rocha e Firmeza de Rocha.</div></div><div class="edition-hint">Versão de laboratório · escolha o herói antes de iniciar ou testar um capítulo.</div>
     </div>
-    <div class="menu-bottom">CONTROLES &nbsp; <kbd>1–5</kbd> cartas · <kbd>ESC</kbd> cancelar · <kbd>ENTER</kbd> encerrar turno<br><small>Protótipo de testes · Arte pixelada provisória original · Regras baseadas no Documento Mestre Santa Mina 3.0</small></div>
+    <div class="menu-bottom">CONTROLES &nbsp; <kbd>1–7</kbd> cartas · <kbd>ESC</kbd> cancelar · <kbd>ENTER</kbd> encerrar turno<br><small>Protótipo de testes · Arte pixelada provisória original · Regras baseadas no Documento Mestre Santa Mina 3.0</small></div>
   </main>
 
   <main id="gameScreen" class="game-screen" hidden>
@@ -454,13 +454,13 @@ const chapters=[
  {title:'O Covil de Tripa Seca',tag:'O ÚLTIMO COMBATE',location:'Entrada da masmorra · Covil',background:'covil',enemies:['tripa_seca','bow_goblin','club_goblin'],description:'Tripa Seca lidera um goblin de porrete, enquanto um arqueiro protege a retaguarda do covil.'}
 ];
 const monsters={
- archer_bandit:{name:'Bandido Arqueiro',sprite:'bandit_archer',hp:6,def:0,dex:1,for:1,ap:3,die:6,count:1,damageStat:'dex',ranged:true,loot:null},
- club_bandit:{name:'Bandido do Porrete',sprite:'bandit_club',hp:8,def:0,dex:1,for:1,weaponPassive:'club',ap:3,die:6,count:1,bonus:1,ranged:false,loot:null},
- club_goblin:{name:'Goblin do Porrete',sprite:'goblin_club',hp:6,def:0,dex:1,for:1,ap:3,die:6,count:1,bonus:1,ranged:false,weaponPassive:'club',loot:{item:'Porrete gasto',gold:2}},
- scrap_goblin:{name:'Goblin Sucata',sprite:'goblin_scrap',hp:6,def:2,dex:0,for:2,ap:3,die:4,count:1,bonus:2,ranged:false,loot:{item:'Tampa de ferro',gold:2}},
- bow_goblin:{name:'Goblin Tiro Certo',sprite:'goblin_archer',hp:5,def:0,dex:2,for:0,ap:3,die:6,count:1,bonus:2,ranged:true,loot:{item:'Arco gasto',gold:2}},
- knife_goblin:{name:'Goblin Faca Cega',sprite:'goblin_knife',hp:6,def:0,dex:2,for:0,ap:3,die:4,count:2,bonus:0,ranged:false,freeMove:1,loot:{item:'Facas cegas',gold:2}},
- tripa_seca:{name:'Tripa Seca',sprite:'tripa_seca',hp:13,def:2,dex:2,for:2,weaponPassive:'sword',ap:4,die:6,count:1,bonus:2,ranged:false,boss:true,loot:{item:'Escudo de madeira e ferro',gold:7}}
+ archer_bandit:{name:'Bandido Arqueiro',sprite:'bandit_archer',size:'medium',hp:6,def:0,dex:1,for:1,ap:3,die:6,count:1,damageStat:'dex',ranged:true,loot:null},
+ club_bandit:{name:'Bandido do Porrete',sprite:'bandit_club',size:'medium',hp:8,def:0,dex:1,for:1,weaponPassive:'club',ap:3,die:6,count:1,bonus:1,ranged:false,loot:null},
+ club_goblin:{name:'Goblin do Porrete',sprite:'goblin_club',size:'small',hp:6,def:0,dex:1,for:1,ap:3,die:6,count:1,bonus:1,ranged:false,weaponPassive:'club',loot:{item:'Porrete gasto',gold:2}},
+ scrap_goblin:{name:'Goblin Sucata',sprite:'goblin_scrap',size:'small',hp:6,def:2,dex:0,for:2,ap:3,die:4,count:1,bonus:2,ranged:false,loot:{item:'Tampa de ferro',gold:2}},
+ bow_goblin:{name:'Goblin Tiro Certo',sprite:'goblin_archer',size:'small',hp:5,def:0,dex:2,for:0,ap:3,die:6,count:1,bonus:2,ranged:true,loot:{item:'Arco gasto',gold:2}},
+ knife_goblin:{name:'Goblin Faca Cega',sprite:'goblin_knife',size:'small',hp:6,def:0,dex:2,for:0,ap:3,die:4,count:2,bonus:0,ranged:false,freeMove:1,loot:{item:'Facas cegas',gold:2}},
+ tripa_seca:{name:'Tripa Seca',sprite:'tripa_seca',size:'large',hp:13,def:2,dex:2,for:2,weaponPassive:'sword',ap:4,die:6,count:1,bonus:2,ranged:false,boss:true,loot:{item:'Escudo de madeira e ferro',gold:7}}
 };
 // Dano inimigo por arma: arcos e facas usam DES; armas de impacto, gancho e espada usam FOR.
 const enemyDamageStat=enemy=>(enemy.damageStat==='dex'||enemy.ranged||enemy.count>1)?enemy.dex:enemy.for;
@@ -470,7 +470,8 @@ const cards=[
  {id:'move',label:'Mover',cost:2,art:'♞',desc:'1 casa, apenas ortogonal'},
  {id:'run',label:'Correr',cost:3,art:'➶',desc:'Até 2 casas, sem atravessar'},
  {id:'advantage',label:'Vantagem',cost:5,art:'✦',desc:'Ataque com 2 dados, vale o maior'},
- {id:'potion',label:'Poção de Vida',cost:1,art:'♥',desc:'Consome 1 poção e cura 1d6 + 2 PV'}
+ {id:'potion',label:'Poção de Vida',cost:1,art:'♥',desc:'Consome 1 poção e cura 1d6 + 2 PV'},
+ {id:'slip',label:'Ninguém me pega',cost:0,art:'✦',desc:'DES CD 12; uma tentativa por turno contra alvo Médio ou Grande'}
 ];
 const POTION_NAME='Poção de Vida';
 const ICONS={
@@ -489,7 +490,8 @@ function pixIcon(rows,map={}){const w=rows[0].length,h=rows.length;let s='';rows
 const key='santamina_html5_test_v1';
 const HEROES={
  brokk:{name:'Brokk',fullName:'Brokk Pedraférrea',race:'ANÃO',weapon:'Machado de Ferro',weaponNote:'1d6 + FOR · natural 6: +2 dano',sprite:'brokk',dex:1,wis:1,con:3,str:3},
- zeno:{name:'Zeno',fullName:'Zeno',race:'HUMANO',weapon:'Espada de Ferro',weaponNote:'1d6 + FOR · rerrola erro uma vez por luta; Veterano: 1º 5+ concede +1 ataque; 2º 5+ concede +1 Defesa (até fim da luta)',sprite:'zeno',dex:1,wis:1,con:3,str:3}
+ zeno:{name:'Zeno',fullName:'Zeno',race:'HUMANO',weapon:'Espada de Ferro',weaponNote:'1d6 + FOR · rerrola erro uma vez por luta; Veterano: 1º 5+ concede +1 ataque; 2º 5+ concede +1 Defesa (até fim da luta)',sprite:'zeno',dex:1,wis:1,con:3,str:3},
+ halfling:{name:'Pequenino',fullName:'Pequenino Ladino',race:'PEQUENINO · LADINO',weapon:'Adaga de Ferro',weaponNote:'1d6 + DES · Ataque por Trás +1d6 se iniciativa superior',sprite:'halfling',dex:3,wis:2,con:2,str:1,int:1,cha:1}
 };
 // Catálogo oficial para testes. Troca de equipamento apenas antes do combate.
 const WEAPONS={
@@ -505,23 +507,23 @@ const WEAPONS={
  long_bow:{name:'Arco Longo',rarity:'Comum',hands:2,die:8,price:6,kind:'ranged',desc:'1d8. Exige DES >= 3; desvantagem contra adjacente.'}
 };
 const SHIELD={name:'Escudo de Madeira e Ferro',hands:1,price:3,def:2,trigger:[2,3],dexPenalty:1,movePenalty:1};
-const heroWeapon=()=>WEAPONS[state?.hero?.weaponId]||WEAPONS[heroType()==='zeno'?'sword':'axe'];
+const heroWeapon=()=>WEAPONS[state?.hero?.weaponId]||WEAPONS[heroType()==='zeno'?'sword':heroType()==='halfling'?'dagger':'axe'];
 const heroShield=()=>!!state?.hero?.shieldEquipped && heroWeapon().hands===1;
 const heroStr=()=>heroInfo().str;
-const heroDex=()=>heroInfo().dex+(heroShield()?0:1); // fichas atuais já registram DES com escudo (-1).
+const heroDex=()=>heroInfo().dex+(heroType()==='halfling'?0:(heroShield()?0:1)); // fichas atuais já registram DES com escudo (-1).
 const meets=(v)=>heroStr()>=v||heroDex()>=v;
-const heroDamageBonus=()=>heroWeapon().kind==='ranged'?heroDex():heroStr();
+const heroDamageBonus=()=>heroWeapon().kind==='ranged'||heroWeapon()===WEAPONS.dagger?heroDex():heroStr();
 const heroReach=()=>heroWeapon().kind==='ranged'?99:(heroWeapon().reach||1);
 const inHeroRange=(a,b)=>heroWeapon().kind==='ranged'?a.r!==b.r||a.c!==b.c:Math.max(Math.abs(a.r-b.r),Math.abs(a.c-b.c))<=heroReach();
-const initWeaponBonus=()=>heroWeapon()===WEAPONS.dagger?1+(heroDex()>=3?1:0):0;
+const initWeaponBonus=()=>heroWeapon()===WEAPONS.dagger?(heroType()==='halfling'?1:1+(heroDex()>=3?1:0)):0;
 function equipTestWeapon(id){if(!WEAPONS[id]||!state||!['placement','interlude'].includes(state.phase))return;state.hero.weaponId=id;state.hero.shieldEquipped=WEAPONS[id].hands===1;state.hero.usedSword=false;state.hero.usedStaff=false;state.hero.knockdown=false;log(`Equipamento de teste: <strong>${WEAPONS[id].name}</strong>. ${WEAPONS[id].hands===2?'Escudo guardado.':'Escudo equipado.'}`,'good');render();if(state.phase==='interlude')renderInterlude();}
-const heroType=()=>state?.hero?.kind==='zeno'?'zeno':'brokk';
+const heroType=()=>state?.hero?.kind==='zeno'?'zeno':state?.hero?.kind==='halfling'?'halfling':'brokk';
 const heroInfo=()=>HEROES[heroType()];
 const heroName=()=>heroInfo().name;
 const heroFullName=()=>heroInfo().fullName;
-function refreshHeroSelect(){const el=$('heroChoice');if(!el)return;$('heroChoiceInfo').textContent=el.value==='zeno'?'Zeno: espada, Veterano de Batalha: 1º dado 5+ concede +1 ataque; 2º dado 5+ concede +1 Defesa até fim da luta.':'Brokk: machado, Pele de Rocha e Firmeza de Rocha.'}
+function refreshHeroSelect(){const el=$('heroChoice');if(!el)return;$('heroChoiceInfo').textContent=el.value==='halfling'?'Pequenino Ladino: 12 PV, DES +3, adaga, Sorte Inata, Esquiva, Ataque por Trás e Ninguém me pega. Arte provisória.':el.value==='zeno'?'Zeno: espada e Veterano de Batalha.':'Brokk: machado, Pele de Rocha e Firmeza de Rocha.'}
 $('heroChoice').addEventListener('change',refreshHeroSelect);refreshHeroSelect();
-function initialJourney(kind=$('heroChoice').value){return {isTest:false,chapterIndex:0,hero:{kind:kind==='zeno'?'zeno':'brokk',hp:14,maxHp:14,tempHp:0,ap:5,defending:false,usedReroll:false,usedSword:false,usedStaff:false,weaponId:kind==='zeno'?'sword':'axe',shieldEquipped:true,usedWall:false,wallDebt:0,veteranAtk:false,veteranDef:false,evaded:false,knocked:false,movedThisTurn:false,r:-1,c:-1,init:0},inventory:{'Pão de queijo':2,'Caldo de ovo':1,'Poção de Vida':1},gold:0,lootCollected:[],checkpoint:null,completed:false};}
+function initialJourney(kind=$('heroChoice').value){return {isTest:false,chapterIndex:0,hero:{kind:kind==='halfling'?'halfling':kind==='zeno'?'zeno':'brokk',hp:kind==='halfling'?12:14,maxHp:kind==='halfling'?12:14,tempHp:0,ap:5,defending:false,usedReroll:false,usedSword:false,usedStaff:false,weaponId:kind==='halfling'?'dagger':kind==='zeno'?'sword':'axe',shieldEquipped:kind!=='halfling',usedWall:false,wallDebt:0,veteranAtk:false,veteranDef:false,usedLuck:false,usedDodge:false,usedBackstabRound:0,usedSlipRound:0,evaded:false,knocked:false,movedThisTurn:false,r:-1,c:-1,init:0},inventory:{'Pão de queijo':2,'Caldo de ovo':1,'Poção de Vida':1},gold:0,lootCollected:[],checkpoint:null,completed:false};}
 function save(){if(!state||state.isTest)return;try{const afterVictory=state.phase==='victory'||state.phase==='interlude';const copy={chapterIndex:afterVictory?state.chapterIndex+1:state.chapterIndex,hero:{...state.hero,r:-1,c:-1,ap:5,defending:false,wallDebt:0,anim:null,mv:null,deathAt:null,visualFlash:0},inventory:state.inventory,gold:state.gold,lootCollected:state.lootCollected,completed:state.completed||(afterVictory&&state.chapterIndex===3)};localStorage.setItem(key,JSON.stringify(copy));$('continueBtn').hidden=copy.completed;}catch(e){console.warn('Salvamento local indisponível',e)}}
 function load(){try{return JSON.parse(localStorage.getItem(key)||'null')}catch{return null}}
 function setScreen(which){$('menuScreen').hidden=which!=='menu';$('gameScreen').hidden=which!=='game';$('menuBtn').hidden=which!=='game';layoutKey='';if(which==='menu'){toggleSheet(false);drawMenuScene()}}
@@ -529,7 +531,7 @@ function showMenu(){session++;busy=false;$('dicePanel').hidden=true;modalClose()
 function newGame(){state=initialJourney();startChapter()}
 function continueGame(){const s=load();if(!s||s.completed||s.chapterIndex>=chapters.length)return newGame();state={...initialJourney(s.hero?.kind||'brokk'),...s,hero:{...initialJourney(s.hero?.kind||'brokk').hero,...s.hero}};state.completed=false;startChapter()}
 function unitFactory(type){const m=monsters[type];return {id:`enemy${++nextUid}`,type,...m,maxHp:m.hp,hp:m.hp,r:-1,c:-1,init:0,alive:true,defending:false,apLeft:0,dirtyUsed:false,freeUsed:false,usedWeaponPassive:false,visualFlash:0};}
-function startChapter(){session++;$('dicePanel').hidden=true;modalClose();busy=false;const c=chapters[state.chapterIndex];state.enemies=c.enemies.map(unitFactory);state.phase='placement';state.hero.r=-1;state.hero.c=-1;state.hero.ap=5;state.hero.defending=false;state.hero.wallDebt=0;state.hero.anim=null;state.hero.mv=null;state.hero.deathAt=null;state.hero.veteranAtk=false;state.hero.veteranDef=false;state.hero.evaded=false;state.hero.knocked=false;state.hero.movedThisTurn=false;state.hero.usedSword=false;state.hero.usedStaff=false; // Equipamentos: 1 uso por combate, restaurados em cada novo encontro.
+function startChapter(){session++;$('dicePanel').hidden=true;modalClose();busy=false;const c=chapters[state.chapterIndex];state.enemies=c.enemies.map(unitFactory);state.phase='placement';state.hero.r=-1;state.hero.c=-1;state.hero.ap=5;state.hero.defending=false;state.hero.wallDebt=0;state.hero.anim=null;state.hero.mv=null;state.hero.deathAt=null;state.hero.veteranAtk=false;state.hero.veteranDef=false;state.hero.usedLuck=false;state.hero.usedBackstabRound=0;state.hero.usedSlipRound=0;state.hero.evaded=false;state.hero.knocked=false;state.hero.movedThisTurn=false;state.hero.usedSword=false;state.hero.usedStaff=false; // Equipamentos: 1 uso por combate, restaurados em cada novo encontro.
  // Habilidades de classe (Mestre das Armas e Muralha de Ferro) permanecem gastas até descanso.
 musicMood(1);state.chapterLoot=[];state.selected=null;state.round=1;state.order=[];state.cursor=-1;state.actor=null;state.log=[];state.hero.rawInit=roll(20);state.hero.init=state.hero.rawInit+heroDex()+initWeaponBonus();for(const enemy of state.enemies){enemy.rawInit=roll(20);enemy.init=enemy.rawInit+enemy.dex;}
  state.order=[state.hero,...state.enemies].sort((a,b)=>b.init-a.init || (a.id==='enemy'?0:1)-(b.id==='enemy'?0:1) || String(a.id||'hero').localeCompare(String(b.id||'hero')));
@@ -872,7 +874,7 @@ function updateTacticPreview(){
  top=Math.max(76,Math.min(top,innerHeight-hbox-110));
  el.style.left=Math.round(left)+'px';el.style.top=Math.round(top)+'px';
 }
-function render(){if(!state)return;const h=state.hero;const playerTurn=isHeroTurn();$('hpText').textContent=`${h.hp} / 14`;$('hpBar').style.width=`${100*h.hp/14}%`;$('tempHP').textContent=h.tempHp>0?`✧ +${h.tempHp} PV temporários`:' ';
+function render(){if(!state)return;const h=state.hero;const playerTurn=isHeroTurn();$('hpText').textContent=`${h.hp} / ${h.maxHp}`;$('hpBar').style.width=`${100*h.hp/h.maxHp}%`;$('tempHP').textContent=h.tempHp>0?`✧ +${h.tempHp} PV temporários`:' ';
  $('apText').textContent=`${h.ap} / 5`;$('apPips').innerHTML=Array.from({length:5},(_,i)=>`<i class="${i<h.ap?'on':''}"></i>`).join('');$('defText').textContent=(heroType()==='brokk'&&h.hp>7?1:0)+(h.defending?2:0)+(heroType()==='zeno'&&h.veteranDef?1:0);
  const equipLabel=document.querySelector('.drawer .equip-line b');if(equipLabel)equipLabel.textContent=heroWeapon().name;const equipNote=document.querySelector('.drawer .equip-line small');if(equipNote)equipNote.textContent=heroWeapon().desc;const shieldLabel=document.querySelectorAll('.drawer .equip-line b')[1];if(shieldLabel)shieldLabel.textContent=heroShield()?SHIELD.name:'Sem escudo (arma 2H)';const shieldNote=document.querySelectorAll('.drawer .equip-line small')[1];if(shieldNote)shieldNote.textContent=heroShield()?'+2 DEF se ataque natural 2 ou 3 · −1 DES · −1 movimento (FOR 3 anula movimento)':'Escudo incompatível com arma de duas mãos';
  $('skillsArea').innerHTML=`<div class="skill"><div><b>⚔ Mestre das Armas</b><small>Automático com natural 1–2; 1 vez por combate</small></div><span class="${h.usedReroll?'used':'ready'}">${h.usedReroll?'USADO':'PRONTO'}</span></div><div class="skill"><div><b>◈ Muralha de Ferro</b><small>Confirmação se fatal ou natural 5+; metade do dano · −1 PA</small></div><span class="${h.usedWall?'used':'ready'}">${h.usedWall?'USADO':'PRONTO'}</span></div>`;
@@ -964,6 +966,7 @@ const ANIM_CYCLE={idle:1700,walk:440,run:270};
 const GOBLIN={thigh:7,shin:8,torso:11,hipW:7,chestW:9.5,neck:1.5,headR:5,upper:8.5,fore:8,armW:3.1,legW:3.4,lean:.26,skin:'#86a64c',leather:'#5a3e26',boots:null,metal:'#a3a8a6',wood:'#7a4f2a',head:'goblin'};
 const HUMAN={thigh:11,shin:11,torso:17,hipW:9,chestW:12.5,neck:2,headR:5,upper:10,fore:9.5,armW:3.7,legW:4.3,lean:.03,skin:'#d29d76',leather:'#5e432c',boots:'#3a2c22',metal:'#bcc2c4',wood:'#7a4f2a',head:'hood'};
 const CHARS={
+ halfling:{...HUMAN,thigh:7,shin:7,torso:12,hipW:8,chestW:10,headR:5.8,skin:'#d3a884',hair:'#634428',cloth:'#44604e',armor:'#57473b',leather:'#513825',boots:'#302a25',head:'hood',weapon:'dagger',weaponArm:'far',shield:null},
  zeno:{...HUMAN,thigh:11,shin:11,torso:17,hipW:9.5,chestW:13,headR:5.5,skin:'#e1b392',hair:'#cdd4d6',hood:'#cdd4d6',cloth:'#315a3d',armor:'#8f9da5',metal:'#c7d0d5',leather:'#654833',boots:'#3a4147',head:'hood',weapon:'sword',weaponArm:'far',shield:'round'},
  brokk:{thigh:7,shin:6.5,torso:14,hipW:11.5,chestW:16,neck:1,headR:5.6,upper:7.5,fore:7,armW:4.8,legW:5.4,lean:.04,skin:'#e2a985',hair:'#c8642c',cloth:'#3d6f93',armor:'#7f8d99',leather:'#6b4a2e',boots:'#4a3426',metal:'#c9d1d6',wood:'#8a5a32',head:'helmet',beard:true,weapon:'axe',weaponArm:'far',shield:'round'},
  goblin_club:{...GOBLIN,cloth:'#7a5a3a',weapon:'club',weaponArm:'near'},
