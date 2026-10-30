@@ -103,7 +103,7 @@ assert.ok(html.includes("if(inCombat){state.hero.ap-=1"),'custo da poção em co
 assert.ok(html.includes("const face=roll(6),heal=Math.min(state.hero.maxHp-state.hero.hp,face+2)"),'cura 1d6+2 com limite de PV');
 assert.ok(html.includes("state.inventory[POTION_NAME]--"),'consome uma única poção');
 assert.ok(html.includes("if(inCombat)await rollDice"),'exibe a rolagem de cura durante o combate');
-assert.ok(html.includes("if(inCombat){busy=false;autoEndIfDone();}else renderInterlude()"),'uso no descanso não consome PA');
+assert.ok(html.includes("if(inCombat){busy=false;render();autoEndIfDone();}else renderInterlude()"),'descanso não consome PA e combate redesenha após animação');
 assert.ok(html.includes("state.chapterIndex===2){state.enemies=[]"),'sala vazia antes da fase do chefe');
 assert.ok(html.includes("title:safeRoom?'Sala vazia — antes do chefe'"),'modal da sala segura');
 assert.ok(html.includes("disabled:!canUsePotion(),click:()=>drinkPotion(false)"),'poção pode ser usada entre encontros');
