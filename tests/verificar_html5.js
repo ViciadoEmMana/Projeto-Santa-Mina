@@ -115,4 +115,9 @@ assert.ok(!chapterStart.includes('state.hero.usedReroll=false'), 'Mestre das Arm
 assert.ok(!chapterStart.includes('state.hero.usedWall=false'), 'Muralha não reinicia sem descanso');
 assert.ok(!chapterStart.includes('state.hero.usedSword=false'), 'Espada não reinicia sem descanso');
 assert.ok(html.includes("e.key<=String(cards.length)"),'tecla 6 usa a sexta carta');
-console.log('HTML validado: sala segura, poção e gestão de habilidades sem reset entre encontros.');
+assert.ok(html.includes("if(target===hero&&heroShield()&&shieldTriggered)"),'animação apenas se escudo equipado ativar no alvo');
+assert.ok(html.includes("await playAnim(hero,'defend',620,1)"),'escudo executa animação de defesa e espera sua conclusão');
+assert.ok(html.includes("showToast('ESCUDO ATIVADO · +2 DEFESA'"),'feedback claro da ativação');
+assert.ok(html.includes("const shieldTriggered=attackNaturals.some(v=>v===2||v===3)"),'gatilho do escudo considera ambas as facas sem empilhar');
+assert.ok(html.includes("const df=defense(target,attackNaturals)"),'animação não altera o dano calculado');
+console.log('HTML validado: animação do escudo para ataques simples e facas, com bônus único.');
