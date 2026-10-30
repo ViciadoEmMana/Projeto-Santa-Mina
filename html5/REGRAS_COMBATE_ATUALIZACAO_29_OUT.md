@@ -37,3 +37,11 @@ Exemplos com Brokk a 14 PV, sem Defender: [1,4] → Defesa 1 (sem gatilho); [1,2
 O bônus de dano não depende mais do campo numérico fixo de cada monstro: é derivado do atributo aplicável à arma. **Arcos e duas facas somam Destreza; espada, porrete e arma de impacto/gancho somam Força.** Um ataque normal causa o valor efetivo do dado + o atributo. As duas facas continuam rolando dois dados independentes; cada 1 erra, e DES é adicionada uma só vez se ao menos uma acertar.
 
 **Goblin Arqueiro:** 1d6 + DES 2, sem o antigo modificador −1. Dado 4 → 6 dano bruto; contra Brokk com Pele de Rocha +1, escudo que não ativou, dano final 5. O escudo continua ativando com 2 ou 3 do arco, quando aplicável.
+
+## Veterano de Batalha — Zeno (novo talento)
+
+- **1º resultado natural 5 ou mais em um dado de ataque:** recebe **+1 de ataque**, aplicado como **+1 de dano** pelo sistema de combate atual, até o final da luta. O bônus já vale para o ataque que o ativou.
+- **2º resultado natural 5 ou mais em um ataque posterior:** recebe **+1 Defesa** até o final da luta. Esse bônus também passa a valer imediatamente quando a segunda ativação acontece.
+- As duas melhorias são permanentes somente durante o combate e **não acumulam novamente** com novas rolagens 5 ou 6.
+- A antiga condição de obter +1 Defesa ao bloquear todo o dano foi substituída pela segunda rolagem 5+.
+- Os dois estados reiniciam no início de cada capítulo/combate.
