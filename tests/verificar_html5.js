@@ -103,7 +103,7 @@ assert.ok(html.includes("if(inCombat){state.hero.ap-=1"),'custo da poção em co
 assert.ok(html.includes("const face=roll(6),heal=Math.min(state.hero.maxHp-state.hero.hp,face+2)"),'cura 1d6+2 com limite de PV');
 assert.ok(html.includes("state.inventory[POTION_NAME]--"),'consome uma única poção');
 assert.ok(html.includes("if(inCombat)await rollDice"),'exibe a rolagem de cura durante o combate');
-assert.ok(html.includes("if(inCombat){busy=false;autoEndIfDone();}else renderInterlude()"),'uso no descanso não consome PA');
+assert.ok(html.includes("if(inCombat){busy=false;render();autoEndIfDone();}else renderInterlude()"),'descanso não consome PA e combate redesenha após animação');
 assert.ok(html.includes("state.chapterIndex===2){state.enemies=[]"),'sala vazia antes da fase do chefe');
 assert.ok(html.includes("title:safeRoom?'Sala vazia — antes do chefe'"),'modal da sala segura');
 assert.ok(html.includes("disabled:!canUsePotion(),click:()=>drinkPotion(false)"),'poção pode ser usada entre encontros');
@@ -122,4 +122,24 @@ assert.ok(html.includes("await playAnim(hero,'defend',620,1)"),'escudo executa a
 assert.ok(html.includes("showToast('ESCUDO ATIVADO · +2 DEFESA'"),'feedback claro da ativação');
 assert.ok(html.includes("const shieldTriggered=attackNaturals.some(v=>v===2||v===3)"),'gatilho do escudo considera ambas as facas sem empilhar');
 assert.ok(html.includes("const df=defense(target,attackNaturals)"),'animação não altera o dano calculado');
+// Regressão: 2 PA -> beber poção por 1 PA -> Defender continua habilitado com 1 PA.
+const potionSource=html.match(/async function drinkPotion\(inCombat\)\{[\s\S]*?\n\}/)?.[0];
+assert.ok(potionSource,'função de uso da poção encontrada');
+const turn={phase:'combat',hero:{ap:2,hp:7,maxHp:14,defending:false},inventory:{'Poção de Vida':1}};
+const snapshots=[],fakeButtons=[];
+const testEnv={state:turn,busy:false,POTION_NAME:'Poção de Vida',roll:()=>4,canUsePotion:()=>true,
+ showToast:()=>{},save:()=>{},log:()=>{},diceSum:()=>'',rollDice:async()=>{},
+ render:()=>snapshots.push({busy:testEnv.busy,ap:turn.hero.ap,defenderEnabled:!testEnv.busy&&turn.hero.ap>=1&&!turn.hero.defending}),
+ autoEndIfDone:()=>fakeButtons.push('autoEndIfDone')};
+testEnv.state.actor=turn.hero;vm.createContext(testEnv);
+vm.runInContext(potionSource,testEnv);
+(async()=>{await testEnv.drinkPotion(true);
+ assert.equal(turn.hero.ap,1,'depois da poção sobrou 1 PA');
+ assert.equal(turn.hero.hp,13,'poção recuperou 4+2 PV');
+ assert.equal(turn.inventory['Poção de Vida'],0,'poção consumida');
+ assert.equal(snapshots.at(-1).busy,false,'interface redesenhada com animação encerrada');
+ assert.equal(snapshots.at(-1).defenderEnabled,true,'Defender volta a ficar clicável com 1 PA');
+ assert.equal(fakeButtons.length,1,'verificação automática de turno continua');
+ console.log('Regressão validada: poção com 2 PA preserva Defender disponível com 1 PA.');
+})().catch(e=>{console.error(e);process.exitCode=1;});
 console.log('HTML validado: animação do escudo para ataques simples e facas, com bônus único.');

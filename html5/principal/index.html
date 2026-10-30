@@ -573,7 +573,7 @@ async function drinkPotion(inCombat){
  state.inventory[POTION_NAME]--;const face=roll(6),heal=Math.min(state.hero.maxHp-state.hero.hp,face+2);state.hero.hp+=heal;
  if(inCombat)await rollDice({title:'POÇÃO DE VIDA · CURA',groups:[{sides:6,faces:[face]}],result:diceSum(face,[[2,'POÇÃO']]),note:`1d6 + 2 = ${face+2}; recuperou ${heal} PV (limite ${state.hero.maxHp} PV).`});
  log(`<strong>POÇÃO DE VIDA:</strong> dado ${face} + 2 = ${face+2}; recuperou ${heal} PV${inCombat?' (−1 PA)':''}.`,'good');showToast(`POÇÃO DE VIDA · +${heal} PV`);save();render();
- if(inCombat){busy=false;autoEndIfDone();}else renderInterlude();return true;
+ if(inCombat){busy=false;render();autoEndIfDone();}else renderInterlude();return true;
 }
 function setSelection(card){if(!isHeroTurn())return;const info=cards.find(v=>v.id===card);if(!info||state.hero.ap<info.cost){showToast('PA INSUFICIENTE',true);return}if((card==='move'||card==='run')&&state.hero.movedThisTurn){showToast('JÁ SE MOVEU NESTE TURNO',true);return}if(card==='defend'&&state.hero.defending){showToast('JÁ ESTÁ DEFENDENDO',true);return}if(card==='potion'){drinkPotion(true);return;}state.selected=card;if(card!=='defend')sound('select');if(card==='defend'){state.hero.ap-=1;state.hero.defending=true;playAnim(state.hero,'defend',380);log(`<strong>${heroName()} defendeu:</strong> +2 Defesa até seu próximo turno.`,'good');sound('block');showToast(`${heroName().toUpperCase()} DEFENDEU · +2 DEFESA`);state.selected=null;}render();if(card==='defend')autoEndIfDone()}
 async function clickCell(r,c){if(!state||modalActive)return;if(state.phase==='placement'){placeHero(r,c);return}if(!isHeroTurn()||busy)return;const a=cards.find(x=>x.id===state.selected);if(!a)return;
