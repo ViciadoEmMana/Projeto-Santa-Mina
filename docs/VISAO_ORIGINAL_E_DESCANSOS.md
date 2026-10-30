@@ -29,3 +29,10 @@ Princípios:
 O pedido de recuperar uma habilidade **a cada turno** na masmorra não foi ativado **durante o combate**: isso mudaria o papel de habilidades de uso limitado e permitiria ciclos de recuperação na frente dos inimigos. É necessário decidir se descanso curto é uma carta **durante combate com custo de PA e risco**, ou uma **atividade apenas após o fim dos encontros/em salas seguras**. Recomendação: segunda opção para evitar tornar Mestre das Armas e Muralha de Ferro quase infinitas.
 
 Esta documentação é a referência para futuras implementações HTML, Godot e livro de regras.
+
+## Sala segura e Poção de Vida (30/10/2026)
+
+- Depois de vencer o **capítulo 3**, antes da sala do chefe **Tripa Seca**, o jogador passa por uma **sala vazia e segura**, sem inimigos, onde pode realizar **descanso curto**. O descanso longo permanece proibido por ser masmorra.
+- O descanso curto é oferecido **apenas após o término do combate** nos pontos de transição seguros, nunca durante a rodada de combate. Consome uma provisão e recupera **uma única habilidade consumível escolhida**. Não é obrigatório: o personagem pode seguir diretamente ao chefe.
+- **Poção de Vida:** cura **1d6 + 2 PV** (3 a 8), sem ultrapassar os PV máximos, e consome uma unidade do inventário. No **combate**, é uma carta de **1 PA**, podendo ser usada durante o turno do personagem; em **intervalos seguros**, é utilizável sem gastar PA e independentemente da escolha de descanso. Não repõe habilidades, não substitui comida e não habilita descanso longo.
+- A versão HTML oferece **1 Poção de Vida inicial para testes**, com quantidade visível no botão da sala segura e disponibilidade conforme inventário e PV atuais. Futuramente, definir fontes de obtenção, custo e raridade para equilibrar o recurso.
