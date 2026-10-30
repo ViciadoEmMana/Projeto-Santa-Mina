@@ -89,8 +89,8 @@ assert.ok(html.includes("ATENÇÃO — MASMORRA: descanso longo proibido"),'avis
 assert.ok(html.includes("function recoverableSkills()"),'seleção das habilidades gastas');
 assert.ok(html.includes("if(h.usedReroll)out.push"),'Mestre das Armas recuperável');
 assert.ok(html.includes("if(h.usedWall)out.push"),'Muralha de Ferro recuperável');
-assert.ok(html.includes("if(h.usedSword&&w===WEAPONS.sword)"),'Espada recuperável');
-assert.ok(html.includes("if(h.usedStaff&&w===WEAPONS.staff)"),'Bastão recuperável');
+assert.ok(!html.includes("if(h.usedSword&&w===WEAPONS.sword)out.push"),'Espada não exige descanso');
+assert.ok(!html.includes("if(h.usedStaff&&w===WEAPONS.staff)out.push"),'Bastão não exige descanso');
 assert.ok(html.includes("state.hero[skillId]=false"),'descanso curto recupera somente habilidade escolhida');
 assert.ok(html.includes("state.restUsedAtInterlude=true"),'um único descanso por intervalo');
 assert.ok(html.includes("state.chapterIndex<2"),'descanso longo fora da masmorra');
@@ -110,10 +110,12 @@ assert.ok(html.includes("disabled:!canUsePotion(),click:()=>drinkPotion(false)")
 assert.ok(html.includes("function longRestAllowed(){return state.phase==='interlude'&&state.chapterIndex<2"),'descanso longo proibido na sala do chefe');
 for(let v=1;v<=6;v++){assert.equal(v+2,v+2,'cura no dado '+v);}
 const chapterStart=html.match(/function startChapter\(\)\{[\s\S]*?\n\s*state\.order=/)?.[0]||'';
-assert.ok(chapterStart.includes('Habilidades consumíveis permanecem gastas'), 'habilidades persistem entre salas');
+assert.ok(chapterStart.includes('Habilidades de classe (Mestre das Armas e Muralha de Ferro) permanecem gastas até descanso'), 'classe mantém usos entre salas');
 assert.ok(!chapterStart.includes('state.hero.usedReroll=false'), 'Mestre das Armas não reinicia sem descanso');
 assert.ok(!chapterStart.includes('state.hero.usedWall=false'), 'Muralha não reinicia sem descanso');
-assert.ok(!chapterStart.includes('state.hero.usedSword=false'), 'Espada não reinicia sem descanso');
+assert.ok(chapterStart.includes('state.hero.usedSword=false'), 'Espada reinicia no próximo combate');
+assert.ok(chapterStart.includes('state.hero.usedStaff=false'), 'Bastão reinicia no próximo combate');
+assert.ok(html.includes("for(const id of ['usedReroll','usedWall'])"), 'descanso longo só recupera habilidades de classe');
 assert.ok(html.includes("e.key<=String(cards.length)"),'tecla 6 usa a sexta carta');
 assert.ok(html.includes("if(target===hero&&heroShield()&&shieldTriggered)"),'animação apenas se escudo equipado ativar no alvo');
 assert.ok(html.includes("await playAnim(hero,'defend',620,1)"),'escudo executa animação de defesa e espera sua conclusão');
