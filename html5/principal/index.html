@@ -724,6 +724,14 @@ async function enemyAttack(enemy){const hero=state.hero;const adjacentOrth=orth(
  const base=enemy.count>1?strikes.reduce((a,b)=>a+b,0)+(strikes.length?enemyDamageStat(enemy):0):raw.reduce((a,b)=>a+b,0)+enemyDamageStat(enemy);
  // Um dado comum serve para acerto e dano; Defesa e reacoes sao descontadas depois.
  const df=defense(target,attackNaturals);let damage=Math.max(0,base-df);
+ // Reação VISUAL automática: cada ação de ataque que ativa o escudo anima a defesa uma vez,
+ // inclusive duas facas com ambos os dados 2/3. Não consome PA nem altera o cálculo.
+ if(target===hero&&heroShield()&&shieldTriggered){
+  log(`<strong>ESCUDO ATIVADO!</strong> ${heroName()} ergueu o escudo: +2 Defesa contra ${enemy.name}.`,'good');
+  showToast('ESCUDO ATIVADO · +2 DEFESA',false,850);sound('shieldBlock');puff(hero,'+2 ESCUDO');
+  await playAnim(hero,'defend',620,1);
+ }
+
  // Porrete de goblin e bandido: 6 natural aplica Derrubado mesmo se Defesa absorver o dano.
  // Brokk tem imunidade racial Firmeza de Rocha contra porrete 1d6.
  if(enemy.weaponPassive==='club'&&natural===6&&target===hero){if(heroType()==='brokk'){log('<strong>FIRMEZA DE ROCHA:</strong> Brokk resistiu ao Derrubado do porrete 1d6.','good');showToast('BROKK · IMUNE A DERRUBADO');puff(hero,'IMUNE');}else{hero.knocked=true;log(`<strong>PORRETE ATIVADO!</strong> ${enemy.name} derrubou ${heroName()} (natural 6): −1 PA no próximo turno; ataques contra ele têm vantagem até o fim desse turno.`,'warn');showToast('PORRETE · DERRUBADO! −1 PA',true);puff(hero,'DERRUBADO');}}if(target===hero&&heroWeapon()===WEAPONS.staff&&!hero.usedStaff&&meets(2)&&damage>0){hero.usedStaff=true;const before=damage;damage=Math.max(0,damage-2);log(`<strong>BASTÃO DE MADEIRA:</strong> bloqueou 2 dano (${before} → ${damage}), uma vez por luta.`,'good');showToast('BLOQUEIO DO BASTÃO!');sound('shieldBlock');}
