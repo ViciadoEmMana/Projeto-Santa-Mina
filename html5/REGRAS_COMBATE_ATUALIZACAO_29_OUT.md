@@ -45,3 +45,9 @@ O bônus de dano não depende mais do campo numérico fixo de cada monstro: é d
 - As duas melhorias são permanentes somente durante o combate e **não acumulam novamente** com novas rolagens 5 ou 6.
 - A antiga condição de obter +1 Defesa ao bloquear todo o dano foi substituída pela segunda rolagem 5+.
 - Os dois estados reiniciam no início de cada capítulo/combate.
+
+## Bandido Arqueiro — bônus de dano
+
+O Bandido Arqueiro possui DES +1 e utiliza arco 1d6. Seu dano bruto é **resultado efetivo do 1d6 + DES (+1)**, nunca apenas 1 fixo. O antigo campo `bonus:1` foi removido da ficha desse inimigo para evitar confusão: a fonte de verdade é o atributo Destreza.
+
+Exemplo com Brokk a 14 PV, sem Defender: dado 2 ⇒ 3 bruto − (Pele 1 + Escudo 2) = 0 dano; dado 3 ⇒ 4 bruto − 3 DEF = 1 dano; dado 4 ⇒ 5 bruto − Pele 1 = 4 dano. Arco adjacente continua sujeito a desvantagem e fogo amigo conforme regras existentes.
