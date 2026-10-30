@@ -454,7 +454,7 @@ const chapters=[
  {title:'O Covil de Tripa Seca',tag:'O ÚLTIMO COMBATE',location:'Entrada da masmorra · Covil',background:'covil',enemies:['tripa_seca','bow_goblin','club_goblin'],description:'Tripa Seca lidera um goblin de porrete, enquanto um arqueiro protege a retaguarda do covil.'}
 ];
 const monsters={
- archer_bandit:{name:'Bandido Arqueiro',sprite:'bandit_archer',hp:6,def:0,dex:1,for:1,ap:3,die:6,count:1,bonus:1,ranged:true,loot:null},
+ archer_bandit:{name:'Bandido Arqueiro',sprite:'bandit_archer',hp:6,def:0,dex:1,for:1,ap:3,die:6,count:1,damageStat:'dex',ranged:true,loot:null},
  club_bandit:{name:'Bandido do Porrete',sprite:'bandit_club',hp:8,def:0,dex:1,for:1,weaponPassive:'club',ap:3,die:6,count:1,bonus:1,ranged:false,loot:null},
  club_goblin:{name:'Goblin do Porrete',sprite:'goblin_club',hp:6,def:0,dex:1,for:1,ap:3,die:6,count:1,bonus:1,ranged:false,weaponPassive:'club',loot:{item:'Porrete gasto',gold:2}},
  scrap_goblin:{name:'Goblin Sucata',sprite:'goblin_scrap',hp:6,def:2,dex:0,for:2,ap:3,die:4,count:1,bonus:2,ranged:false,loot:{item:'Tampa de ferro',gold:2}},
@@ -463,7 +463,7 @@ const monsters={
  tripa_seca:{name:'Tripa Seca',sprite:'tripa_seca',hp:13,def:2,dex:2,for:2,weaponPassive:'sword',ap:4,die:6,count:1,bonus:2,ranged:false,boss:true,loot:{item:'Escudo de madeira e ferro',gold:7}}
 };
 // Dano inimigo por arma: arcos e facas usam DES; armas de impacto, gancho e espada usam FOR.
-const enemyDamageStat=enemy=>(enemy.ranged||enemy.count>1)?enemy.dex:enemy.for;
+const enemyDamageStat=enemy=>(enemy.damageStat==='dex'||enemy.ranged||enemy.count>1)?enemy.dex:enemy.for;
 const cards=[
  {id:'attack',label:'Ataque',cost:3,art:'⚔',desc:'Golpe com a arma equipada'},
  {id:'defend',label:'Defender',cost:1,art:'⛨',desc:'+2 Defesa até o próximo turno'},
@@ -702,7 +702,7 @@ async function enemyAttack(enemy){const hero=state.hero;const adjacentOrth=orth(
  const shieldTriggered=attackNaturals.some(v=>v===2||v===3); // Em duas facas, verifica AMBOS os golpes; escudo concede no máximo +2 por ação.
  const groups=[{label:rollMode==='max'?'VANTAGEM':rollMode==='min'?'DESVANTAGEM':enemy.count>1?'GOLPE 1':'ATAQUE',sides:enemy.die,faces:rolls,pick:rollMode}];
  if(extraRolls.length)groups.push({label:rollMode==='max'?'GOLPE 2 · VANTAGEM':rollMode==='min'?'GOLPE 2 · DESVANTAGEM':'GOLPE 2',sides:enemy.die,faces:extraRolls,pick:rollMode});
- await rollDice({title:`${enemy.name.toUpperCase()} ATACA`,tone:'enemy',groups,attackNatural:natural,result:enemy.count>1?(strikes.length?diceSum(strikes,[[enemyDamageStat(enemy),'DES']]):'<b class="tot miss">OS DOIS GOLPES ERRARAM</b>'):(missed?'<span class="die-chip">1</span> <span class="op">·</span> <b class="tot miss">ERROU</b>':diceSum(raw,[[enemyDamageStat(enemy),enemy.ranged?'DES':'FOR']])),note:[proneAdvantage?'Alvo Derrubado: vantagem.':'',bowDisadvantage?'Arco adjacente: desvantagem.':'',rollMode==='max'?'Vale o maior de cada rolagem.':'',rollMode==='min'?'Vale o menor de cada rolagem.':'',proneAdvantage&&bowDisadvantage?'Vantagem e desvantagem se anulam.':'',enemy.count>1?'Cada faca: 1 erra individualmente; DES/FOR soma uma vez se alguma acertar.':'',intercepted?`Dado ${natural}: fogo amigo!`:'',!intercepted&&shieldTriggered?(enemy.count>1?'Escudo: +2 DEF na ação inteira (não acumula entre facas).':'Escudo: +2 DEF neste golpe.') :'','Dano exibido antes de descontar a Defesa.'].filter(Boolean).join(' ')});
+ await rollDice({title:`${enemy.name.toUpperCase()} ATACA`,tone:'enemy',groups,attackNatural:natural,result:enemy.count>1?(strikes.length?diceSum(strikes,[[enemyDamageStat(enemy),'DES']]):'<b class="tot miss">OS DOIS GOLPES ERRARAM</b>'):(missed?'<span class="die-chip">1</span> <span class="op">·</span> <b class="tot miss">ERROU</b>':diceSum(raw,[[enemyDamageStat(enemy),enemy.ranged?'DES':'FOR']])),note:[proneAdvantage?'Alvo Derrubado: vantagem.':'',bowDisadvantage?'Arco adjacente: desvantagem.':'',rollMode==='max'?'Vale o maior de cada rolagem.':'',rollMode==='min'?'Vale o menor de cada rolagem.':'',proneAdvantage&&bowDisadvantage?'Vantagem e desvantagem se anulam.':'',enemy.count>1?'Cada faca: 1 erra individualmente; DES soma uma vez se alguma acertar.':'',intercepted?`Dado ${natural}: fogo amigo!`:'',!intercepted&&shieldTriggered?(enemy.count>1?'Escudo: +2 DEF na ação inteira (não acumula entre facas).':'Escudo: +2 DEF neste golpe.') :'','Dano exibido antes de descontar a Defesa.'].filter(Boolean).join(' ')});
 
  await playAnim(enemy,'attack',enemy.ranged?950:780,enemy.ranged?.6:.58);if(enemy.ranged)await shootArrow(enemy,intercepted||hero);
  let target=hero;if(intercepted){{target=intercepted;log(`<strong>FOGO AMIGO!</strong> Flecha de ${enemy.name} acertou ${target.name} (dado ${natural}).`,'warn');await announce('FOGO AMIGO!',true,900);}}
