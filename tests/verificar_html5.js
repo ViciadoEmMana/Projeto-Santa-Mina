@@ -122,4 +122,24 @@ assert.ok(html.includes("await playAnim(hero,'defend',620,1)"),'escudo executa a
 assert.ok(html.includes("showToast('ESCUDO ATIVADO · +2 DEFESA'"),'feedback claro da ativação');
 assert.ok(html.includes("const shieldTriggered=attackNaturals.some(v=>v===2||v===3)"),'gatilho do escudo considera ambas as facas sem empilhar');
 assert.ok(html.includes("const df=defense(target,attackNaturals)"),'animação não altera o dano calculado');
+// Regressão: 2 PA -> beber poção por 1 PA -> Defender continua habilitado com 1 PA.
+const potionSource=html.match(/async function drinkPotion\(inCombat\)\{[\s\S]*?\n\}/)?.[0];
+assert.ok(potionSource,'função de uso da poção encontrada');
+const turn={phase:'combat',hero:{ap:2,hp:7,maxHp:14,defending:false},inventory:{'Poção de Vida':1}};
+const snapshots=[],fakeButtons=[];
+const testEnv={state:turn,busy:false,POTION_NAME:'Poção de Vida',roll:()=>4,canUsePotion:()=>true,
+ showToast:()=>{},save:()=>{},log:()=>{},diceSum:()=>'',rollDice:async()=>{},
+ render:()=>snapshots.push({busy:testEnv.busy,ap:turn.hero.ap,defenderEnabled:!testEnv.busy&&turn.hero.ap>=1&&!turn.hero.defending}),
+ autoEndIfDone:()=>fakeButtons.push('autoEndIfDone')};
+testEnv.state.actor=turn.hero;vm.createContext(testEnv);
+vm.runInContext(potionSource,testEnv);
+(async()=>{await testEnv.drinkPotion(true);
+ assert.equal(turn.hero.ap,1,'depois da poção sobrou 1 PA');
+ assert.equal(turn.hero.hp,13,'poção recuperou 4+2 PV');
+ assert.equal(turn.inventory['Poção de Vida'],0,'poção consumida');
+ assert.equal(snapshots.at(-1).busy,false,'interface redesenhada com animação encerrada');
+ assert.equal(snapshots.at(-1).defenderEnabled,true,'Defender volta a ficar clicável com 1 PA');
+ assert.equal(fakeButtons.length,1,'verificação automática de turno continua');
+ console.log('Regressão validada: poção com 2 PA preserva Defender disponível com 1 PA.');
+})().catch(e=>{console.error(e);process.exitCode=1;});
 console.log('HTML validado: animação do escudo para ataques simples e facas, com bônus único.');
