@@ -551,7 +551,7 @@ function initialEnemyPosition(e,knowsHero){const preferred=e.ranged?[5,4]:[3];co
 function placeHero(r,c){if(state.phase!=='placement'||modalActive)return;const allowed=allowedStart().some(x=>x.r===r&&x.c===c);if(!allowed){showToast('POSIÇÃO NÃO PERMITIDA',true);return}state.hero.r=r;state.hero.c=c;for(const e of state.order){if(e===state.hero)continue;if(e.r===-1)initialEnemyPosition(e,true)}state.phase='combat';log(`<strong>${heroName()}</strong> assumiu a posição ${String.fromCharCode(65+r)}${c+1}.`,'good');render();showToast('O COMBATE COMEÇOU');sleep(800).then(advanceTurn)}
 function currentActor(){return state.order[state.cursor]||null}
 function isHeroTurn(){return state&&state.phase==='combat'&&state.actor===state.hero&&!busy&&!modalActive}
-function isCellValid(r,c){if(!isHeroTurn()||!state.selected)return false;if(state.selected==='move'||state.selected==='run'){if(state.hero.movedThisTurn)return false;const max=Math.max(0,(state.selected==='move'?1:2)-(heroShield()&&heroStr()<3?1:0));return max>0&&!!shortPath(state.hero,{r,c},max)}const target=occupied(r,c);return !!(target&&target!==state.hero&&target.alive&&inHeroRange(state.hero,target));}
+function isCellValid(r,c){if(!isHeroTurn()||!state.selected)return false;if(state.selected==='move'||state.selected==='run'){if(state.hero.movedThisTurn)return false;const max=Math.max(0,(state.selected==='move'?1:2)-(heroShield()&&heroStr()<3?1:0));return max>0&&!!shortPath(state.hero,{r,c},max)}const target=occupied(r,c);if(state.selected==='slip')return !!slipTarget(target);return !!(target&&target!==state.hero&&target.alive&&inHeroRange(state.hero,target));}
 function isMelee(a,b){return Math.max(Math.abs(a.r-b.r),Math.abs(a.c-b.c))<=1}
 function orth(a,b){return Math.abs(a.r-b.r)+Math.abs(a.c-b.c)}
 function neighbors(r,c){return [[r-1,c],[r+1,c],[r,c-1],[r,c+1]].filter(([rr,cc])=>rr>=0&&rr<3&&cc>=0&&cc<6)}
@@ -563,7 +563,7 @@ async function advanceTurn(){if(!state||state.phase!=='combat')return;if(!state.
  const actor=currentActor();state.actor=actor;if(actor===state.hero){state.hero.defending=false;state.hero.ap=clamp(5-state.hero.wallDebt,0,5);state.hero.wallDebt=0;state.hero.movedThisTurn=false;if(state.hero.knocked){state.hero.ap=Math.max(0,state.hero.ap-1);log(`<strong>DERRUBADO:</strong> ${heroName()} tem −1 PA neste turno (${state.hero.ap} PA). Ataques contra ele têm vantagem.`,'warn');showToast(`DERRUBADO · −1 PA`,true);puff(state.hero,'−1 PA');}state.selected='attack';busy=false;log(`<strong>Seu turno!</strong> ${state.hero.ap} pontos de ação disponíveis.`,'good');sound('turn');showToast(`SEU TURNO · ${heroName().toUpperCase()}`,false,1200);render();return}
  state.selected=null;busy=true;render();sound('turnEnemy');await announce(`TURNO DO OPONENTE · ${actor.name.toUpperCase()}`,true,1200);await enemyTurn(actor);if(state.phase==='combat')await sleep(700);if(state.phase==='combat')advanceTurn();}
 function clearKnockedAfterTurn(actor){if(actor?.knocked){actor.knocked=false;log(`<strong>${actor===state.hero?heroName():actor.name}</strong> se levantou: Derrubado terminou.`,'good');render();}}
-function heroCanAct(){const h=state.hero;return cards.some(c=>h.ap>=c.cost&&!(c.id==='defend'&&h.defending)&&(!['move','run'].includes(c.id)||!h.movedThisTurn)&&(c.id!=='potion'||canUsePotion()))}
+function heroCanAct(){const h=state.hero;return cards.some(c=>(c.id!=='slip'||canSlipAny())&&h.ap>=c.cost&&!(c.id==='defend'&&h.defending)&&(!['move','run'].includes(c.id)||!h.movedThisTurn)&&(c.id!=='potion'||canUsePotion()))}
 async function announce(msg,error=false,ms=900){showToast(msg,error,ms);await sleep(ms)}
 // Turno passa sozinho quando nenhuma carta útil cabe nos PA restantes.
 async function autoEndIfDone(){if(state.phase!=='combat'||state.actor!==state.hero||heroCanAct())return;busy=true;state.selected=null;render();await sleep(900);if(state.phase!=='combat'||state.actor!==state.hero)return;await announce('SEM PONTOS DE AÇÃO',false,1000);if(state.phase==='combat'&&state.actor===state.hero){clearKnockedAfterTurn(state.hero);advanceTurn()}}
@@ -577,7 +577,10 @@ async function drinkPotion(inCombat){
  log(`<strong>POÇÃO DE VIDA:</strong> dado ${face} + 2 = ${face+2}; recuperou ${heal} PV${inCombat?' (−1 PA)':''}.`,'good');showToast(`POÇÃO DE VIDA · +${heal} PV`);save();render();
  if(inCombat){busy=false;render();autoEndIfDone();}else renderInterlude();return true;
 }
-function setSelection(card){if(!isHeroTurn())return;const info=cards.find(v=>v.id===card);if(!info||state.hero.ap<info.cost){showToast('PA INSUFICIENTE',true);return}if((card==='move'||card==='run')&&state.hero.movedThisTurn){showToast('JÁ SE MOVEU NESTE TURNO',true);return}if(card==='defend'&&state.hero.defending){showToast('JÁ ESTÁ DEFENDENDO',true);return}if(card==='potion'){drinkPotion(true);return;}state.selected=card;if(card!=='defend')sound('select');if(card==='defend'){state.hero.ap-=1;state.hero.defending=true;playAnim(state.hero,'defend',380);log(`<strong>${heroName()} defendeu:</strong> +2 Defesa até seu próximo turno.`,'good');sound('block');showToast(`${heroName().toUpperCase()} DEFENDEU · +2 DEFESA`);state.selected=null;}render();if(card==='defend')autoEndIfDone()}
+function slipTarget(enemy){if(heroType()!=='halfling'||!enemy?.alive||!['medium','large'].includes(enemy.size)||state.hero.usedSlipRound===state.round)return null;const dr=enemy.r-state.hero.r,dc=enemy.c-state.hero.c;if(Math.abs(dr)+Math.abs(dc)!==1)return null;const r=enemy.r+dr,c=enemy.c+dc;return r>=0&&r<3&&c>=0&&c<6&&!occupied(r,c)?{r,c}:null;}
+function canSlipAny(){return state&&state.phase==='combat'&&heroType()==='halfling'&&state.enemies.some(e=>slipTarget(e));}
+async function attemptSlip(enemy){const destination=slipTarget(enemy);if(!destination){showToast('ALVO OU CASA INVÁLIDA',true);return;}state.hero.usedSlipRound=state.round;state.selected=null;busy=true;const n=roll(20),success=n+heroDex()>=12;await rollDice({title:'NINGUÉM ME PEGA · DES CD 12',groups:[{sides:20,faces:[n]}],result:diceSum(n,[[heroDex(),'DES']]),note:success?'Sucesso! Passou para trás do alvo.':'Falhou. Tentativa usada neste turno.'});if(success){state.hero.r=destination.r;state.hero.c=destination.c;log(`<strong>NINGUÉM ME PEGA:</strong> passou por ${enemy.name} para ${String.fromCharCode(65+destination.r)}${destination.c+1}.`,'good');}else log(`<strong>NINGUÉM ME PEGA:</strong> falhou no teste CD 12 (${n}+${heroDex()}).`,'warn');busy=false;render();autoEndIfDone();}
+function setSelection(card){if(!isHeroTurn())return;const info=cards.find(v=>v.id===card);if(!info||state.hero.ap<info.cost||(card==='slip'&&!canSlipAny())){showToast('PA INSUFICIENTE',true);return}if((card==='move'||card==='run')&&state.hero.movedThisTurn){showToast('JÁ SE MOVEU NESTE TURNO',true);return}if(card==='defend'&&state.hero.defending){showToast('JÁ ESTÁ DEFENDENDO',true);return}if(card==='potion'){drinkPotion(true);return;}state.selected=card;if(card!=='defend')sound('select');if(card==='defend'){state.hero.ap-=1;state.hero.defending=true;playAnim(state.hero,'defend',380);log(`<strong>${heroName()} defendeu:</strong> +2 Defesa até seu próximo turno.`,'good');sound('block');showToast(`${heroName().toUpperCase()} DEFENDEU · +2 DEFESA`);state.selected=null;}render();if(card==='defend')autoEndIfDone()}
 async function clickCell(r,c){if(!state||modalActive)return;if(state.phase==='placement'){placeHero(r,c);return}if(!isHeroTurn()||busy)return;const a=cards.find(x=>x.id===state.selected);if(!a)return;
  if(state.hero.ap<a.cost){showToast('PA INSUFICIENTE',true);return}
  if(state.selected==='move'||state.selected==='run'){
@@ -585,6 +588,7 @@ async function clickCell(r,c){if(!state||modalActive)return;if(state.phase==='pl
    const path=shortPath(state.hero,{r,c},Math.max(0,(state.selected==='move'?1:2)-(heroShield()&&heroStr()<3?1:0)));if(!path){showToast('CAMINHO INVÁLIDO',true);return}
    state.hero.ap-=a.cost;state.hero.movedThisTurn=true;busy=true;for(const p of path)await stepTo(state.hero,p,a.id==='run');busy=false;log(`${heroName()} se deslocou para <strong>${String.fromCharCode(65+r)}${c+1}</strong>.`);state.selected=null;render();showToast(a.id==='run'?`${heroName().toUpperCase()} CORREU`:`${heroName().toUpperCase()} MOVEU`);autoEndIfDone();return;
  }
+ if(state.selected==='slip'){const target=occupied(r,c);if(!slipTarget(target)){showToast('ESCOLHA INIMIGO MÉDIO/GRANDE ADJACENTE COM CASA LIVRE ATRÁS',true);return;}await attemptSlip(target);return;}
  if(state.selected==='attack'||state.selected==='advantage'){
    const target=occupied(r,c);if(!target||target===state.hero||!target.alive||!inHeroRange(state.hero,target)){showToast('ALVO FORA DE ALCANCE',true);return}
    const advantage=state.selected==='advantage';if(heroWeapon().kind==='ranged'&&heroDex()<(heroWeapon()===WEAPONS.short_bow?2:3)){showToast('DESTREZA INSUFICIENTE',true);return;}state.hero.ap-=a.cost;state.selected=null;busy=true;render();await announce(advantage?'PREPARANDO ATAQUE COM VANTAGEM':'PREPARANDO ATAQUE',false,800);await heroAttack(target,advantage);busy=false;render();autoEndIfDone();return;
@@ -657,10 +661,12 @@ async function heroAttack(target,advantage){const hero=state.hero,w=heroWeapon()
  // E vice-versa: se Mestre das Armas resultar em 1, a espada ainda disponível pode agir.
  // No máximo duas repetições por ataque; o resultado de cada uma substitui o anterior.
  const swordAvailable=()=>natural===1&&w===WEAPONS.sword&&!hero.usedSword&&meets(2);
- const masterAvailable=()=>natural<=2&&!hero.usedReroll;
- for(let attempt=0;attempt<2;attempt++){
+ const masterAvailable=()=>heroType()!=='halfling'&&natural<=2&&!hero.usedReroll;
+ for(let attempt=0;attempt<3;attempt++){
    let usedAbility='';
-   if(swordAvailable()){
+   if(heroType()==='halfling'&&natural===1&&!hero.usedLuck){
+     hero.usedLuck=true;usedAbility='SORTE INATA';
+   }else if(swordAvailable()){
      hero.usedSword=true;
      usedAbility='ESPADA DE FERRO';
    }else if(masterAvailable()){
@@ -683,7 +689,9 @@ async function heroAttack(target,advantage){const hero=state.hero,w=heroWeapon()
  if(heroType()==='zeno'&&natural>=5){if(!hero.veteranAtk){hero.veteranAtk=true;log('<strong>VETERANO DE BATALHA — 1º GATILHO!</strong> +1 de ataque (dano) até o fim do combate.','good');showToast('VETERANO · +1 ATAQUE');puff(hero,'+1 ATQ');sound('turn');}else if(!hero.veteranDef){hero.veteranDef=true;log('<strong>VETERANO DE BATALHA — 2º GATILHO!</strong> +1 de Defesa até o fim do combate.','good');showToast('VETERANO · +1 DEFESA');puff(hero,'+1 DEF');sound('block');}}
  const axeBonus=w===WEAPONS.axe&&natural===6&&heroStr()>=2?2:0;
  const ignoreDef=(w===WEAPONS.spear&&natural===6&&meets(2))||(w===WEAPONS.great_spear&&natural===6&&meets(3))||(w===WEAPONS.imperial_spear&&natural>=6&&meets(3));
- const base=natural+heroDamageBonus()+axeBonus+(heroType()==='zeno'&&hero.veteranAtk?1:0);
+ const backstab=heroType()==='halfling'&&natural!==1&&hero.init>target.init&&hero.usedBackstabRound!==state.round?roll(w.die):0;
+ if(backstab){hero.usedBackstabRound=state.round;log(`<strong>ATAQUE POR TRÁS:</strong> iniciativa superior! Dado extra 1d${w.die} = ${backstab}.`,'good');showToast(`ATAQUE POR TRÁS · +${backstab}`);}
+ const base=natural+heroDamageBonus()+axeBonus+backstab+(heroType()==='zeno'&&hero.veteranAtk?1:0);
  const defenseAmount=ignoreDef?0:finalTarget.def+(finalTarget.defending?2:0);
  const after=Math.max(0,base-defenseAmount);
  // Golpe Sujo: reação apenas diante de dano corpo a corpo realmente fatal para Tripa Seca.
@@ -697,7 +705,7 @@ async function heroAttack(target,advantage){const hero=state.hero,w=heroWeapon()
   if(n+modifier<12){log(`<strong>Golpe Sujo:</strong> ${heroName()} falhou e o golpe potencialmente fatal foi anulado.`,'warn');showToast('GOLPE SUJO · ATAQUE ANULADO',true);sound('miss');return;}
   log(`<strong>Golpe Sujo:</strong> ${heroName()} resistiu! O ataque prossegue.`,'good');
  }
- log(`${heroName()} (${w.name}) atingiu <strong>${finalTarget.name||'aliado'}</strong>: ${natural}+${heroDamageBonus()}${axeBonus?'+2 machado':''}${heroType()==='zeno'&&hero.veteranAtk?'+1 Veterano':''} − ${defenseAmount} DEF = <strong>${after} dano</strong>${ignoreDef?' (ignorou Defesa)':''}.`,'damage');
+ log(`${heroName()} (${w.name}) atingiu <strong>${finalTarget.name||'aliado'}</strong>: ${natural}+${heroDamageBonus()}${axeBonus?'+2 machado':''}${backstab?'+'+backstab+' Ataque por Trás':''}${heroType()==='zeno'&&hero.veteranAtk?'+1 Veterano':''} − ${defenseAmount} DEF = <strong>${after} dano</strong>${ignoreDef?' (ignorou Defesa)':''}.`,'damage');
  if(w===WEAPONS.mace&&natural===6&&heroStr()>=2&&finalTarget.alive){finalTarget.knocked=true;log(`<strong>MAÇA:</strong> ${finalTarget.name} ficou Derrubado.`,'good');showToast('DERRUBADO!');}
  if(after===0){combatImpact(finalTarget,0,{reduced:true});showToast('BLOQUEADO',true);return;}
  await applyDamage(finalTarget,after,hero);
@@ -739,7 +747,10 @@ async function enemyAttack(enemy){const hero=state.hero;const adjacentOrth=orth(
  // Brokk tem imunidade racial Firmeza de Rocha contra porrete 1d6.
  if(enemy.weaponPassive==='club'&&natural===6&&target===hero){if(heroType()==='brokk'){log('<strong>FIRMEZA DE ROCHA:</strong> Brokk resistiu ao Derrubado do porrete 1d6.','good');showToast('BROKK · IMUNE A DERRUBADO');puff(hero,'IMUNE');}else{hero.knocked=true;log(`<strong>PORRETE ATIVADO!</strong> ${enemy.name} derrubou ${heroName()} (natural 6): −1 PA no próximo turno; ataques contra ele têm vantagem até o fim desse turno.`,'warn');showToast('PORRETE · DERRUBADO! −1 PA',true);puff(hero,'DERRUBADO');}}if(target===hero&&heroWeapon()===WEAPONS.staff&&!hero.usedStaff&&meets(2)&&damage>0){hero.usedStaff=true;const before=damage;damage=Math.max(0,damage-2);log(`<strong>BASTÃO DE MADEIRA:</strong> bloqueou 2 dano (${before} → ${damage}), uma vez por luta.`,'good');showToast('BLOQUEIO DO BASTÃO!');sound('shieldBlock');}
  log(`${enemy.name}: ${enemy.count>1?'facas '+raw.map(v=>v===1?'1 (ERRO)':String(v)).join(' / ')+(strikes.length?' + '+enemyDamageStat(enemy)+' DES (1x)':''):'ataque '+natural+', dano '+raw.join('+')+(enemyDamageStat(enemy)>=0?'+':'')+enemyDamageStat(enemy)} − DEF ${df} = <strong>${damage}</strong> em ${target===hero?heroName():target.name}.`,'damage');if(!damage){combatImpact(target,0,{reduced:df>0});showToast(target===hero?`${heroName().toUpperCase()} BLOQUEOU O GOLPE`:'BLOQUEADO',false,1100);return}
- if(target===hero&&!hero.usedWall&&damage>0&&(natural>=5||base>=6||damage>=hero.hp+hero.tempHp)){
+ if(target===hero&&heroType()==='halfling'&&!hero.usedDodge&&damage>0&&(damage>=5||damage>=hero.hp+hero.tempHp)){
+  hero.usedDodge=true;log(`<strong>ESQUIVA AUTOMÁTICA!</strong> ${heroName()} anulou ${damage} dano de ${enemy.name}, sem custo de PA.`,'good');showToast('ESQUIVA · DANO ANULADO');puff(hero,'ESQUIVA');await playAnim(hero,'defend',440,1);return;
+ }
+ if(target===hero&&heroType()!=='halfling'&&!hero.usedWall&&damage>0&&(natural>=5||base>=6||damage>=hero.hp+hero.tempHp)){
   const fatal=damage>=hero.hp+hero.tempHp,wallReason=fatal?'golpe potencialmente fatal':base>=6?'ataque total '+base+' (6+)':'dado natural '+natural;
   const choice=await ask({eyebrow:'REAÇÃO DO GUERREIRO · 1 VEZ',title:'Usar Muralha de Ferro?',text:`${enemy.name} causaria ${damage} de dano físico${fatal?' (golpe potencialmente fatal)':''}; dado natural ${natural}. Se usar a reação, o dano será reduzido para ${Math.floor(damage/2)} e você terá −1 PA no próximo turno. Deseja ativar?`,buttons:[{label:'ATIVAR MURALHA DE FERRO',value:true},{label:'NÃO USAR AGORA',value:false,secondary:true}]});
   if(choice===true){
@@ -793,7 +804,7 @@ function finishGame(){state.completed=true;save();openModal({eyebrow:'DEMONSTRA�
 // O ponto de descanso atual representa o FIM do encontro, antes do próximo capítulo.
 function interlude(){state.phase='interlude';state.restUsedAtInterlude=false;if(state.chapterIndex===2){state.enemies=[];state.order=[state.hero];state.actor=null;state.round=0;log('<strong>SALA SEGURA:</strong> sala vazia antes do covil de Tripa Seca. Descanso curto permitido; descanso longo proibido.','good');}render();renderInterlude()}
 function restOptions(){return Object.entries(state.inventory).filter(([name,n])=>n>0&&['Pão de queijo','Caldo de ovo'].includes(name));}
-function recoverableSkills(){const h=state.hero,out=[];if(h.usedReroll)out.push({id:'usedReroll',name:'Mestre das Armas'});if(h.usedWall)out.push({id:'usedWall',name:'Muralha de Ferro'});return out;}
+function recoverableSkills(){const h=state.hero,out=[];if(heroType()==='halfling'){if(h.usedDodge)out.push({id:'usedDodge',name:'Esquiva'});return out;}if(h.usedReroll)out.push({id:'usedReroll',name:'Mestre das Armas'});if(h.usedWall)out.push({id:'usedWall',name:'Muralha de Ferro'});return out;}
 function longRestAllowed(){return state.phase==='interlude'&&state.chapterIndex<2;} // Somente acampamento aberto neste protótipo; hotel quando existir.
 function renderInterlude(){
  const protectedSite=longRestAllowed(),food=restOptions(),skills=recoverableSkills(),rested=!!state.restUsedAtInterlude,safeRoom=state.chapterIndex===2;
@@ -811,7 +822,7 @@ function doRest(kind){
  if(kind==='short'&&skills.length&&!skills.some(v=>v.id===skillId)){showToast('ESCOLHA UMA HABILIDADE',true);return;}
  state.inventory[food]--;state.restUsedAtInterlude=true;
  if(kind==='short'){if(skills.length){state.hero[skillId]=false;log(`<strong>DESCANSO CURTO:</strong> ${skills.find(v=>v.id===skillId).name} recuperada.`,'good');}}
- else{for(const id of ['usedReroll','usedWall'])state.hero[id]=false;const recovery=Math.ceil(state.hero.maxHp/2)+heroInfo().con;state.hero.hp=Math.min(state.hero.maxHp,state.hero.hp+recovery);log(`<strong>DESCANSO LONGO:</strong> todas habilidades recuperadas; até ${recovery} PV restaurados.`,'good');}
+ else{for(const id of ['usedReroll','usedWall','usedDodge'])state.hero[id]=false;const recovery=Math.ceil(state.hero.maxHp/2)+heroInfo().con;state.hero.hp=Math.min(state.hero.maxHp,state.hero.hp+recovery);log(`<strong>DESCANSO LONGO:</strong> todas habilidades recuperadas; até ${recovery} PV restaurados.`,'good');}
  if(food==='Pão de queijo')state.hero.tempHp+=2;
  if(food==='Caldo de ovo')state.hero.hp=Math.min(state.hero.maxHp,state.hero.hp+1);
  save();render();showToast(kind==='long'?'DESCANSO LONGO':'DESCANSO CURTO');renderInterlude();
@@ -886,7 +897,7 @@ function render(){if(!state)return;const h=state.hero;const playerTurn=isHeroTur
  $('contextHelp').textContent=state.phase==='placement'?'Clique em uma das casas destacadas para posicionar seu herói.':playerTurn?'Escolha uma carta e clique em uma casa válida.':'Acompanhe a iniciativa e os movimentos.';
  $('phaseInfo').textContent=state.phase==='placement'?'POSICIONAMENTO INICIAL':state.phase==='combat'?(state.actor===h?'SUA VEZ DE AGIR':state.actor?'MOVIMENTO INIMIGO':'ORDEM DE INICIATIVA'):'COMBATE ENCERRADO';$('roundInfo').textContent=`Rodada ${state.round||1} · ${chapters[state.chapterIndex].location}`;
  $('endTurnBtn').disabled=!playerTurn;$('endTurnBtn').classList.toggle('pulse',playerTurn&&!heroCanAct());$('actionHint').textContent=playerTurn&&state.selected?'Casas verdes: destinos e alvos possíveis':'Selecione uma carta e clique em uma casa válida';
- $('actionCards').innerHTML=cards.map((c,i)=>`<button class="action-card ${state.selected===c.id?'selected':''}" data-card="${c.id}" ${!playerTurn||h.ap<c.cost||(c.id==='defend'&&h.defending)||(['move','run'].includes(c.id)&&h.movedThisTurn)||(c.id==='potion'&&!canUsePotion())?'disabled':''} title="${c.label} · ${c.cost} PA · ${c.desc} (atalho ${i+1})" aria-label="${c.label}, ${c.cost} PA"><span class="cost-badge">${c.cost}</span><span class="hotkey">${i+1}</span><span class="card-art">${pixIcon(ICONS[c.id])}</span><span class="card-name">${c.label}</span><span class="card-desc">${c.desc}</span></button>`).join('');
+ $('actionCards').innerHTML=cards.map((c,i)=>`<button class="action-card ${state.selected===c.id?'selected':''}" data-card="${c.id}" ${!playerTurn||h.ap<c.cost||(c.id==='defend'&&h.defending)||(['move','run'].includes(c.id)&&h.movedThisTurn)||(c.id==='potion'&&!canUsePotion())||(c.id==='slip'&&!canSlipAny())?'disabled':''} title="${c.label} · ${c.cost} PA · ${c.desc} (atalho ${i+1})" aria-label="${c.label}, ${c.cost} PA"><span class="cost-badge">${c.cost}</span><span class="hotkey">${i+1}</span><span class="card-art">${pixIcon(ICONS[c.id])}</span><span class="card-name">${c.label}</span><span class="card-desc">${c.desc}</span></button>`).join('');
  $('actionCards').querySelectorAll('.action-card').forEach(b=>b.addEventListener('click',()=>setSelection(b.dataset.card)));renderLog();updateTacticPreview();}
 function showToast(msg,error=false,time=1100){const t=$('stageToast');t.textContent=msg;t.hidden=false;t.classList.toggle('error',error);clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>t.hidden=true,time)}
 function openModal(data){modalActive=true;const dst=$('modalContent');dst.innerHTML=`<div class="modal-eyebrow">${data.eyebrow||'SANTA MINA'}</div><h2>${data.title}</h2>${data.text?`<p>${data.text}</p>`:''}${data.body||''}<div class="modal-actions"></div>`;const actions=dst.querySelector('.modal-actions');for(const b of data.buttons||[]){const el=document.createElement('button');el.className='modal-btn'+(b.secondary?' secondary':'');el.textContent=b.label;el.disabled=!!b.disabled;el.addEventListener('click',()=>sound('click'));el.addEventListener('click',b.click);actions.appendChild(el)}$('modalBackdrop').hidden=false;}
