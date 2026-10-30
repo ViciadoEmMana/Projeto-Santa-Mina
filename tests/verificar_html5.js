@@ -109,4 +109,10 @@ assert.ok(html.includes("title:safeRoom?'Sala vazia — antes do chefe'"),'modal
 assert.ok(html.includes("disabled:!canUsePotion(),click:()=>drinkPotion(false)"),'poção pode ser usada entre encontros');
 assert.ok(html.includes("function longRestAllowed(){return state.phase==='interlude'&&state.chapterIndex<2"),'descanso longo proibido na sala do chefe');
 for(let v=1;v<=6;v++){assert.equal(v+2,v+2,'cura no dado '+v);}
-console.log('HTML validado: sala pré-chefe, poção 1d6+2, carta 1 PA e descanso seguro.');
+const chapterStart=html.match(/function startChapter\(\)\{[\s\S]*?\n\s*state\.order=/)?.[0]||'';
+assert.ok(chapterStart.includes('Habilidades consumíveis permanecem gastas'), 'habilidades persistem entre salas');
+assert.ok(!chapterStart.includes('state.hero.usedReroll=false'), 'Mestre das Armas não reinicia sem descanso');
+assert.ok(!chapterStart.includes('state.hero.usedWall=false'), 'Muralha não reinicia sem descanso');
+assert.ok(!chapterStart.includes('state.hero.usedSword=false'), 'Espada não reinicia sem descanso');
+assert.ok(html.includes("e.key<=String(cards.length)"),'tecla 6 usa a sexta carta');
+console.log('HTML validado: sala segura, poção e gestão de habilidades sem reset entre encontros.');
