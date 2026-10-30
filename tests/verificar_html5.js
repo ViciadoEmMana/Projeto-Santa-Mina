@@ -25,7 +25,7 @@ assert.ok(html.includes("base>=6||damage>=hero.hp+hero.tempHp"), 'Muralha gatilh
 assert.ok(html.includes("wallReason=fatal?"), 'Muralha motivo visual');
 assert.ok(html.includes("const extraRolls=enemy.count>1?dice"), 'Faca dupla sempre rola segundo dado');
 assert.ok(html.includes("strikes=enemy.count>1?raw.filter(v=>v!==1):raw"), 'Faca natural 1 nao soma dano');
-assert.ok(html.includes("strikes.reduce((a,b)=>a+b,0)+(strikes.length?(enemy.dex??enemy.for??0):0)"), 'Faca soma atributo apenas uma vez se houver acerto');
+assert.ok(html.includes("strikes.reduce((a,b)=>a+b,0)+(strikes.length?enemyDamageStat(enemy):0)"), 'Faca soma atributo uma vez se acertar');
 assert.equal(([3,4].filter(x=>x!==1).reduce((a,b)=>a+b,0)+2),9,'3 e 4 causam 9 de dano bruto');
 assert.equal(([1,4].filter(x=>x!==1).reduce((a,b)=>a+b,0)+2),6,'1 e 4 causam 6 de dano bruto');
 assert.equal(([1,1].filter(x=>x!==1).reduce((a,b)=>a+b,0)),0,'dois resultados 1 causam 0 de dano bruto');
@@ -68,4 +68,13 @@ assert.equal(stat({ranged:false,count:1,dex:1,for:2}),2,'porrete/espada/gancho u
 assert.ok(html.includes("strikes.length?enemyDamageStat(enemy):0"),'duas facas somam atributo somente quando acertam');
 assert.ok(html.includes("raw.reduce((a,b)=>a+b,0)+enemyDamageStat(enemy)"),'ataque único soma atributo correto');
 assert.equal(4+stat({ranged:true,count:1,dex:2,for:0}),6,'arqueiro com dado 4 causa 6 bruto');
-console.log('HTML válido: inimigos usam atributo da arma, arqueiro 1d6+2 DES e facas preservadas.');
+assert.ok(html.includes("if(heroType()==='zeno'&&natural>=5){if(!hero.veteranAtk)"),'1º dado 5+ ativa ataque');
+assert.ok(html.includes("else if(!hero.veteranDef){hero.veteranDef=true"),'2º dado 5+ ativa Defesa');
+assert.ok(!html.includes("Bloqueio sem dano: +1 Defesa até o fim do combate"),'Defesa do veterano não ativa mais por bloqueio');
+const veteranTrigger=(hero,n)=>{if(n>=5){if(!hero.veteranAtk)hero.veteranAtk=true;else if(!hero.veteranDef)hero.veteranDef=true;}};
+let zeno={veteranAtk:false,veteranDef:false};
+veteranTrigger(zeno,4);assert.equal(zeno.veteranAtk,false);
+veteranTrigger(zeno,5);assert.equal(zeno.veteranAtk,true);assert.equal(zeno.veteranDef,false);
+veteranTrigger(zeno,6);assert.equal(zeno.veteranDef,true);
+veteranTrigger(zeno,5);assert.equal(zeno.veteranAtk,true);assert.equal(zeno.veteranDef,true);
+console.log('HTML válido: arco usa DES, Faca Dupla com bônus único e Veterano de Batalha progressivo.');
