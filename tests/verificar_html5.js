@@ -85,4 +85,16 @@ const banditDefense=(face,hp=14,defending=false)=>((hp>7?1:0)+(defending?2:0)+([
 assert.equal(Math.max(0,3+1-banditDefense(3)),1,'natural 3, escudo e pele = 1 dano');
 assert.equal(Math.max(0,4+1-banditDefense(4)),4,'natural 4, pele = 4 dano');
 assert.equal(Math.max(0,2+1-banditDefense(2)),0,'natural 2, escudo + pele = 0 dano');
-console.log('HTML válido: Bandido Arqueiro usa DES +1, dano bruto e Defesa conferidos.');
+assert.ok(html.includes("ATENÇÃO — MASMORRA: descanso longo proibido"),'aviso de entrada na masmorra');
+assert.ok(html.includes("function recoverableSkills()"),'seleção das habilidades gastas');
+assert.ok(html.includes("if(h.usedReroll)out.push"),'Mestre das Armas recuperável');
+assert.ok(html.includes("if(h.usedWall)out.push"),'Muralha de Ferro recuperável');
+assert.ok(html.includes("if(h.usedSword&&w===WEAPONS.sword)"),'Espada recuperável');
+assert.ok(html.includes("if(h.usedStaff&&w===WEAPONS.staff)"),'Bastão recuperável');
+assert.ok(html.includes("state.hero[skillId]=false"),'descanso curto recupera somente habilidade escolhida');
+assert.ok(html.includes("state.restUsedAtInterlude=true"),'um único descanso por intervalo');
+assert.ok(html.includes("state.chapterIndex<2"),'descanso longo fora da masmorra');
+assert.ok(html.includes("Math.ceil(state.hero.maxHp/2)+heroInfo().con"),'descanso longo usa metade de PV + CON');
+assert.ok(html.includes("if(kind==='long'&&!longRestAllowed())"),'proteção lógica contra descanso longo na masmorra');
+assert.ok(!html.includes("if(state.hero.usedReroll)state.hero.usedReroll=false;else if(state.hero.usedWall)"),'prioridade automática antiga foi removida');
+console.log('HTML válido: descanso em locais seguros, habilidades escolhidas, limite de descanso e aviso de masmorra.');

@@ -535,7 +535,7 @@ function startChapter(){session++;$('dicePanel').hidden=true;modalClose();busy=f
  $('chapterKicker').textContent=`CAPÍTULO ${String(state.chapterIndex+1).padStart(2,'0')} / 04`;
  $('chapterName').textContent=c.title;
  $('progressDots').innerHTML=chapters.map((_,i)=>`<i class="${i<state.chapterIndex?'done':i===state.chapterIndex?'active':''}"></i>`).join('');
- setScreen('game');render();openModal({eyebrow:c.tag,title:c.title,text:c.description,body:`<div class="modal-details">⚔ <b>Formação e iniciativa</b><br>${heroName()}: <b>${state.hero.rawInit} + ${heroDex()+initWeaponBonus()} = ${state.hero.init}</b> · ${state.enemies.length} inimigo(s).<br>Na grade, escolha a posição inicial entre as casas <b>destacadas em verde</b>. O resultado da iniciativa define as colunas permitidas.</div>`,buttons:[{label:'ESCOLHER POSIÇÃO',click:()=>{modalClose();showToast('ESCOLHA UMA CASA',false,1250)}}]});save();}
+ setScreen('game');render();openModal({eyebrow:c.tag,title:c.title,text:(state.chapterIndex===3?'⚠ ATENÇÃO — MASMORRA: descanso longo proibido. Gerencie suas habilidades; somente descanso curto em intervalos seguros. ':'' )+c.description,body:`<div class="modal-details">⚔ <b>Formação e iniciativa</b><br>${heroName()}: <b>${state.hero.rawInit} + ${heroDex()+initWeaponBonus()} = ${state.hero.init}</b> · ${state.enemies.length} inimigo(s).<br>Na grade, escolha a posição inicial entre as casas <b>destacadas em verde</b>. O resultado da iniciativa define as colunas permitidas.</div>`,buttons:[{label:'ESCOLHER POSIÇÃO',click:()=>{modalClose();showToast('ESCOLHA UMA CASA',false,1250)}}]});save();}
 function occupied(r,c,ignore){if(state.hero!==ignore&&state.hero.hp>0&&state.hero.r===r&&state.hero.c===c)return state.hero;return state.enemies.find(e=>e!==ignore&&e.alive&&e.r===r&&e.c===c)||null}
 function allowedStart(){const z=state.hero.init;const cols=z<10?[2]:z<15?[1,2]:[0,1,2];const a=[];for(let r=0;r<3;r++)for(const c of cols)if(!occupied(r,c))a.push({r,c});return a}
 // Formações fixas para o desfiladeiro e covil; independem da iniciativa.
@@ -764,18 +764,33 @@ function onVictory(){if(state.phase!=='combat')return;state.phase='victory';stat
  sound('victory');render();const text=items.length?items.map(it=>`<div class="loot-line">✦ ${it}</div>`).join(''):'<div class="loot-line">Nenhum saque definido para estes bandidos.</div>';
  openModal({eyebrow:`CAPÍTULO ${state.chapterIndex+1} CONCLUÍDO`,title:state.chapterIndex===3?'O covil foi vencido!':'Vitória no combate!',text:'Todos os inimigos foram derrotados. Os saques são recolhidos uma única vez, após a vitória.',body:`<div class="modal-details"><b>+${earned} coroas</b> · Total: <b>${state.gold} coroas</b>${text}${state.chapterIndex===3?'<div class="loot-line">✦ Espada de ferro, arco curto e poção comum (efeito a definir)</div>':''}</div>`,buttons:[{label:state.chapterIndex===3?'VER RESULTADO FINAL':'CONTINUAR JORNADA',click:()=>state.chapterIndex===3?finishGame():interlude()}]});save();}
 function finishGame(){state.completed=true;save();openModal({eyebrow:'DEMONSTRAÇÃO CONCLUÍDA',title:'O Covil de Tripa Seca',text:'Você concluiu os quatro capítulos da minicampanha de testes. Parabéns por sobreviver aos perigos da Santa Mina!',body:`<div class="modal-details">✦ <b>4 capítulos concluídos</b><br>✦ <b>${state.gold} coroas</b> recolhidas (total de coroas acumuladas na campanha)<br>✦ <b>${state.hero.hp}/${state.hero.maxHp} PV</b> restantes<br>✦ Cartas especiais, exploração aberta e ficha completa de Zeno permanecem para futuras versões.</div>`,buttons:[{label:'JOGAR NOVAMENTE',click:newGame},{label:'VOLTAR AO MENU',secondary:true,click:showMenu}]})}
-function interlude(){state.phase='interlude';render();renderInterlude()}
+// Descansos são atividades entre encontros em locais seguros, não ações gratuitas de combate.
+// O ponto de descanso atual representa o FIM do encontro, antes do próximo capítulo.
+function interlude(){state.phase='interlude';state.restUsedAtInterlude=false;render();renderInterlude()}
 function restOptions(){return Object.entries(state.inventory).filter(([name,n])=>n>0&&['Pão de queijo','Caldo de ovo'].includes(name));}
-function renderInterlude(){const protectedSite=state.chapterIndex<2;const food=restOptions();const foodHTML=food.length?`<select id="restFood">${food.map(([n,c])=>`<option value="${n}">${n} (${c})</option>`).join('')}</select>`:'<p>Você está sem alimentos ou bebidas disponíveis.</p>';
- const canShort=state.hero.usedReroll||state.hero.usedWall;
- const body=`<div class="modal-details">${heroName()}: <b>${state.hero.hp}/${state.hero.maxHp} PV</b> · ${state.hero.tempHp} PV temporários · <b>${state.gold} coroas</b><br>${protectedSite?'⛺ Acampamento protegido de testes.':'⛏ A passagem dá acesso à masmorra. Descanso longo indisponível.'}</div><p>Escolha um alimento para descansar. O descanso curto recupera exatamente uma habilidade de classe; o longo recupera todas e até <b>10 PV</b> de Brokk. O alimento também aplica seu efeito.</p>${foodHTML}<p class="small-note">Os alimentos iniciais deste protótipo são uma provisão de testes; não são um inventário inicial canônico.</p>`;
- openModal({eyebrow:'INTERVALO ENTRE CAPÍTULOS',title:'Uma breve trégua',text:`Próximo: ${chapters[state.chapterIndex+1].title}`,body,buttons:[{label:'DESCANSO CURTO',secondary:true,disabled:!food.length||!canShort,click:()=>doRest('short')},{label:'DESCANSO LONGO',secondary:true,disabled:!food.length||!protectedSite,click:()=>doRest('long')},{label:'PRÓXIMO CAPÍTULO',click:()=>{state.chapterIndex++;startChapter()}}]});save()}
-function doRest(kind){const f=$('restFood')?.value;if(!f||!(state.inventory[f]>0))return;state.inventory[f]--;
- if(kind==='short'){if(state.hero.usedReroll)state.hero.usedReroll=false;else if(state.hero.usedWall)state.hero.usedWall=false;}
- else{state.hero.usedReroll=false;state.hero.usedWall=false;state.hero.hp=Math.min(14,state.hero.hp+10)}
- if(f==='Pão de queijo')state.hero.tempHp+=2;
- if(f==='Caldo de ovo')state.hero.hp=Math.min(14,state.hero.hp+1);
- save();render();showToast(kind==='long'?'DESCANSO LONGO':'DESCANSO CURTO');renderInterlude();}
+function recoverableSkills(){const h=state.hero,w=heroWeapon(),out=[];if(h.usedReroll)out.push({id:'usedReroll',name:'Mestre das Armas'});if(h.usedWall)out.push({id:'usedWall',name:'Muralha de Ferro'});if(h.usedSword&&w===WEAPONS.sword)out.push({id:'usedSword',name:'Espada de Ferro'});if(h.usedStaff&&w===WEAPONS.staff)out.push({id:'usedStaff',name:'Bastão de Madeira'});return out;}
+function longRestAllowed(){return state.phase==='interlude'&&state.chapterIndex<2;} // Somente acampamento aberto neste protótipo; hotel quando existir.
+function renderInterlude(){
+ const protectedSite=longRestAllowed(),food=restOptions(),skills=recoverableSkills(),rested=!!state.restUsedAtInterlude;
+ const foodHTML=food.length?`<label>Provisão obrigatória <select id="restFood">${food.map(([n,c])=>`<option value="${n}">${n} (${c})</option>`).join('')}</select></label>`:'<p>Você está sem alimentos. Descansar exige uma provisão.</p>';
+ const skillHTML=skills.length?`<label>Habilidade para recuperar (somente uma) <select id="restSkill">${skills.map(v=>`<option value="${v.id}">${v.name}</option>`).join('')}</select></label>`:'<p>Você não tem habilidades consumíveis indisponíveis. Descanso curto ainda permite consumir uma provisão.</p>';
+ const recovery=Math.ceil(state.hero.maxHp/2)+heroInfo().con;
+ const body=`<div class="modal-details">${heroName()}: <b>${state.hero.hp}/${state.hero.maxHp} PV</b> · ${state.hero.tempHp} PV temporários · <b>${state.gold} coroas</b><br>${protectedSite?'⛺ Área aberta e segura: descansos curto ou longo.':'⚠ ATENÇÃO — DUNGEON: descanso longo PROIBIDO. Somente descanso curto em ponto seguro.'}</div><p><b>Descanso curto:</b> consome uma provisão e permite recuperar <b>uma habilidade à sua escolha</b>, além do efeito da comida. <b>Descanso longo:</b> somente em área aberta ou hotel (quando disponível); consome uma provisão, recupera todas as habilidades consumíveis e até <b>${recovery} PV</b> (metade dos PV máximos, arredondada para cima, + CON). </p>${foodHTML}${skillHTML}<p class="small-note">${rested?'Você já descansou neste intervalo. Prossiga para o próximo capítulo.':'Apenas um descanso por intervalo entre encontros.'} Poções e medicamentos serão adicionados ao inventário quando seus efeitos estiverem definidos.</p>`;
+ openModal({eyebrow:'FINAL DO ENCONTRO · DESCANSO',title:'Uma breve trégua',text:`Próximo: ${chapters[state.chapterIndex+1].title}`,body,buttons:[{label:'DESCANSO CURTO',secondary:true,disabled:rested||!food.length,click:()=>doRest('short')},{label:'DESCANSO LONGO',secondary:true,disabled:rested||!food.length||!protectedSite,click:()=>doRest('long')},{label:'PRÓXIMO CAPÍTULO',click:()=>{state.chapterIndex++;startChapter()}}]});save();
+}
+function doRest(kind){
+ if(state.phase!=='interlude'||state.restUsedAtInterlude)return;
+ if(kind==='long'&&!longRestAllowed()){showToast('DESCANSO LONGO PROIBIDO NA MASMORRA',true);return;}
+ const food=$('restFood')?.value,skills=recoverableSkills(),skillId=$('restSkill')?.value;
+ if(!food||!(state.inventory[food]>0))return;
+ if(kind==='short'&&skills.length&&!skills.some(v=>v.id===skillId)){showToast('ESCOLHA UMA HABILIDADE',true);return;}
+ state.inventory[food]--;state.restUsedAtInterlude=true;
+ if(kind==='short'){if(skills.length){state.hero[skillId]=false;log(`<strong>DESCANSO CURTO:</strong> ${skills.find(v=>v.id===skillId).name} recuperada.`,'good');}}
+ else{for(const id of ['usedReroll','usedWall','usedSword','usedStaff'])state.hero[id]=false;const recovery=Math.ceil(state.hero.maxHp/2)+heroInfo().con;state.hero.hp=Math.min(state.hero.maxHp,state.hero.hp+recovery);log(`<strong>DESCANSO LONGO:</strong> todas habilidades recuperadas; até ${recovery} PV restaurados.`,'good');}
+ if(food==='Pão de queijo')state.hero.tempHp+=2;
+ if(food==='Caldo de ovo')state.hero.hp=Math.min(state.hero.maxHp,state.hero.hp+1);
+ save();render();showToast(kind==='long'?'DESCANSO LONGO':'DESCANSO CURTO');renderInterlude();
+}
 function log(text,type=''){if(!state)return;state.log.unshift({text,type});state.log=state.log.slice(0,25);if(!$('gameScreen').hidden)renderLog()}
 function renderLog(){$('combatLog').innerHTML=(state?.log||[]).slice(0,13).map(e=>`<div class="log-entry ${e.type}">${e.text}</div>`).join('')}
 // Indicadores são exclusivamente visuais: não consomem habilidades nem alteram os cálculos.
