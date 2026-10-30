@@ -445,6 +445,7 @@ let session=0, state=null, busy=false, muted=true, hovered=null, particles=[], c
 const images={};['brokk','zeno','bandit_archer','bandit_club','goblin_club','goblin_scrap','goblin_archer','goblin_knife','tripa_seca'].forEach(n=>{
  const i=new Image();i.src=ASSETS[n];images[n]=i;
 });
+images.halfling=images.zeno; // Retrato provisório até chegarem os sprites próprios.
 const R=(n)=>1+Math.floor(Math.random()*n),roll=(n=20)=>R(n),dice=(n,count=1)=>Array.from({length:count},()=>roll(n));
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const chapters=[
@@ -647,7 +648,7 @@ async function rollDice({title,groups,result,note='',tone='hero',attackNatural=n
  dice3d.forEach(d=>d.cv.classList.toggle('dim',!d.chosen));dice3d.filter(d=>d.chosen).forEach(d=>d.cv.classList.add('landed'));
  $('diceResult').innerHTML=result||'';$('diceDetail').innerHTML=note;sound('land');if(attackNatural===5||attackNatural===6){sound('highRoll',.11);dp.classList.add('high-roll');setTimeout(()=>dp.classList.remove('high-roll'),700);}
  await sleep(DIE_HOLD_MS);dp.hidden=true}
-const heroDamageText=(n,w=heroWeapon())=>n===1?'<span class="die-chip">1</span> <span class="op">·</span> <b class="tot miss">ERROU</b>':diceSum(n,[[heroDamageBonus(),'FOR'],[w===WEAPONS.axe&&n===6&&heroStr()>=2?2:0,'MACHADO'],[heroType()==='zeno'&&(state.hero.veteranAtk||n>=5)?1:0,'VETERANO']]);
+const heroDamageText=(n,w=heroWeapon())=>n===1?'<span class="die-chip">1</span> <span class="op">·</span> <b class="tot miss">ERROU</b>':diceSum(n,[[heroDamageBonus(),(w===WEAPONS.dagger||w.kind==='ranged')?'DES':'FOR'],[w===WEAPONS.axe&&n===6&&heroStr()>=2?2:0,'MACHADO'],[heroType()==='zeno'&&(state.hero.veteranAtk||n>=5)?1:0,'VETERANO']]);
 async function heroAttack(target,advantage){const hero=state.hero,w=heroWeapon();
  if(w.kind==='ranged'&&heroDex()<(w===WEAPONS.short_bow?2:3)){log(`${heroName()} não possui DES suficiente para usar ${w.name} à distância.`,'warn');showToast('DESTREZA INSUFICIENTE',true);return;}
  const adjacentBow=w.kind==='ranged'&&orth(hero,target)===1,proneAdvantage=!!target.knocked,hasAdvantage=advantage||proneAdvantage;
@@ -834,11 +835,16 @@ function renderSkillStatus(){
  if(!state)return;
  const h=state.hero,w=heroWeapon(),entries=[];
  const add=(symbol,name,status,description)=>entries.push({symbol,name,status,description});
- add('⚔','Mestre das Armas',h.usedReroll?'used':'ready','Repetição automática do dado natural 1–2; 1 vez por combate');
- add('◈','Muralha de Ferro',h.usedWall?'used':'ready','Reação confirmada se inimigo tirar 5+ ou golpe físico for fatal; −1 PA seguinte');
+ if(heroType()!=='halfling')add('⚔','Mestre das Armas',h.usedReroll?'used':'ready','Repetição automática do dado natural 1–2; 1 vez por combate');
+ if(heroType()!=='halfling')add('◈','Muralha de Ferro',h.usedWall?'used':'ready','Reação confirmada se inimigo tirar 5+ ou golpe físico for fatal; −1 PA seguinte');
  if(w===WEAPONS.sword)add('✧','Espada de Ferro',h.usedSword?'used':meets(2)?'ready':'locked','Repetição de erro natural 1; 1 vez por combate; FOR ou DES 2+');
  if(w===WEAPONS.staff)add('▣','Bastão',h.usedStaff?'used':meets(2)?'ready':'locked','Bloqueia 2 de dano 1 vez por combate');
- if(heroType()==='zeno'){
+ if(heroType()==='halfling'){
+   add('🍀','Sorte Inata',h.usedLuck?'used':'ready','Rerrolagem automática de 1 natural, 1 vez por combate');
+   add('◈','Esquiva',h.usedDodge?'used':'ready','Automática com 5+ de dano final ou fatal, sem custo de PA');
+   add('🗡','Ataque por Trás','ready','+1 dado por turno quando iniciativa for superior');
+   add('♞','Ninguém me pega',h.usedSlipRound===state.round?'used':'ready','1 tentativa grátis por turno; DES CD 12, tamanho Médio/Grande');
+ }else if(heroType()==='zeno'){
    add('★','Veterano ATQ',h.veteranAtk?'active':'ready','1º dado de ataque 5 ou mais: +1 ataque (dano) até o fim da luta');
    add('⛨','Veterano DEF',h.veteranDef?'active':h.veteranAtk?'ready':'locked','2º dado de ataque 5 ou mais: +1 Defesa até o fim da luta');
  }else{
