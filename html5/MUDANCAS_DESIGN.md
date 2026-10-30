@@ -6,6 +6,27 @@ A entrada mais nova fica no topo. Cada entrada diz o que mudou, por que mudou e 
 
 ---
 
+## 30/10/2026 — Correção urgente: jogo travava ao abrir depois do Pequenino Ladino
+
+Pull request: ramo `fix/ladino-capuz-trava-carregamento`.
+
+### 1. Jogo parava de carregar (todos os heróis)
+- **Sintoma:** desde o pull request 16, o script quebrava ao abrir a página. Nenhum botão do menu funcionava e a API de teste (`__santaMinaTest`) não existia.
+- **Causa:** a ficha `CHARS.halfling` usa `head:'hood'`, mas não tinha a cor `hood`. Ao gerar os retratos de todos os personagens (`portraitURL`), `drawHead` chamava `C(undefined)` e `shadeHex` quebrava.
+- **Correção:** `hood:'#3d4a3a'` (capuz verde-escuro) na ficha do Pequenino. Além disso, `drawHead` agora usa `cfg.hood||cfg.hair||cfg.cloth`, então uma ficha nova sem cor de capuz não derruba mais o jogo inteiro.
+
+### 2. Barra de cartas quebrava ao posicionar o herói
+- **Sintoma:** ao escolher a casa inicial, `render()` quebrava e o combate não começava.
+- **Causa:** a carta nova `slip` ("Ninguém me pega") não tinha ícone em `ICONS`, e `pixIcon(undefined)` quebrava. A carta aparece para todos os heróis (desabilitada para quem não é Ladino), então afetava qualquer herói.
+- **Correção:** ícone `ICONS.slip` em pixel art (figura escapando com rastros de movimento). `pixIcon` agora devolve vazio se faltar ícone, em vez de quebrar.
+
+### Testado
+- **Teste automático do repositório:** `node tests/verificar_html5.js` continua passando.
+- **No navegador (Chromium):** um robô jogou a campanha com Brokk, Zeno e Pequenino. Os três venceram os capítulos 1 e 2, chegaram ao 3 e também jogaram o capítulo 4 pelo "Testar um capítulo". Nenhum erro de JavaScript e nenhum travamento.
+- **Por que o teste automático não pegou:** ele lê o código, mas não abre a página. Erros que só acontecem ao rodar passam despercebidos.
+
+---
+
 ## 29/10/2026 — Interface de madeira completa, casas com luz suave, pixel do Brokk e goteira do covil
 
 Pull request: ramo `design/interface-madeira-casas-sutis`.
