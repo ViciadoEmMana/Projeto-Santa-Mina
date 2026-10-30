@@ -36,3 +36,10 @@ Esta documentação é a referência para futuras implementações HTML, Godot e
 - O descanso curto é oferecido **apenas após o término do combate** nos pontos de transição seguros, nunca durante a rodada de combate. Consome uma provisão e recupera **uma única habilidade consumível escolhida**. Não é obrigatório: o personagem pode seguir diretamente ao chefe.
 - **Poção de Vida:** cura **1d6 + 2 PV** (3 a 8), sem ultrapassar os PV máximos, e consome uma unidade do inventário. No **combate**, é uma carta de **1 PA**, podendo ser usada durante o turno do personagem; em **intervalos seguros**, é utilizável sem gastar PA e independentemente da escolha de descanso. Não repõe habilidades, não substitui comida e não habilita descanso longo.
 - A versão HTML oferece **1 Poção de Vida inicial para testes**, com quantidade visível no botão da sala segura e disponibilidade conforme inventário e PV atuais. Futuramente, definir fontes de obtenção, custo e raridade para equilibrar o recurso.
+
+## Diferença entre habilidades de equipamentos e de classe
+
+- **Habilidades de armas/equipamentos de uso limitado por combate:** a Espada de Ferro (repetição de erro natural 1) e o Bastão de Madeira (bloqueio de 2 dano) recuperam seu uso automaticamente **no início de cada novo combate**. Não precisam de descanso curto ou longo.
+- **Escudo:** o bônus condicional +2 Defesa nos resultados naturais 2 ou 3 não tem limite de ativações por combate, e nas duas facas não acumula.
+- **Habilidades consumíveis de classe:** Mestre das Armas e Muralha de Ferro **não** reiniciam entre encontros; exigem descanso curto (uma à escolha) ou longo (todas), respeitando os locais permitidos.
+- Recuperações do descanso não listam habilidades de equipamentos. Habilidades passivas de progressão (como Veterano de Batalha) seguem suas próprias regras de ativação por combate.
