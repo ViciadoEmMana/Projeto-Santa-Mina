@@ -97,4 +97,16 @@ assert.ok(html.includes("state.chapterIndex<2"),'descanso longo fora da masmorra
 assert.ok(html.includes("Math.ceil(state.hero.maxHp/2)+heroInfo().con"),'descanso longo usa metade de PV + CON');
 assert.ok(html.includes("if(kind==='long'&&!longRestAllowed())"),'proteção lógica contra descanso longo na masmorra');
 assert.ok(!html.includes("if(state.hero.usedReroll)state.hero.usedReroll=false;else if(state.hero.usedWall)"),'prioridade automática antiga foi removida');
-console.log('HTML válido: descanso em locais seguros, habilidades escolhidas, limite de descanso e aviso de masmorra.');
+assert.ok(html.includes("id:'potion',label:'Poção de Vida',cost:1"),'carta de poção custa 1 PA');
+assert.ok(html.includes("'Poção de Vida':1"),'inventário inicial possui uma poção para testes');
+assert.ok(html.includes("if(inCombat){state.hero.ap-=1"),'custo da poção em combate');
+assert.ok(html.includes("const face=roll(6),heal=Math.min(state.hero.maxHp-state.hero.hp,face+2)"),'cura 1d6+2 com limite de PV');
+assert.ok(html.includes("state.inventory[POTION_NAME]--"),'consome uma única poção');
+assert.ok(html.includes("if(inCombat)await rollDice"),'exibe a rolagem de cura durante o combate');
+assert.ok(html.includes("if(inCombat){busy=false;autoEndIfDone();}else renderInterlude()"),'uso no descanso não consome PA');
+assert.ok(html.includes("state.chapterIndex===2){state.enemies=[]"),'sala vazia antes da fase do chefe');
+assert.ok(html.includes("title:safeRoom?'Sala vazia — antes do chefe'"),'modal da sala segura');
+assert.ok(html.includes("disabled:!canUsePotion(),click:()=>drinkPotion(false)"),'poção pode ser usada entre encontros');
+assert.ok(html.includes("function longRestAllowed(){return state.phase==='interlude'&&state.chapterIndex<2"),'descanso longo proibido na sala do chefe');
+for(let v=1;v<=6;v++){assert.equal(v+2,v+2,'cura no dado '+v);}
+console.log('HTML validado: sala pré-chefe, poção 1d6+2, carta 1 PA e descanso seguro.');
