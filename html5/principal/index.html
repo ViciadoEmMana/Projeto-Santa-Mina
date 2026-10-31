@@ -455,10 +455,10 @@ const chapters=[
  {title:'O Covil de Tripa Seca',tag:'O ÚLTIMO COMBATE',location:'Entrada da masmorra · Covil',background:'covil',enemies:['tripa_seca','bow_goblin','club_goblin'],description:'Tripa Seca lidera um goblin de porrete, enquanto um arqueiro protege a retaguarda do covil.'}
 ];
 const monsters={
- archer_bandit:{name:'Bandido Arqueiro',sprite:'bandit_archer',size:'medium',hp:6,def:0,dex:1,for:1,ap:3,die:6,count:1,damageStat:'dex',ranged:true,loot:null},
- club_bandit:{name:'Bandido do Porrete',sprite:'bandit_club',size:'medium',hp:8,def:0,dex:1,for:1,weaponPassive:'club',ap:3,die:6,count:1,bonus:1,ranged:false,loot:null},
- club_goblin:{name:'Goblin do Porrete',sprite:'goblin_club',size:'small',hp:6,def:0,dex:1,for:1,ap:3,die:6,count:1,bonus:1,ranged:false,weaponPassive:'club',loot:{item:'Porrete gasto',gold:2}},
- scrap_goblin:{name:'Goblin Sucata',sprite:'goblin_scrap',size:'small',hp:6,def:2,dex:0,for:2,ap:3,die:4,count:1,bonus:2,ranged:false,loot:{item:'Tampa de ferro',gold:2}},
+ archer_bandit:{name:'Bandido Arqueiro',sprite:'bandit_archer',size:'medium',hp:6,def:0,dex:2,for:1,ap:3,die:6,count:1,damageStat:'dex',ranged:true,loot:null},
+ club_bandit:{name:'Bandido do Porrete',sprite:'bandit_club',size:'medium',hp:8,def:0,dex:1,for:2,weaponPassive:'club',ap:3,die:6,count:1,bonus:1,ranged:false,loot:null},
+ club_goblin:{name:'Goblin do Porrete',sprite:'goblin_club',size:'small',hp:6,def:0,dex:1,for:2,ap:3,die:6,count:1,bonus:1,ranged:false,weaponPassive:'club',loot:{item:'Porrete gasto',gold:2}},
+ scrap_goblin:{name:'Goblin Sucata',sprite:'goblin_scrap',size:'small',hp:6,def:2,shieldBlock:true,dex:0,for:2,ap:3,die:4,count:1,bonus:2,ranged:false,loot:{item:'Tampa de ferro',gold:2}},
  bow_goblin:{name:'Goblin Tiro Certo',sprite:'goblin_archer',size:'small',hp:5,def:0,dex:2,for:0,ap:3,die:6,count:1,bonus:2,ranged:true,loot:{item:'Arco gasto',gold:2}},
  knife_goblin:{name:'Goblin Faca Cega',sprite:'goblin_knife',size:'small',hp:6,def:0,dex:2,for:0,ap:3,die:4,count:2,bonus:0,ranged:false,freeMove:1,loot:{item:'Facas cegas',gold:2}},
  tripa_seca:{name:'Tripa Seca',sprite:'tripa_seca',size:'large',hp:13,def:2,dex:2,for:2,weaponPassive:'sword',ap:4,die:6,count:1,bonus:2,ranged:false,boss:true,loot:{item:'Escudo de madeira e ferro',gold:7}}
@@ -695,7 +695,7 @@ async function heroAttack(target,advantage){const hero=state.hero,w=heroWeapon()
  const backstab=heroType()==='halfling'&&natural!==1&&hero.init>target.init&&!(hero.backstabTargets||[]).includes(target.id)&&w.kind==='melee'?roll(w.die):0;
  if(backstab){(hero.backstabTargets??=[]).push(target.id);log(`<strong>ATAQUE POR TRÁS:</strong> iniciativa superior! Dado extra 1d${w.die} = ${backstab}.`,'good');showToast(`ATAQUE POR TRÁS · +${backstab}`);}
  const base=natural+heroDamageBonus()+axeBonus+backstab+(heroType()==='zeno'&&hero.veteranAtk?1:0);
- const defenseAmount=ignoreDef?0:finalTarget.def+(finalTarget.defending?2:0);
+ const shieldBlock=!ignoreDef&&finalTarget.shieldBlock&&(natural===2||natural===3)?2:0;  const defenseAmount=ignoreDef?0:finalTarget.def+(finalTarget.defending?2:0)+shieldBlock;  if(shieldBlock){log(`<strong>ESCUDO DO GOBLIN SUCATA:</strong> dado ${natural}, +2 Defesa neste golpe.`,'good');showToast('GOBLIN SUCATA · ESCUDO +2');playAnim(finalTarget,'defend',420);}
  const after=Math.max(0,base-defenseAmount);
  // Golpe Sujo: reação apenas diante de dano corpo a corpo realmente fatal para Tripa Seca.
  // A verificação ocorre depois do resultado final do dado, das repetições automáticas
@@ -777,8 +777,8 @@ function combatImpact(target,damage,{reduced=false}={}){
    puff(target,msg,damage>=3);
  }
 }
-function visibleDefense(target){if(!state)return 0;if(target!==state.hero)return Math.max(0,target.def+(target.defending?2:0));const h=state.hero;return Math.max(0,(heroType()==='brokk'&&h.hp>h.maxHp/2?1:0)+(h.defending?2:0)+(heroType()==='zeno'&&h.veteranDef?1:0));}
-function defense(target,attackNatural){const diceResults=Array.isArray(attackNatural)?attackNatural:[attackNatural];if(target===state.hero)return (heroType()==='brokk'&&target.hp>7?1:0)+(target.defending?2:0)+(heroType()==='zeno'&&target.veteranDef?1:0)+(heroShield()&&diceResults.some(v=>v===2||v===3)?2:0);
+function visibleDefense(target){if(!state)return 0;if(target!==state.hero)return Math.max(0,target.def+(target.defending?2:0));const h=state.hero;return Math.max(0,1+(heroType()==='brokk'&&h.hp>h.maxHp/2?1:0)+(h.defending?2:0)+(heroType()==='zeno'&&h.veteranDef?1:0));}
+function defense(target,attackNatural){const diceResults=Array.isArray(attackNatural)?attackNatural:[attackNatural];if(target===state.hero)return 1+(heroType()==='brokk'&&target.hp>target.maxHp/2?1:0)+(target.defending?2:0)+(heroType()==='zeno'&&target.veteranDef?1:0)+(heroShield()&&diceResults.some(v=>v===2||v===3)?2:0);
  return visibleDefense(target)}
 async function applyDamage(target,amount,attacker){if(amount<0)return;let died=false;
  if(target.boss&&attacker===state.hero&&(amount>=5||amount>=target.hp)){
