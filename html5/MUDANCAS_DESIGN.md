@@ -6,6 +6,17 @@ A entrada mais nova fica no topo. Cada entrada diz o que mudou, por que mudou e 
 
 ---
 
+## 07/11/2026 — Correção: jogo quebrava ao posicionar o Clérigo
+
+Pull request: ramo `fix/clerigo-retrato-render`.
+
+- **Sintoma:** com o Clérigo escolhido, `render()` quebrava assim que ele era posicionado, e o combate não seguia.
+- **Causa:** `render()` usava `images[heroType()].src`, mas não existe `images.cleric`. O Clérigo usa o sprite do Zeno (`heroInfo().sprite`).
+- **Correção:** o retrato da ficha e o da ordem de turno usam `images[heroType()] || images[heroInfo().sprite] || images.brokk`. Herói novo sem retrato próprio não quebra mais o jogo.
+- **Testado no navegador:** Clérigo, Pequenino, Zeno e Brokk posicionam e jogam sem erro.
+
+---
+
 ## 30/10/2026 — Correção urgente: jogo travava ao abrir depois do Pequenino Ladino
 
 Pull request: ramo `fix/ladino-capuz-trava-carregamento`.
