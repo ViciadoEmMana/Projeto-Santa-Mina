@@ -6,6 +6,64 @@ A entrada mais nova fica no topo. Cada entrada diz o que mudou, por que mudou e 
 
 ---
 
+## 07/11/2026 — Novo design aprovado na tela de combate (pergaminho, pedra e miniaturas)
+
+Pull request: ramo `design/novo-design-interface`. **Nenhuma regra mudou.**
+
+### O que mudou
+- **Tela de combate:** em telas a partir de cerca de 800×450, o combate vira um palco fixo de 1600×900, escalado para caber na janela. O fundo é a arte aprovada:
+  - caverna e tabuleiro de pedra em perspectiva;
+  - ficha em pergaminho à esquerda;
+  - cartas ilustradas embaixo;
+  - painéis "Ordem de Iniciativa" e "Registro de Combate" à direita;
+  - botão "Finalizar Turno".
+
+  Os textos que mudam foram apagados da arte e o jogo escreve por cima: capítulo, rodada, nome e classe do herói, PV, PA, ficha, custos e textos das cartas, iniciativa e registro.
+- **Celular:** em celular em pé ou deitado (tela pequena), continua o layout anterior. O menu, os intervalos e as janelas não mudaram.
+- **Tabuleiro:** segue a perspectiva da arte. Linhas **A–C** (A em cima) e colunas **1–6**, como no resto do jogo e no registro. A arte original tinha A–F e 1–3, e foi trocada para não confundir.
+- **Miniaturas pintadas:**
+  - **Quem tem:** Brokk e Goblin do Porrete.
+  - **Animação:** andam com pulinho, avançam no ataque, piscam em vermelho ao levar dano, brilham em azul defendendo e tombam na morte.
+  - **Quem não tem:** os outros heróis e inimigos continuam com o sprite atual até ganharem miniatura própria.
+- **Destaques:**
+  - casa do herói com contorno dourado na vez dele;
+  - anel dourado (herói) ou vermelho (inimigo) sob quem está agindo;
+  - casas de Mover e Correr com brilho suave.
+- **Cartas extras:**
+  - **Poção de Vida e "Ninguém me pega":** viraram placas no canto inferior esquerdo, no lugar de "Mão/Comprar".
+  - **Pancada Sagrada e Botas de Aço (Clérigo):** ficam acima de "Finalizar Turno".
+- **Botões do topo da arte:** "?" abre as regras, a engrenagem abre as configurações, o terceiro botão põe em tela cheia. A velocidade 1×/2×/4× fica ao lado deles. Clicar no retrato abre a ficha completa.
+- **Fonte:** Alegreya (Google Fonts). Sem internet, cai para Georgia.
+
+### Onde mexer
+- **Estilo:** bloco CSS "NOVO DESIGN" no fim do `<style>`. Tudo é escopado em `body.nd`; posições em pixels da arte de 1600×900.
+- **Código:**
+  - `ND` e `ndX` no topo do script: limites do tabuleiro (`ROWS`, `TL/TR/BL/BR`).
+  - `cellCorner`, `unitXY`, `unitBox`, `mouseCell`: usam a perspectiva da arte quando `ND.on`.
+  - Módulo "Novo design" antes de `window.__santaMinaTest`:
+    - `ND_FIG`: miniaturas e ponto de apoio da base;
+    - `ndDrawFig`: animação das miniaturas;
+    - `ndRender`: textos da ficha;
+    - `ndFit`: escala e regra de quando ligar.
+- **Miniatura nova:** acrescente em `ND_FIG` (imagem PNG transparente + `ax/ay` do centro da base) e em `ndFigKey`.
+
+### Testado (Chromium)
+- **Telas:** 1600×900, 1440×900 e 1280×720 com Brokk, Zeno, Clérigo e Pequenino, nos capítulos 1 a 4, e celular 390×844 (layout anterior). Nenhum erro.
+- **Robô:** jogou com Brokk e com o Clérigo, venceu os capítulos 1 e 2 e chegou ao 3, sem travamento.
+
+---
+
+## 07/11/2026 — Correção: jogo quebrava ao posicionar o Clérigo
+
+Pull request: ramo `fix/clerigo-retrato-render`.
+
+- **Sintoma:** com o Clérigo escolhido, `render()` quebrava assim que ele era posicionado, e o combate não seguia.
+- **Causa:** `render()` usava `images[heroType()].src`, mas não existe `images.cleric`. O Clérigo usa o sprite do Zeno (`heroInfo().sprite`).
+- **Correção:** o retrato da ficha e o da ordem de turno usam `images[heroType()] || images[heroInfo().sprite] || images.brokk`. Herói novo sem retrato próprio não quebra mais o jogo.
+- **Testado no navegador:** Clérigo, Pequenino, Zeno e Brokk posicionam e jogam sem erro.
+
+---
+
 ## 30/10/2026 — Correção urgente: jogo travava ao abrir depois do Pequenino Ladino
 
 Pull request: ramo `fix/ladino-capuz-trava-carregamento`.
