@@ -6,6 +6,22 @@ A entrada mais nova fica no topo. Cada entrada diz o que mudou, por que mudou e 
 
 ---
 
+## 07/11/2026 — Teste do novo design em página separada (`html5/testes/novo-design/`)
+
+Pull request: ramo `design/teste-novo-design`. **Não mexe no jogo oficial.**
+
+- **O que é:** uma página de teste com uma fase só (Brokk contra o Goblin do Porrete), sem menu, montada sobre a imagem de referência do novo design: tabuleiro em perspectiva com miniaturas pintadas, ficha em pergaminho, cartas ilustradas, painéis de iniciativa e registro à direita.
+- **Por quê:** para os dois testarem a proposta visual jogando, antes de decidir se ela vai para o arquivo principal.
+- **Como funciona:**
+  - O fundo é a imagem de referência, com o tabuleiro limpo.
+  - As miniaturas recortadas andam com um pulinho, avançam no ataque e piscam ao levar dano.
+  - A casa de quem está na vez ganha contorno dourado. Na vez do goblin aparece o anel vermelho.
+  - Ao passar o mouse num destino ou alvo, aparece a seta tracejada. O acerto solta uma faísca.
+- **Regras:** as atuais do jogo. Os números da referência (PV 18, PA 3, custos 1/1/1/2/0, Mover 3 casas, Correr 6) foram tratados como provisórios da arte e **não** foram aplicados.
+- **Link depois de mesclado:** `https://viciadoemmana.github.io/Projeto-Santa-Mina/testes/novo-design/`. A publicação já envia a pasta `html5/` inteira.
+
+---
+
 ## 30/10/2026 — Correção urgente: jogo travava ao abrir depois do Pequenino Ladino
 
 Pull request: ramo `fix/ladino-capuz-trava-carregamento`.
