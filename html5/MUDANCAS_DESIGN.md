@@ -6,6 +6,18 @@ A entrada mais nova fica no topo. Cada entrada diz o que mudou, por que mudou e 
 
 ---
 
+## 13/11/2026 — Cores corrigidas e carta original da Ladra de Bolsas
+
+Ramo `feat/ladra-arte-carta-original`. **Sem alterações nos atributos ou nas regras do combate.**
+
+- Miniatura da Ladra atualizada com a arte colorida aprovada (PNG transparente, 266 × 430 px) no arquivo `html5/principal/assets/ladra_bolsas.b64`.
+- A escala de 1,60 m é preservada: `ND_FIG.pocket_thief.ax=133`, `ay=430`, `bodyHeightPx=420`. A perspectiva por fileira continua funcionando.
+- Ao clicar na criatura sem selecionar ação, abre agora a **imagem original completa** da carta TCG no modal, em lugar da ficha reconstruída em HTML.
+- Carta PNG armazenada em duas partes de base64 `assets/ladra_carta_original_1.b64` e `assets/ladra_carta_original_2.b64`, montadas sob demanda e mantidas em cache durante a sessão.
+- A ficha mostra separadamente o HP atual e a interpretação dos números `3/1` como **Ataque 3 (DES +3) / Defesa 1**. Os demais símbolos não foram reinterpretados.
+- CSS `.pocket-original-image` permite a visualização responsiva da carta; `openPocketThiefCard` mantém o mesmo gesto de clique e a seleção de ataques continua tendo prioridade.
+
+
 ## 13/11/2026 — Escala proporcional de miniaturas 2.5D
 
 Ramo `feat/escala-miniaturas-por-altura`. **Nenhuma regra de combate alterada.**
