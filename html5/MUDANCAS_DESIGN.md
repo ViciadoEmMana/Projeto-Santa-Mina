@@ -6,6 +6,19 @@ A entrada mais nova fica no topo. Cada entrada diz o que mudou, por que mudou e 
 
 ---
 
+## 13/11/2026 — Escala proporcional de miniaturas 2.5D
+
+Ramo `feat/escala-miniaturas-por-altura`. **Nenhuma regra de combate alterada.**
+
+- Referência visual oficial na fileira central: pessoa de **1,80 m = 120 px** de altura corporal (pés ao topo da cabeça, sem acessórios).
+- Medidas cadastradas: **Brokk = 1,50 m = 100 px**; **Ladra de Bolsas = 1,60 m ≈ 106,7 px** na fileira central.
+- Perspectiva mantida pela razão entre as larguras das casas das respectivas fileiras e da fileira central.
+- Os PNGs podem ter dimensões e margens diferentes: `ND_FIG.*.bodyHeightPx` calibra a altura corporal na arte; `ND_FIG.*.ay` conserva o apoio da base no tabuleiro.
+- Alterações localizadas nas funções `ndScale`, `ndPerspective`, `ndFigH`, `unitBox` e nas tabelas `MINIATURE_HEIGHT_M` e `MINIATURE_REFERENCE`.
+- Miniaturas que ainda não receberam altura oficial continuam com a escala anterior; novas alturas e medidas da ilustração podem ser adicionadas depois.
+- As áreas de clique acompanham o tamanho da miniatura na apresentação 2.5D.
+
+
 ## 13/11/2026 — Ladra de Bolsas em miniatura 2.5D e carta de criatura
 
 Ramo: `feat/ladra-bolsas-miniatura-carta`. **Nenhum capítulo da campanha foi substituído.**
