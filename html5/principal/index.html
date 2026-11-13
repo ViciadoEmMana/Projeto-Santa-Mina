@@ -196,6 +196,13 @@ kbd{font:inherit;font-size:.9em;padding:1px 6px;border:2px solid var(--plate-lin
 .stage-toast.error{color:#ffb4a4}
 @keyframes toastIn{from{transform:translateY(-50%) scale(1.25);opacity:.2}}
 
+.floating-roll{position:absolute;z-index:12;left:50%;top:38%;transform:translate(-50%,-50%);font-size:clamp(28px,4vw,48px);font-family:Georgia,serif;font-weight:900;color:#f9e5a8;text-shadow:0 3px 0 #231711,0 0 12px #000,2px 2px 3px #000;pointer-events:none;white-space:nowrap;text-align:center;animation:floatingRollUp .8s ease-out both}
+.floating-roll.enemy{color:#ffaaa1}
+.floating-roll[hidden]{display:none!important}
+@keyframes floatingRollUp{0%{opacity:0;transform:translate(-50%,-12%) scale(.76)}25%{opacity:1}75%{opacity:1}100%{opacity:0;transform:translate(-50%,-95%) scale(1.12)}}
+.dice-panel{max-width:min(540px,calc(100% - 20px));box-sizing:border-box}
+.dice-faces{flex-wrap:wrap}
+.dice-row{justify-content:center}
 /* ---------- MODAIS ---------- */
 .modal-backdrop{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:16px;background:#050b09b8}
 .modal{width:min(560px,100%);max-height:90vh;overflow:auto;padding:24px 26px 22px}
@@ -254,7 +261,7 @@ kbd{font:inherit;font-size:.9em;padding:1px 6px;border:2px solid var(--plate-lin
 .dice-group{display:flex;flex-direction:column;align-items:center;gap:0}
 .dice-group small{font-size:11px;letter-spacing:2px;color:var(--ink-faint)}
 .dice-row{display:flex;gap:4px}
-.dice-panel canvas.die3d{width:96px;height:96px;cursor:default;image-rendering:pixelated;transition:opacity .25s,filter .25s}
+.dice-panel canvas.die3d{width:48px;height:48px;max-width:48px;max-height:48px;flex:none;cursor:default;image-rendering:pixelated;transition:opacity .25s,filter .25s}
 .die3d.dim{opacity:.32;filter:grayscale(.7)}
 .die3d.landed{animation:dieLand .3s steps(3)}
 @keyframes dieLand{50%{transform:scale(1.14)}}
@@ -267,7 +274,7 @@ kbd{font:inherit;font-size:.9em;padding:1px 6px;border:2px solid var(--plate-lin
 .dice-result .tot.miss{color:var(--bad);font-size:28px}
 @keyframes totIn{from{transform:scale(1.6);opacity:.3}}
 .dice-detail{font-size:13px;min-height:16px}
-@media(max-width:759px){.dice-panel canvas.die3d{width:72px;height:72px}.dice-panel{top:150px;min-width:0;width:calc(100vw - 24px)}.dice-result{font-size:18px}.dice-result .tot{font-size:28px}}
+@media(max-width:759px){.dice-panel canvas.die3d{width:40px;height:40px;max-width:40px;max-height:40px}.dice-panel{top:150px;min-width:0;width:calc(100vw - 24px)}.dice-result{font-size:18px}.dice-result .tot{font-size:28px}}
 /* Novo feedback visual: dado alto (5/6) */
 .dice-panel.high-roll{animation:rollHighPulse .65s steps(4);border-color:#ffe4a1;}
 @keyframes rollHighPulse{0%,100%{filter:none}45%{filter:drop-shadow(0 0 16px #ffd776) brightness(1.35)}}
@@ -484,7 +491,7 @@ body.nd #gameScreen .stage-toast{left:330px;right:330px;top:150px;transform:none
     <div class="stage-frame" id="stageFrame">
       <canvas id="battleCanvas" aria-label="Tabuleiro tático de três linhas por seis colunas"></canvas>
       <div id="dicePanel" class="dice-panel plate" hidden><div id="diceHead" class="dice-head">ROLAGEM</div><div id="diceFaces" class="dice-faces"></div><div id="diceResult" class="dice-result"></div><div id="diceDetail" class="dice-detail"></div></div>
-      <div id="stageToast" class="stage-toast" hidden></div>
+      <div id="stageToast" class="stage-toast" hidden></div><div id="floatingRoll" class="floating-roll" aria-live="polite" hidden></div>
     </div>
 
     <div class="hud-top-left hud-reserve">
@@ -542,7 +549,7 @@ body.nd #gameScreen .stage-toast{left:330px;right:330px;top:150px;transform:none
 
   <div class="gear-wrap">
     <button id="gearBtn" class="gear-btn" aria-label="Configurações" aria-expanded="false"><span id="gearIcon" class="pix-icon"></span></button>
-    <div id="gearMenu" class="gear-menu plate" hidden><button id="musicBtn" class="icon-button">♫ <span>Música</span></button><button id="sfxBtn" class="icon-button">♪ <span>Efeitos</span></button><button id="helpBtn" class="icon-button">? <span>Regras</span></button><button id="menuBtn" class="icon-button">↶ <span>Menu principal</span></button></div>
+    <div id="gearMenu" class="gear-menu plate" hidden><button id="musicBtn" class="icon-button">♫ <span>Música</span></button><button id="sfxBtn" class="icon-button">♪ <span>Efeitos</span></button><button id="dice3dBtn" type="button" class="icon-button" role="switch" aria-checked="true">🎲 <span>Dados 3D: ligados</span></button><button id="helpBtn" class="icon-button">? <span>Regras</span></button><button id="menuBtn" class="icon-button">↶ <span>Menu principal</span></button></div>
   </div>
 
   <div id="modalBackdrop" class="modal-backdrop" hidden><section id="modalContent" class="modal plate" role="dialog" aria-modal="true" aria-live="polite"></section></div>
@@ -558,7 +565,7 @@ body.nd #gameScreen .stage-toast{left:330px;right:330px;top:150px;transform:none
 const ND={on:false,k:1,ROWS:[202,286,394,507],TL:[478,202],TR:[1185,202],BL:[392,507],BR:[1236,507]};
 const ndX=(c,y)=>{const L=ND.TL[0]+(ND.BL[0]-ND.TL[0])*(y-ND.TL[1])/(ND.BL[1]-ND.TL[1]),R=ND.TR[0]+(ND.BR[0]-ND.TR[0])*(y-ND.TR[1])/(ND.BR[1]-ND.TR[1]);return L+(R-L)*c/6};
 // sleep() de uma partida abandonada nunca resolve: impede que turnos antigos continuem rodando depois de voltar ao menu.
-let combatSpeed=1;const $=id=>document.getElementById(id), speedMs=ms=>Math.max(10,Math.round(ms/combatSpeed)), sleep=ms=>{const sid=session;return new Promise(r=>setTimeout(()=>{if(sid===session)r()},speedMs(ms)))};
+let combatSpeed=1,dice3DEnabled=true;try{dice3DEnabled=localStorage.getItem('santaMina:dados3d')!=='off'}catch(_e){}const $=id=>document.getElementById(id), speedMs=ms=>Math.max(10,Math.round(ms/combatSpeed)), sleep=ms=>{const sid=session;return new Promise(r=>setTimeout(()=>{if(sid===session)r()},speedMs(ms)))};
 const canvas=$('battleCanvas'),ctx=canvas.getContext('2d');
 let CW=1000,CH=600,TILE=86,DX=86,DY=20,SHEAR=28,X0=0,Y0=0,DPR=1,PIX=3,sceneCanvas=null,sceneKey='';
 let session=0, state=null, busy=false, muted=true, hovered=null, particles=[], cameraShake=0, nextUid=0, modalActive=false, diceTimeout=null, toastTimeout=null;
@@ -730,7 +737,7 @@ function unitBox(u){const {x,y}=unitXY(u),foot=ND.on?Math.round(y+(ND.ROWS[u.r+1
 function puff(u,value,bad=false){if(u.r<0)return;particles.push({type:'float',r:u.r,c:u.c,text:value,bad,t:performance.now()});}
 function flash(u){if(u)u.visualFlash=performance.now()+330;cameraShake=performance.now()+230}
 // ---------- Dados 3D em pixel art: poliedros reais girando, desenhados em baixa resolução ----------
-const DIE_RES=40,DIE_ROLL_MS=1900,DIE_HOLD_MS=1500,DIE_GEOMS={};
+const DIE_RES=64,DIE_ROLL_MS=1900,DIE_HOLD_MS=1500,DIE_GEOMS={};
 const DIE_PAL={hero:{ramp:['#7d7462','#aaa08a','#d3cbb6','#f3eee1'],ink:'#2a2620',edge:'#1c1617'},enemy:{ramp:['#4a1418','#7a2228','#a8383d','#d65d5a'],ink:'#fff1e6',edge:'#1c1617'}};
 const v3={sub:(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]],dot:(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2],cross:(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],norm:a=>{const l=Math.hypot(...a)||1;return [a[0]/l,a[1]/l,a[2]/l]},len:a=>Math.hypot(...a)};
 const quat={axis:(ax,an)=>{const s=Math.sin(an/2);return [Math.cos(an/2),ax[0]*s,ax[1]*s,ax[2]*s]},mul:(a,b)=>[a[0]*b[0]-a[1]*b[1]-a[2]*b[2]-a[3]*b[3],a[0]*b[1]+a[1]*b[0]+a[2]*b[3]-a[3]*b[2],a[0]*b[2]-a[1]*b[3]+a[2]*b[0]+a[3]*b[1],a[0]*b[3]+a[1]*b[2]-a[2]*b[1]+a[3]*b[0]],inv:q=>[q[0],-q[1],-q[2],-q[3]],rot:(q,v)=>{const p=quat.mul(quat.mul(q,[0,v[0],v[1],v[2]]),quat.inv(q));return [p[1],p[2],p[3]]}};
@@ -767,7 +774,22 @@ function paintDie(g,die,now){const S=DIE_RES,geom=die.geom,pal=DIE_PAL[die.tone]
  return u>=1}
 function diceSum(faces,mods){faces=[].concat(faces);let total=faces.reduce((a,b)=>a+b,0),s=faces.map(v=>`<span class="die-chip">${v}</span>`).join(' <span class="op">+</span> ');for(const [v,label] of mods){if(!v)continue;s+=` <span class="op">${v<0?'−':'+'}</span> ${Math.abs(v)} <small>${label}</small>`;total+=v}return `${s} <span class="op">=</span> <b class="tot">${total}</b>`}
 // groups: [{label, sides, faces, pick:'max'|'min'}]; result/note: HTML exibido quando os dados param.
-async function rollDice({title,groups,result,note='',tone='hero',attackNatural=null}){const dp=$('dicePanel'),fd=$('diceFaces');clearTimeout(diceTimeout);dp.hidden=false;dp.classList.toggle('enemy',tone==='enemy');$('diceHead').textContent=title;$('diceResult').innerHTML='';$('diceDetail').textContent='Rolando...';
+async function rollDice({title,groups,result,note='',tone='hero',attackNatural=null}){
+ if(!dice3DEnabled){
+  const dp=$('dicePanel'),floating=$('floatingRoll');dp.hidden=true;dp.classList.remove('high-roll');
+  const faces=groups.flatMap(gr=>gr.faces.map(String));
+  const temp=document.createElement('div');temp.innerHTML=result||'';
+  const total=temp.querySelector('.tot')?.textContent?.trim();
+  floating.textContent=total&&/^[-+]?\d+$/.test(total)?faces.join(' · ')+' → '+total:faces.join(' · ');
+  floating.classList.toggle('enemy',tone==='enemy');floating.hidden=false;
+  const duration=Math.max(340,Math.round(720/combatSpeed));
+  floating.style.animation='none';void floating.offsetWidth;floating.style.animation='';
+  floating.style.animationDuration=duration+'ms';
+  await new Promise(resolve=>setTimeout(resolve,duration));
+  floating.hidden=true;
+  return;
+ }
+ const dp=$('dicePanel'),fd=$('diceFaces');clearTimeout(diceTimeout);dp.hidden=false;dp.classList.toggle('enemy',tone==='enemy');$('diceHead').textContent=title;$('diceResult').innerHTML='';$('diceDetail').textContent='Rolando...';
  const start=performance.now(),diceSpeed=combatSpeed,dice3d=[];let k=0;
  fd.innerHTML=groups.map(gr=>`<div class="dice-group">${gr.label?`<small>${gr.label}</small>`:''}<div class="dice-row">${gr.faces.map(()=>`<canvas class="die3d" width="${DIE_RES}" height="${DIE_RES}"></canvas>`).join('')}</div></div>`).join('');
  const cvs=[...fd.querySelectorAll('canvas')];
@@ -1471,6 +1493,19 @@ $('chapterTestBtn').addEventListener('click',()=>{openModal({eyebrow:'LABORATÓR
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!modalActive&&state?.phase==='combat'){state.selected=null;render()}if(modalActive||!state||!isHeroTurn())return;if(e.key>='1'&&e.key<=String(cards.length)){e.preventDefault();setSelection(cards[Number(e.key)-1].id)}if(e.key==='Enter'){e.preventDefault();state.selected=null;busy=true;clearKnockedAfterTurn(state.hero);render();advanceTurn();}});
 // Interface da tela de jogo: engrenagem, ficha, diário e ícones em pixel art.
 $('heartIcon').innerHTML=pixIcon(ICONS.heart,{o:'#1c1617',r:'#e0424a',h:'#ff9a9e',d:'#9e1f2a'});$('gearIcon').innerHTML=pixIcon(ICONS.gear);$('boltIcon').innerHTML=pixIcon(ICONS.bolt,{'#':'#b58cff'});$('sheetIcon').innerHTML=pixIcon(ICONS.bag,{'#':'#c9a46a'});
+function updateDice3DSettings(){
+ const button=$('dice3dBtn');if(!button)return;
+ button.setAttribute('aria-checked',String(dice3DEnabled));
+ button.querySelector('span').textContent=dice3DEnabled?'Dados 3D: ligados':'Dados 3D: desligados';
+ button.title=dice3DEnabled?'Desativar dados 3D e usar números flutuantes':'Ativar dados 3D';
+}
+$('dice3dBtn').addEventListener('click',()=>{
+ dice3DEnabled=!dice3DEnabled;
+ try{localStorage.setItem('santaMina:dados3d',dice3DEnabled?'on':'off')}catch(_e){}
+ $('dicePanel').hidden=true;$('floatingRoll').hidden=true;
+ updateDice3DSettings();showToast(dice3DEnabled?'DADOS 3D ATIVADOS':'NÚMEROS FLUTUANTES ATIVADOS');
+});
+updateDice3DSettings();
 function toggleGear(open){const m=$('gearMenu');open=open??m.hidden;m.hidden=!open;$('gearBtn').setAttribute('aria-expanded',String(open))}
 function toggleSheet(open){const dr=$('heroDrawer');open=open??dr.hidden;dr.hidden=!open;$('sheetBtn').setAttribute('aria-expanded',String(open))}
 $('gearBtn').addEventListener('click',e=>{e.stopPropagation();toggleGear()});document.addEventListener('click',e=>{if(!$('gearMenu').hidden&&!e.composedPath().some(el=>el.classList?.contains('gear-wrap')))toggleGear(false)});['helpBtn','menuBtn'].forEach(id=>$(id).addEventListener('click',()=>toggleGear(false)));
