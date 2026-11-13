@@ -186,3 +186,11 @@ assert.ok(Math.abs(calc('pocket_thief',1)*120-(120*1.6/1.8))<.01,'Ladra 1,60 m =
 assert.ok(calc('brokk',0)<calc('brokk',1)&&calc('brokk',2)>calc('brokk',1),'perspectiva varia com a fileira');
 assert.ok(html.includes('if(ND.on&&ndFig(u)){const fig=ndFig(u),scale=ndScale(u)'), 'área clicável segue o tamanho da miniatura');
 console.log('Miniaturas validadas: escala 120 px/1,80 m, Brokk 100 px, Ladra 106,67 px e perspectiva.');
+
+
+assert.ok(html.includes('id="miniPreviewBtn"'), 'botão de prévia de miniaturas no menu');
+assert.ok(html.includes('id="miniShowcaseBoard"'), 'tabuleiro visual separado do combate principal');
+assert.ok(html.includes("assets/miniaturas_quatro_atlas.b64"), 'atlas das quatro miniaturas carregado no HTML5');
+for(const name of ['Ladrão de Pipas','Ladrão de Doces','Quebrador de Ossos','Ladrão de Galinha'])assert.ok(html.includes(name), 'miniatura visual cadastrada: '+name);
+assert.ok(html.includes('positions=[8,9,10,11]'), 'quatro peças posicionadas no tabuleiro de prévia');
+console.log('Galeria de miniaturas validada: acesso no menu, quatro peças, atlas e tabuleiro visual.');
