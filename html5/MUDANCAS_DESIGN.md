@@ -6,6 +6,20 @@ A entrada mais nova fica no topo. Cada entrada diz o que mudou, por que mudou e 
 
 ---
 
+## 13/11/2026 — Ladra de Bolsas em miniatura 2.5D e carta de criatura
+
+Ramo: `feat/ladra-bolsas-miniatura-carta`. **Nenhum capítulo da campanha foi substituído.**
+
+- Criatura de teste: Ladra de Bolsas (Humanoide), 8 PV, Ataque 3 proveniente de DES +3, Defesa 1, arma Adaga 1d6 + DES, 3 PA.
+- Novo token 2.5D com arte compacta transparente; arquivo `html5/principal/assets/ladra_bolsas.b64` carregado pelo navegador para preservar o jogo em uma só página de entrada.
+- Clique no token **sem ação selecionada** abre carta com atributos e descrição, sem gastar PA. Com uma ação selecionada, o clique continua usando as mecânicas do combate.
+- Acesso: menu principal → **TESTAR UM CAPÍTULO** → **LADRA DE BOLSAS · ENCONTRO DE TESTE**.
+- Significado de 3/1 na carta: **Ataque 3 (DES +3) / Defesa 1**. Demais símbolos ainda não foram especificados.
+- Após vencer o encontro de teste, retorna ao menu, sem mudar progresso salvo ou capítulos.
+- Ponto de integração visual: `ND_FIG.pocket_thief`, `ndFigKey`; carta em `openPocketThiefCard` e CSS `.pocket-card`.
+- A arte foi reduzida para caber no protótipo; substituir por PNG original em resolução alta quando for estabelecido o pipeline final de assets.
+
+
 ## 13/11/2026 — Dados 3D menores e opção de texto flutuante
 
 Ramo: `fix/dados-3d-texto-flutuante`. Nenhuma regra ou valor de dado foi alterado.
