@@ -38,7 +38,7 @@ const distancia=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
 const comprimento=ps=>ps.slice(1).reduce((sum,p,i)=>sum+distancia(ps[i],p),0);
 const grafo=Object.fromEntries(locais.map(l=>[l.id,[]]));
 for(const e of caminhos){const len=comprimento(e.coordenadas);grafo[e.a].push({id:e.b,len,e,reverso:false});grafo[e.b].push({id:e.a,len,e,reverso:true});}
-function rota(origem,destino){
+function rotaEstradas(origem,destino){
 if(!pontos[origem]||!pontos[destino])throw Error("Localidade desconhecida");
 if(origem===destino)return {locais:[origem],coordenadas:[[pontos[origem].x,pontos[origem].y]],distancia:0};
 const dist=Object.fromEntries(locais.map(l=>[l.id,Infinity])),anterior={};dist[origem]=0;
@@ -51,9 +51,30 @@ while(atual!==origem){const {de,trecho}=anterior[atual];etapas.unshift(trecho);l
 const coordenadas=[];for(const etapa of etapas){const c=etapa.reverso?[...etapa.e.coordenadas].reverse():etapa.e.coordenadas;coordenadas.push(...(coordenadas.length?c.slice(1):c));}
 return {locais:localidades,coordenadas,distancia:comprimento(coordenadas)};
 }
-const referencia=rota("santa","forja_nova").distancia;
-function dias(origem,destino,meio="pe"){if(!["pe","carroca"].includes(meio))throw Error("Meio de transporte inválido");
-const r=rota(origem,destino);return r.distancia===0?0:Math.max(1,Math.round((r.distancia/referencia)*(meio==="carroca"?3:6)));}
+// Caminhada livre: localidades e coordenadas arbitrárias são válidas.
+function ponto(alvo){
+ if(typeof alvo==="string"){const p=pontos[alvo];if(!p)throw Error("Localidade desconhecida");return [p.x,p.y];}
+ if(Array.isArray(alvo)&&alvo.length===2&&alvo.every(Number.isFinite))return alvo.slice();
+ if(alvo&&Number.isFinite(alvo.x)&&Number.isFinite(alvo.y))return [alvo.x,alvo.y];
+ throw Error("Posição inválida");
+}
+function rotaLivre(origem,destino,passagens=[]){
+ const coordenadas=[origem,...passagens,destino].map(ponto);
+ return {locais:[origem,destino].filter(x=>typeof x==="string"),coordenadas,distancia:comprimento(coordenadas),livre:true};
+}
+function rota(origem,destino,meio="pe",passagens=[]){
+ if(meio==="pe")return rotaLivre(origem,destino,passagens);
+ if(meio==="carroca"){if(typeof origem!=="string"||typeof destino!=="string")throw Error("Carroças usam somente estradas entre localidades");return rotaEstradas(origem,destino);}
+ throw Error("Meio de transporte inválido");
+}
+const referenciaCarroca=rotaEstradas("santa","forja_nova").distancia;
+const referenciaPe=rotaLivre("santa","forja_nova").distancia;
+const referencia=referenciaCarroca;
+function dias(origem,destino,meio="pe",passagens=[]){
+ const r=rota(origem,destino,meio,passagens);
+ const base=meio==="carroca"?referenciaCarroca:referenciaPe;
+ return r.distancia===0?0:Math.max(1,Math.round((r.distancia/base)*(meio==="carroca"?3:6)));
+}
 function posicao(coordenadas,progresso){if(!coordenadas.length)throw Error("Trajeto vazio");
 const p=Math.max(0,Math.min(1,progresso));let restante=comprimento(coordenadas)*p;
 for(let i=1;i<coordenadas.length;i++){const anterior=coordenadas[i-1],atual=coordenadas[i],len=distancia(anterior,atual);
@@ -61,7 +82,7 @@ if(restante<=len||i===coordenadas.length-1){const t=len?Math.min(1,restante/len)
 const ultimo=coordenadas.at(-1);return {x:ultimo[0],y:ultimo[1]};
 }
 // O relógio é determinado pela simulação, nunca por tempo real obrigatório.
-function iniciarViagem(origem,destino,meio="pe"){const trajeto=rota(origem,destino);return {...trajeto,origem,destino,meio,dias:dias(origem,destino,meio),progresso:0};}
+function iniciarViagem(origem,destino,meio="pe",passagens=[]){const trajeto=rota(origem,destino,meio,passagens);return {...trajeto,origem,destino,meio,dias:dias(origem,destino,meio,passagens),progresso:0};}
 function avancar(viagem,fracao){viagem.progresso=Math.max(0,Math.min(1,viagem.progresso+fracao));return {posicao:posicao(viagem.coordenadas,viagem.progresso),diasDecorridos:viagem.dias*viagem.progresso,chegou:viagem.progresso>=1};}
-global.SantaMinaViagens=Object.freeze({locais,caminhos,rota,dias,posicao,iniciarViagem,avancar,referencia});
+global.SantaMinaViagens=Object.freeze({locais,caminhos,rota,rotaEstradas,rotaLivre,dias,posicao,iniciarViagem,avancar,referencia,referenciaPe,referenciaCarroca});
 })(typeof window!=="undefined"?window:globalThis);
