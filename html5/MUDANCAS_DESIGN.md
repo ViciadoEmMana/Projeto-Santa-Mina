@@ -6,6 +6,18 @@ A entrada mais nova fica no topo. Cada entrada diz o que mudou, por que mudou e 
 
 ---
 
+## 13/11/2026 — Dados 3D menores e opção de texto flutuante
+
+Ramo: `fix/dados-3d-texto-flutuante`. Nenhuma regra ou valor de dado foi alterado.
+
+- Dados 3D: canvas de 64 px e visualização em 48 px (40 px no celular), com disposição adaptável para evitar dados gigantes e sobreposição.
+- Configurações (engrenagem): opção **Dados 3D: ligados/desligados**, salva no `localStorage` do navegador.
+- Desligado: nenhuma animação de poliedros ou painel de dados; os resultados numéricos aparecem como texto flutuante por um curto período, preservando os registros e cálculos de combate.
+- CSS: classes `.floating-roll`, `.dice-panel canvas.die3d`, painel limitado e responsivo.
+- JS: controle `dice3DEnabled`, `updateDice3DSettings`, bifurcação inicial de `rollDice`.
+- Verificação: código e locais de integração conferidos; ainda requer teste manual de jogabilidade nas duas modalidades.
+
+
 ## 07/11/2026 — Novo design aprovado na tela de combate (pergaminho, pedra e miniaturas)
 
 Pull request: ramo `design/novo-design-interface`. **Nenhuma regra mudou.**
