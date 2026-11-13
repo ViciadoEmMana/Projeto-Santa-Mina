@@ -163,3 +163,21 @@ assert.ok(html.includes("function openPocketThiefCard(u)"), 'Carta da Ladra abre
 assert.ok(html.includes("function ndFigKey(u)")&&html.includes("u.sprite==='pocket_thief'"), 'Ladra usa miniatura 2.5D');
 assert.ok(html.includes("assets/ladra_bolsas.b64"), 'Arte transparente carregada do asset dedicado');
 console.log('HTML validado: animação do escudo para ataques simples e facas, com bônus único.');
+
+
+// Confere que altura corporal determina o tamanho da miniatura sem interferir na perspectiva.
+const miniatureSource=html.match(/const MINIATURE_REFERENCE=\{[\s\S]*?(?=function ndDrawFig\()/)?.[0];
+assert.ok(miniatureSource,'código de escala proporcional presente');
+const miniatureEnv=vm.createContext({
+ ND:{ROWS:[0,100,200,300]},
+ ndX:(col,y)=>col*(120+(y-150)*0.2),
+ ndFig:u=>({bodyHeightPx:u.key==='brokk'?175:120,ay:u.key==='brokk'?195:128}),
+ ndFigKey:u=>u.key,Number,Math
+});
+vm.runInContext(miniatureSource,miniatureEnv);
+const calc=(key,r)=>vm.runInContext('ndScale({key:'+JSON.stringify(key)+',r:'+r+'})',miniatureEnv);
+assert.ok(Math.abs(calc('brokk',1)*175-100)<.01,'Brokk 1,50 m = 100 px na fileira central');
+assert.ok(Math.abs(calc('pocket_thief',1)*120-(120*1.6/1.8))<.01,'Ladra 1,60 m = 106,67 px na fileira central');
+assert.ok(calc('brokk',0)<calc('brokk',1)&&calc('brokk',2)>calc('brokk',1),'perspectiva varia com a fileira');
+assert.ok(html.includes('if(ND.on&&ndFig(u)){const fig=ndFig(u),scale=ndScale(u)'), 'área clicável segue o tamanho da miniatura');
+console.log('Miniaturas validadas: escala 120 px/1,80 m, Brokk 100 px, Ladra 106,67 px e perspectiva.');
