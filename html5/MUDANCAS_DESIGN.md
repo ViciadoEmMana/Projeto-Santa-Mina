@@ -6,6 +6,19 @@ A entrada mais nova fica no topo. Cada entrada diz o que mudou, por que mudou e 
 
 ---
 
+## 13/11/2026 — Galeria visual das quatro novas miniaturas 2.5D
+
+Ramo `feat/galeria-miniaturas-quatro-criaturas`. **Nenhuma criatura nova foi colocada em encontros reais; estatísticas e alturas pendentes.**
+
+- Adicionado botão **VER NOVAS MINIATURAS 2.5D** no menu do HTML oficial.
+- Nova prévia sobre tabuleiro 3×6 com quatro tokens: Ladrão de Pipas, Ladrão de Doces, Quebrador de Ossos e Ladrão de Galinha.
+- Atlas `html5/principal/assets/miniaturas_quatro_atlas.b64`: miniaturas reduzidas para exibição, derivadas das ilustrações PNG originais e com bases padronizadas, sem redesenhar rostos ou roupas.
+- Clique seleciona uma miniatura e clique em casa livre muda sua posição **apenas na prévia**. Esc permite fechar.
+- UI e implementação no HTML oficial: `miniPreviewBtn`, `miniShowcase`, `.sm-mini-*` e script independente.
+- A prévia não afeta IA, campanhas, níveis, dano, defesa, PA, fichas de criaturas ou progresso salvo.
+- Os tokens da prévia têm tamanho ilustrativo. Quando as alturas forem cadastradas, integrar às escalas reais do tabuleiro.
+
+
 ## 13/11/2026 — Cores corrigidas e carta original da Ladra de Bolsas
 
 Ramo `feat/ladra-arte-carta-original`. **Sem alterações nos atributos ou nas regras do combate.**
