@@ -162,6 +162,11 @@ assert.ok(html.includes("state.testEnemies||c.enemies"), 'Laboratório permite c
 assert.ok(html.includes("function openPocketThiefCard(u)"), 'Carta da Ladra abre na interface');
 assert.ok(html.includes("function ndFigKey(u)")&&html.includes("u.sprite==='pocket_thief'"), 'Ladra usa miniatura 2.5D');
 assert.ok(html.includes("assets/ladra_bolsas.b64"), 'Arte transparente carregada do asset dedicado');
+assert.ok(html.includes("ND_FIG.pocket_thief={src:'',ax:133,ay:430"), 'Token corrigido com arte colorida em alta resolução');
+assert.ok(html.includes('ND_FIG.pocket_thief.bodyHeightPx=420'), 'Escala da Ladra calibrada para a nova resolução');
+assert.ok(html.includes('assets/ladra_carta_original_1.b64')&&html.includes('assets/ladra_carta_original_2.b64'), 'Carta TCG original é carregada dos assets');
+assert.ok(html.includes('pocket-original-image'), 'Carta original é exibida como imagem');
+assert.ok(!html.includes('const portrait=ND_FIG.pocket_thief.src'), 'Ficha reconstruída foi substituída');
 console.log('HTML validado: animação do escudo para ataques simples e facas, com bônus único.');
 
 
