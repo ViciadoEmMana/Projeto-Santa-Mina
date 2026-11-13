@@ -744,7 +744,7 @@ if(state.selected==='slip'&&heroType()==='halfling'){showToast('HABILIDADE BLOQU
  }
 }
 function unitXY(u){if(ND.on){const y=(ND.ROWS[u.r]+ND.ROWS[u.r+1])/2;return {x:ndX(u.c+.5,y),y}}return {x:X0+u.c*DX+u.r*SHEAR+(TILE+SHEAR)/2,y:Y0+u.r*DY+DY/2}}
-function unitBox(u){const {x,y}=unitXY(u),foot=ND.on?Math.round(y+(ND.ROWS[u.r+1]-ND.ROWS[u.r])*.3):Math.round((y+DY*.2)/PIX)*PIX,SP=sprScale();return {x,foot,sw:Math.round(26*SP),sh:Math.round(charHeight(CHARS[charKey(u)])*SP)}}
+function unitBox(u){const {x,y}=unitXY(u),foot=ND.on?Math.round(y+(ND.ROWS[u.r+1]-ND.ROWS[u.r])*.3):Math.round((y+DY*.2)/PIX)*PIX,SP=sprScale();if(ND.on&&ndFig(u)){const fig=ndFig(u),scale=ndScale(u);return {x,foot,sw:Math.round(fig.img.width*scale),sh:Math.round(fig.ay*scale)}}return {x,foot,sw:Math.round(26*SP),sh:Math.round(charHeight(CHARS[charKey(u)])*SP)}}
 function puff(u,value,bad=false){if(u.r<0)return;particles.push({type:'float',r:u.r,c:u.c,text:value,bad,t:performance.now()});}
 function flash(u){if(u)u.visualFlash=performance.now()+330;cameraShake=performance.now()+230}
 // ---------- Dados 3D em pixel art: poliedros reais girando, desenhados em baixa resolução ----------
