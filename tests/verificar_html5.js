@@ -156,4 +156,10 @@ assert.ok(html.includes("id=\"dice3dBtn\""), 'Configuração de dados 3D está d
 assert.ok(html.includes('floatingRoll'), 'Modo de números flutuantes existe');
 assert.ok(html.includes('if(!dice3DEnabled)'), 'Modo de números flutuantes não renderiza dados 3D');
 console.log('Ladino atualizado validado: PV, adaga, Esquiva, Mão Leve e Ataque Rápido nível 2.');
+assert.ok(html.includes("pocket_thief:{name:'Ladra de Bolsas'"), 'Ladra de Bolsas cadastrada no bestiário');
+assert.ok(html.includes("hp:8,def:1,dex:3"), 'Ladra tem 8 PV, Defesa 1 e ataque DES +3');
+assert.ok(html.includes("state.testEnemies||c.enemies"), 'Laboratório permite combate isolado sem alterar capítulos');
+assert.ok(html.includes("function openPocketThiefCard(u)"), 'Carta da Ladra abre na interface');
+assert.ok(html.includes("function ndFigKey(u)")&&html.includes("u.sprite==='pocket_thief'"), 'Ladra usa miniatura 2.5D');
+assert.ok(html.includes("assets/ladra_bolsas.b64"), 'Arte transparente carregada do asset dedicado');
 console.log('HTML validado: animação do escudo para ataques simples e facas, com bônus único.');
